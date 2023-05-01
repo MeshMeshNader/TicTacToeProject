@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Text fx:id="ticTacToeServerTxt" layoutX="24.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tic_Tac_Toe SERVER">
+               <font>
+                  <Font name="Bauhaus 93" size="60.0" />
+               </font>
+               <effect>
+                  <Glow />
+               </effect>
+            </Text>
+            <Text fx:id="userNameTxt" fill="#f27b7a" layoutX="155.0" layoutY="275.0" strokeType="OUTSIDE" strokeWidth="0.0" text="USerName">
+               <font>
+                  <Font name="Bauhaus 93" size="40.0" />
+               </font>
+            </Text>
+            <Text fx:id="passwardTxt" fill="#f27b7a" layoutX="160.0" layoutY="364.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PaSSward">
+               <font>
+                  <Font name="Bauhaus 93" size="40.0" />
+               </font>
+            </Text>
+            <TextField fx:id="userNameTxtField" layoutX="354.0" layoutY="246.0" prefHeight="40.0" prefWidth="440.0" />
+            <TextField fx:id="passwardTxtField" layoutX="354.0" layoutY="338.0" prefHeight="40.0" prefWidth="440.0" />
+            <Button fx:id="serverLoginBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="429.0" layoutY="458.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="209.0" style="-fx-background-color: #f79594;" text="Login" textAlignment="CENTER">
+               <font>
+                  <Font name="Bauhaus 93" size="36.0" />
+               </font>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Button>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
