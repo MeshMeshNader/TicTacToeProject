@@ -1,3 +1,4 @@
+package tictactoe;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
@@ -12,7 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class ComputerLevelPageFXMLBase extends BorderPane {
+public abstract class ComputerLevelPage extends BorderPane {
 
     protected final AnchorPane anchorPane;
     protected final AnchorPane anchorPane0;
@@ -43,7 +44,7 @@ public class ComputerLevelPageFXMLBase extends BorderPane {
     protected final DropShadow dropShadow4;
     protected final Glow glow0;
 
-    public ComputerLevelPageFXMLBase() {
+    public ComputerLevelPage() {
 
         anchorPane = new AnchorPane();
         anchorPane0 = new AnchorPane();

@@ -1,3 +1,4 @@
+package tictactoe;
 
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
@@ -6,7 +7,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class PopUpInviteAcceptingFXMLBase extends AnchorPane {
+public abstract class PopUpInviteAccepting extends AnchorPane {
 
     protected final Text incomingInviteTxt;
     protected final Button acceptBtn;
@@ -15,7 +16,7 @@ public class PopUpInviteAcceptingFXMLBase extends AnchorPane {
     protected final DropShadow dropShadow0;
     protected final Glow glow;
 
-    public PopUpInviteAcceptingFXMLBase() {
+    public PopUpInviteAccepting() {
 
         incomingInviteTxt = new Text();
         acceptBtn = new Button();

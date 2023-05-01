@@ -1,3 +1,4 @@
+package tictactoe;
 
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -17,7 +18,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class ComputerGameBoardFXMLBase extends BorderPane {
+public abstract class ComputerGameBoard extends BorderPane {
 
     protected final AnchorPane anchorPane;
     protected final AnchorPane anchorPane0;
@@ -76,7 +77,7 @@ public class ComputerGameBoardFXMLBase extends BorderPane {
     protected final Button cellPos2_0;
     protected final ColorAdjust colorAdjust7;
 
-    public ComputerGameBoardFXMLBase() {
+    public ComputerGameBoard() {
 
         anchorPane = new AnchorPane();
         anchorPane0 = new AnchorPane();

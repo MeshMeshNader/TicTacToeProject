@@ -1,3 +1,4 @@
+package tictactoe;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -8,7 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class PopUpViewProfileFXMLBase extends BorderPane {
+public abstract class PopUpViewProfile extends BorderPane {
 
     protected final AnchorPane anchorPane;
     protected final Text enterYourNameTxt;
@@ -24,7 +25,7 @@ public class PopUpViewProfileFXMLBase extends BorderPane {
     protected final DropShadow dropShadow;
     protected final Glow glow;
 
-    public PopUpViewProfileFXMLBase() {
+    public PopUpViewProfile() {
 
         anchorPane = new AnchorPane();
         enterYourNameTxt = new Text();
