@@ -16,17 +16,17 @@ Online Mode:
  In online mode, the user can play against another player over the network. The application will display a list of online or available users. The player can choose any of them to send a request to play. The opponent player will receive the request to play and will have the decision to accept or refuse.
 we can use Java's Socket and ServerSocket classes to handle the network communication between the clients and the server.
 
-Recording:<br>
+</strong>Recording:</strong><br>
 To implement the recording of games, we can save the moves made during the game in the file and allow the user to replay the game later. The application will give the user an option to record the game and store it for replay later. The recorded games will be stored in the file.
 
 <strong>Server User Interface:</strong>  <br>
  The application will have a modern and elegant user interface designed using JavaFX. The UI will provide buttons to start and stop the service, and it will display graphs that show the number of active users, online and offline users.
 
-Prize system:  <br>
+</strong>Prize system:</strong> <br>
 To implement the prize system, we can store a list of bonus videos in the application files  and play them when the user wins a game or lose the game.
 
-Player Score:  <br>
+</strong>Player Score:</strong>  <br>
  The application will store the player score, number of wins, and losses in the database. The user can view their scores
 
-User Authentication: <br>
+</strong>User Authentication:</strong> <br>
  The user can register and login to the server. The server will store the user's authentication information in the database. The user's information will be encrypted to protect their privacy.
