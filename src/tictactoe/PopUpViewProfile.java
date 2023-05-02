@@ -1,5 +1,7 @@
 package tictactoe;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
@@ -8,9 +10,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class PopUpViewProfile extends BorderPane {
 
+    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Text userNameTxt;
     protected final TextField nameTxtField;
@@ -25,8 +29,9 @@ public class PopUpViewProfile extends BorderPane {
     protected final DropShadow dropShadow;
     protected final Glow glow;
 
-    public PopUpViewProfile() {
+    public PopUpViewProfile(Stage stage) {
 
+        parentStage = stage;
         anchorPane = new AnchorPane();
         userNameTxt = new Text();
         nameTxtField = new TextField();
@@ -145,6 +150,13 @@ public class PopUpViewProfile extends BorderPane {
         anchorPane.getChildren().add(noOfWinsTxtField);
         anchorPane.getChildren().add(nameValueTxtField);
         anchorPane.getChildren().add(okBtn);
+
+        okBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                parentStage.close();
+            }
+        });
 
     }
 }

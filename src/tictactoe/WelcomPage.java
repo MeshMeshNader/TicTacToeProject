@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class WelcomPage extends BorderPane {
@@ -250,6 +251,12 @@ public class WelcomPage extends BorderPane {
             public void handle(ActionEvent event) {
                 
                 //OPen PopUp
+                Stage popUpStage = new Stage();
+                Scene popUpPage = new Scene(new PopUpAbout(popUpStage));
+                
+                popUpStage.setScene(popUpPage);
+                popUpStage.initModality(Modality.APPLICATION_MODAL);
+                popUpStage.showAndWait();
                 
             }
         });

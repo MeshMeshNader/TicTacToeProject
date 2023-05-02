@@ -15,6 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class OnlineUsersPage extends BorderPane {
@@ -271,6 +272,14 @@ public class OnlineUsersPage extends BorderPane {
 
                 //Don't Forget To Handel Ex (cannot press withour select user)
                 //Show PopUpViewProfile
+                //OPen PopUp
+                Stage popUpStage = new Stage();
+                Scene popUpPage = new Scene(new PopUpViewProfile(popUpStage));
+
+                popUpStage.setScene(popUpPage);
+                popUpStage.initModality(Modality.APPLICATION_MODAL);
+                popUpStage.showAndWait();
+
             }
         });
 
@@ -280,6 +289,14 @@ public class OnlineUsersPage extends BorderPane {
 
                 //Don't Forget To Handel Ex (cannot press withour select user)
                 //Show PopUpInviteUser
+                //OPen PopUp
+                Stage popUpStage = new Stage();
+                Scene popUpPage = new Scene(new PopUpInviteWaiting(popUpStage));
+
+                popUpStage.setScene(popUpPage);
+                popUpStage.initModality(Modality.APPLICATION_MODAL);
+                popUpStage.showAndWait();
+
             }
         });
 

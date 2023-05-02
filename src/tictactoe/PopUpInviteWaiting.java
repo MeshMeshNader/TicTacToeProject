@@ -1,5 +1,7 @@
 package tictactoe;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.DropShadow;
@@ -7,9 +9,11 @@ import javafx.scene.effect.Glow;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class PopUpInviteWaiting extends AnchorPane {
 
+    Stage parentStage;
     protected final Text waitingForResponseTxt;
     protected final Button startBtn;
     protected final DropShadow dropShadow;
@@ -18,8 +22,9 @@ public class PopUpInviteWaiting extends AnchorPane {
     protected final ProgressIndicator progressIndicator;
     protected final Glow glow;
 
-    public PopUpInviteWaiting() {
+    public PopUpInviteWaiting(Stage stage) {
 
+        parentStage = stage;
         waitingForResponseTxt = new Text();
         startBtn = new Button();
         dropShadow = new DropShadow();
@@ -64,8 +69,8 @@ public class PopUpInviteWaiting extends AnchorPane {
 
         cancelBtn.setEffect(dropShadow0);
 
-        progressIndicator.setLayoutX(224.0);
-        progressIndicator.setLayoutY(202.0);
+        progressIndicator.setLayoutX(200.0);
+        progressIndicator.setLayoutY(200.0);
         progressIndicator.setPrefHeight(83.0);
         progressIndicator.setPrefWidth(111.0);
 
@@ -75,6 +80,20 @@ public class PopUpInviteWaiting extends AnchorPane {
         getChildren().add(startBtn);
         getChildren().add(cancelBtn);
         getChildren().add(progressIndicator);
+
+        cancelBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                parentStage.close();
+            }
+        });
+
+        startBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // When The User Accept  the game
+            }
+        });
 
     }
 }

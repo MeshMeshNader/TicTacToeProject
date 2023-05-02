@@ -31,7 +31,7 @@
             <DropShadow />
          </effect>
       </Button>
-      <ProgressIndicator fx:id="progressIndicator" layoutX="224.0" layoutY="202.0" prefHeight="83.0" prefWidth="111.0" />
+      <ProgressIndicator fx:id="progressIndicator" layoutX="203.0" layoutY="202.0" prefHeight="83.0" prefWidth="111.0" />
    </children>
    <effect>
       <Glow />

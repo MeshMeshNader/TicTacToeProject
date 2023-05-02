@@ -1,14 +1,18 @@
 package tictactoe;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class PopUpInviteAccepting extends AnchorPane {
 
+    Stage parentStage;
     protected final Text incomingInviteTxt;
     protected final Button acceptBtn;
     protected final DropShadow dropShadow;
@@ -17,8 +21,9 @@ public class PopUpInviteAccepting extends AnchorPane {
     protected final Text userNameValueTxt;
     protected final Glow glow;
 
-    public PopUpInviteAccepting() {
+    public PopUpInviteAccepting(Stage stage) {
 
+        parentStage = stage;
         incomingInviteTxt = new Text();
         acceptBtn = new Button();
         dropShadow = new DropShadow();
@@ -75,6 +80,20 @@ public class PopUpInviteAccepting extends AnchorPane {
         getChildren().add(acceptBtn);
         getChildren().add(cancelBtn);
         getChildren().add(userNameValueTxt);
+
+        acceptBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                parentStage.close();
+            }
+        });
+
+        cancelBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                parentStage.close();
+            }
+        });
 
     }
 }
