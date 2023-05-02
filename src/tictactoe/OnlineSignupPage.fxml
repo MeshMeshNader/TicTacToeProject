@@ -147,7 +147,7 @@
                   <Font name="Bauhaus 93" size="19.0" />
                </font>
             </ToggleButton>
-            <Text fx:id="soundTxtt" layoutX="410.0" layoutY="692.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sound">
+            <Text fx:id="soundTxt" layoutX="410.0" layoutY="692.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sound">
                <font>
                   <Font name="Bauhaus 93" size="30.0" />
                </font>

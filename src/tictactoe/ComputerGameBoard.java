@@ -18,7 +18,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public abstract class ComputerGameBoard extends BorderPane {
+public class ComputerGameBoard extends BorderPane {
 
     protected final AnchorPane anchorPane;
     protected final AnchorPane anchorPane0;
@@ -29,7 +29,7 @@ public abstract class ComputerGameBoard extends BorderPane {
     protected final DropShadow dropShadow0;
     protected final Button homeBtn;
     protected final DropShadow dropShadow1;
-    protected final Text playerTwoUserNameLValueTxt;
+    protected final Text playerTwoUserNameLTxt;
     protected final Text toeLTxt;
     protected final Text aLTxt;
     protected final Text ticLTxt;
@@ -40,7 +40,7 @@ public abstract class ComputerGameBoard extends BorderPane {
     protected final AnchorPane anchorPane1;
     protected final AnchorPane anchorPane2;
     protected final Glow glow0;
-    protected final Text playerTwoUserNameRValueTxt;
+    protected final Text playerTwoUserNameRTxt;
     protected final Text toeRTxt;
     protected final Text aRTxt;
     protected final Text ticRTxt;
@@ -48,14 +48,14 @@ public abstract class ComputerGameBoard extends BorderPane {
     protected final DropShadow dropShadow3;
     protected final Text soundTxt;
     protected final Text playerOneUserNameRValueTxt;
-    protected final GridPane gridPane;
+    protected final GridPane xoGridPane;
     protected final ColumnConstraints columnConstraints;
     protected final ColumnConstraints columnConstraints0;
     protected final ColumnConstraints columnConstraints1;
     protected final RowConstraints rowConstraints;
     protected final RowConstraints rowConstraints0;
     protected final RowConstraints rowConstraints1;
-    protected final Rectangle rectangle;
+    protected final Rectangle xoRectangle;
     protected final Blend blend;
     protected final Reflection reflection;
     protected final Button cellPos2_1;
@@ -88,7 +88,7 @@ public abstract class ComputerGameBoard extends BorderPane {
         dropShadow0 = new DropShadow();
         homeBtn = new Button();
         dropShadow1 = new DropShadow();
-        playerTwoUserNameLValueTxt = new Text();
+        playerTwoUserNameLTxt = new Text();
         toeLTxt = new Text();
         aLTxt = new Text();
         ticLTxt = new Text();
@@ -99,7 +99,7 @@ public abstract class ComputerGameBoard extends BorderPane {
         anchorPane1 = new AnchorPane();
         anchorPane2 = new AnchorPane();
         glow0 = new Glow();
-        playerTwoUserNameRValueTxt = new Text();
+        playerTwoUserNameRTxt = new Text();
         toeRTxt = new Text();
         aRTxt = new Text();
         ticRTxt = new Text();
@@ -107,14 +107,14 @@ public abstract class ComputerGameBoard extends BorderPane {
         dropShadow3 = new DropShadow();
         soundTxt = new Text();
         playerOneUserNameRValueTxt = new Text();
-        gridPane = new GridPane();
+        xoGridPane = new GridPane();
         columnConstraints = new ColumnConstraints();
         columnConstraints0 = new ColumnConstraints();
         columnConstraints1 = new ColumnConstraints();
         rowConstraints = new RowConstraints();
         rowConstraints0 = new RowConstraints();
         rowConstraints1 = new RowConstraints();
-        rectangle = new Rectangle();
+        xoRectangle = new Rectangle();
         blend = new Blend();
         reflection = new Reflection();
         cellPos2_1 = new Button();
@@ -186,12 +186,12 @@ public abstract class ComputerGameBoard extends BorderPane {
 
         homeBtn.setEffect(dropShadow1);
 
-        playerTwoUserNameLValueTxt.setLayoutX(216.0);
-        playerTwoUserNameLValueTxt.setLayoutY(514.0);
-        playerTwoUserNameLValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
-        playerTwoUserNameLValueTxt.setStrokeWidth(0.0);
-        playerTwoUserNameLValueTxt.setText("player");
-        playerTwoUserNameLValueTxt.setFont(new Font("Bauhaus 93", 36.0));
+        playerTwoUserNameLTxt.setLayoutX(199.0);
+        playerTwoUserNameLTxt.setLayoutY(517.0);
+        playerTwoUserNameLTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
+        playerTwoUserNameLTxt.setStrokeWidth(0.0);
+        playerTwoUserNameLTxt.setText("Computer");
+        playerTwoUserNameLTxt.setFont(new Font("Bauhaus 93", 31.0));
 
         toeLTxt.setFill(javafx.scene.paint.Color.valueOf("#f8e3e3"));
         toeLTxt.setLayoutX(169.0);
@@ -199,7 +199,7 @@ public abstract class ComputerGameBoard extends BorderPane {
         toeLTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         toeLTxt.setStrokeWidth(0.0);
         toeLTxt.setText("T     O     E");
-        toeLTxt.setFont(new Font("Bauhaus 93", 36.0));
+        toeLTxt.setFont(new Font("Bauhaus 93", 31.0));
 
         aLTxt.setFill(javafx.scene.paint.Color.valueOf("#f8e3e3"));
         aLTxt.setLayoutX(168.0);
@@ -207,22 +207,22 @@ public abstract class ComputerGameBoard extends BorderPane {
         aLTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         aLTxt.setStrokeWidth(0.0);
         aLTxt.setText("A");
-        aLTxt.setFont(new Font("Bauhaus 93", 36.0));
+        aLTxt.setFont(new Font("Bauhaus 93", 31.0));
 
         ticLTxt.setFill(javafx.scene.paint.Color.valueOf("#f8e3e3"));
-        ticLTxt.setLayoutX(46.0);
-        ticLTxt.setLayoutY(518.0);
+        ticLTxt.setLayoutX(61.0);
+        ticLTxt.setLayoutY(516.0);
         ticLTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         ticLTxt.setStrokeWidth(0.0);
         ticLTxt.setText("T     I     C");
-        ticLTxt.setFont(new Font("Bauhaus 93", 36.0));
+        ticLTxt.setFont(new Font("Bauhaus 93", 31.0));
 
-        playerOneUserNameLValueTxt.setLayoutX(30.0);
+        playerOneUserNameLValueTxt.setLayoutX(52.0);
         playerOneUserNameLValueTxt.setLayoutY(411.0);
         playerOneUserNameLValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         playerOneUserNameLValueTxt.setStrokeWidth(0.0);
         playerOneUserNameLValueTxt.setText("player");
-        playerOneUserNameLValueTxt.setFont(new Font("Bauhaus 93", 36.0));
+        playerOneUserNameLValueTxt.setFont(new Font("Bauhaus 93", 31.0));
 
         recordToggleBtn.setLayoutX(174.0);
         recordToggleBtn.setLayoutY(26.0);
@@ -251,12 +251,12 @@ public abstract class ComputerGameBoard extends BorderPane {
 
         anchorPane2.setEffect(glow0);
 
-        playerTwoUserNameRValueTxt.setLayoutX(351.0);
-        playerTwoUserNameRValueTxt.setLayoutY(157.0);
-        playerTwoUserNameRValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
-        playerTwoUserNameRValueTxt.setStrokeWidth(0.0);
-        playerTwoUserNameRValueTxt.setText("player");
-        playerTwoUserNameRValueTxt.setFont(new Font("Bauhaus 93", 24.0));
+        playerTwoUserNameRTxt.setLayoutX(351.0);
+        playerTwoUserNameRTxt.setLayoutY(157.0);
+        playerTwoUserNameRTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
+        playerTwoUserNameRTxt.setStrokeWidth(0.0);
+        playerTwoUserNameRTxt.setText("Computer");
+        playerTwoUserNameRTxt.setFont(new Font("Bauhaus 93", 24.0));
 
         toeRTxt.setFill(javafx.scene.paint.Color.valueOf("#f27b7a"));
         toeRTxt.setLayoutX(312.0);
@@ -306,12 +306,12 @@ public abstract class ComputerGameBoard extends BorderPane {
         playerOneUserNameRValueTxt.setText("player");
         playerOneUserNameRValueTxt.setFont(new Font("Bauhaus 93", 24.0));
 
-        gridPane.setHgap(10.0);
-        gridPane.setLayoutX(143.0);
-        gridPane.setLayoutY(219.0);
-        gridPane.setPrefHeight(390.0);
-        gridPane.setPrefWidth(390.0);
-        gridPane.setVgap(10.0);
+        xoGridPane.setHgap(10.0);
+        xoGridPane.setLayoutX(143.0);
+        xoGridPane.setLayoutY(219.0);
+        xoGridPane.setPrefHeight(390.0);
+        xoGridPane.setPrefWidth(390.0);
+        xoGridPane.setVgap(10.0);
 
         columnConstraints.setHgrow(javafx.scene.layout.Priority.SOMETIMES);
         columnConstraints.setMinWidth(10.0);
@@ -338,27 +338,27 @@ public abstract class ComputerGameBoard extends BorderPane {
         rowConstraints1.setMinHeight(10.0);
         rowConstraints1.setPrefHeight(106.4666809082031);
         rowConstraints1.setVgrow(javafx.scene.layout.Priority.SOMETIMES);
-        gridPane.setPadding(new Insets(10.0));
+        xoGridPane.setPadding(new Insets(10.0));
 
-        GridPane.setColumnSpan(rectangle, 3);
-        GridPane.setRowSpan(rectangle, 3);
-        rectangle.setArcHeight(20.0);
-        rectangle.setArcWidth(20.0);
-        rectangle.setFill(javafx.scene.paint.Color.valueOf("#f27b7a"));
-        rectangle.setHeight(390.0);
-        rectangle.setOpacity(0.55);
-        rectangle.setStroke(javafx.scene.paint.Color.valueOf("#f2cdcd"));
-        rectangle.setStrokeLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
-        rectangle.setStrokeLineJoin(javafx.scene.shape.StrokeLineJoin.ROUND);
-        rectangle.setStrokeType(javafx.scene.shape.StrokeType.INSIDE);
-        rectangle.setTranslateX(-10.0);
-        rectangle.setWidth(390.0);
+        GridPane.setColumnSpan(xoRectangle, 3);
+        GridPane.setRowSpan(xoRectangle, 3);
+        xoRectangle.setArcHeight(20.0);
+        xoRectangle.setArcWidth(20.0);
+        xoRectangle.setFill(javafx.scene.paint.Color.valueOf("#f27b7a"));
+        xoRectangle.setHeight(390.0);
+        xoRectangle.setOpacity(0.55);
+        xoRectangle.setStroke(javafx.scene.paint.Color.valueOf("#f2cdcd"));
+        xoRectangle.setStrokeLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
+        xoRectangle.setStrokeLineJoin(javafx.scene.shape.StrokeLineJoin.ROUND);
+        xoRectangle.setStrokeType(javafx.scene.shape.StrokeType.INSIDE);
+        xoRectangle.setTranslateX(-10.0);
+        xoRectangle.setWidth(390.0);
 
         blend.setMode(javafx.scene.effect.BlendMode.LIGHTEN);
         blend.setOpacity(0.0);
 
         blend.setTopInput(reflection);
-        rectangle.setEffect(blend);
+        xoRectangle.setEffect(blend);
 
         GridPane.setColumnIndex(cellPos2_1, 1);
         GridPane.setRowIndex(cellPos2_1, 2);
@@ -481,7 +481,7 @@ public abstract class ComputerGameBoard extends BorderPane {
         anchorPane0.getChildren().add(backBtn);
         anchorPane0.getChildren().add(rematchBtn);
         anchorPane0.getChildren().add(homeBtn);
-        anchorPane0.getChildren().add(playerTwoUserNameLValueTxt);
+        anchorPane0.getChildren().add(playerTwoUserNameLTxt);
         anchorPane0.getChildren().add(toeLTxt);
         anchorPane0.getChildren().add(aLTxt);
         anchorPane0.getChildren().add(ticLTxt);
@@ -489,30 +489,30 @@ public abstract class ComputerGameBoard extends BorderPane {
         anchorPane0.getChildren().add(recordToggleBtn);
         anchorPane0.getChildren().add(recordTxt);
         anchorPane.getChildren().add(anchorPane0);
-        anchorPane2.getChildren().add(playerTwoUserNameRValueTxt);
+        anchorPane2.getChildren().add(playerTwoUserNameRTxt);
         anchorPane2.getChildren().add(toeRTxt);
         anchorPane2.getChildren().add(aRTxt);
         anchorPane2.getChildren().add(ticRTxt);
         anchorPane2.getChildren().add(soundToggleBtn);
         anchorPane2.getChildren().add(soundTxt);
         anchorPane2.getChildren().add(playerOneUserNameRValueTxt);
-        gridPane.getColumnConstraints().add(columnConstraints);
-        gridPane.getColumnConstraints().add(columnConstraints0);
-        gridPane.getColumnConstraints().add(columnConstraints1);
-        gridPane.getRowConstraints().add(rowConstraints);
-        gridPane.getRowConstraints().add(rowConstraints0);
-        gridPane.getRowConstraints().add(rowConstraints1);
-        gridPane.getChildren().add(rectangle);
-        gridPane.getChildren().add(cellPos2_1);
-        gridPane.getChildren().add(cellPos1_1);
-        gridPane.getChildren().add(cellPos0_0);
-        gridPane.getChildren().add(cellPos1_2);
-        gridPane.getChildren().add(cellPos0_2);
-        gridPane.getChildren().add(cellPos1_0);
-        gridPane.getChildren().add(cellPos2_2);
-        gridPane.getChildren().add(cellPos0_1);
-        gridPane.getChildren().add(cellPos2_0);
-        anchorPane2.getChildren().add(gridPane);
+        xoGridPane.getColumnConstraints().add(columnConstraints);
+        xoGridPane.getColumnConstraints().add(columnConstraints0);
+        xoGridPane.getColumnConstraints().add(columnConstraints1);
+        xoGridPane.getRowConstraints().add(rowConstraints);
+        xoGridPane.getRowConstraints().add(rowConstraints0);
+        xoGridPane.getRowConstraints().add(rowConstraints1);
+        xoGridPane.getChildren().add(xoRectangle);
+        xoGridPane.getChildren().add(cellPos2_1);
+        xoGridPane.getChildren().add(cellPos1_1);
+        xoGridPane.getChildren().add(cellPos0_0);
+        xoGridPane.getChildren().add(cellPos1_2);
+        xoGridPane.getChildren().add(cellPos0_2);
+        xoGridPane.getChildren().add(cellPos1_0);
+        xoGridPane.getChildren().add(cellPos2_2);
+        xoGridPane.getChildren().add(cellPos0_1);
+        xoGridPane.getChildren().add(cellPos2_0);
+        anchorPane2.getChildren().add(xoGridPane);
         anchorPane1.getChildren().add(anchorPane2);
 
     }

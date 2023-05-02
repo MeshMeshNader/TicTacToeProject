@@ -16,7 +16,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public abstract class OnlineSignupPage extends BorderPane {
+public class OnlineSignupPage extends BorderPane {
 
     protected final AnchorPane anchorPane;
     protected final Glow glow;
@@ -46,7 +46,7 @@ public abstract class OnlineSignupPage extends BorderPane {
     protected final ImageView image;
     protected final ToggleButton soundBtn;
     protected final DropShadow dropShadow2;
-    protected final Text soundTxtt;
+    protected final Text soundTxt;
 
     public OnlineSignupPage() {
 
@@ -78,7 +78,7 @@ public abstract class OnlineSignupPage extends BorderPane {
         image = new ImageView();
         soundBtn = new ToggleButton();
         dropShadow2 = new DropShadow();
-        soundTxtt = new Text();
+        soundTxt = new Text();
 
         setMaxHeight(USE_PREF_SIZE);
         setMaxWidth(USE_PREF_SIZE);
@@ -238,12 +238,12 @@ public abstract class OnlineSignupPage extends BorderPane {
         soundBtn.setEffect(dropShadow2);
         soundBtn.setFont(new Font("Bauhaus 93", 19.0));
 
-        soundTxtt.setLayoutX(410.0);
-        soundTxtt.setLayoutY(692.0);
-        soundTxtt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
-        soundTxtt.setStrokeWidth(0.0);
-        soundTxtt.setText("Sound");
-        soundTxtt.setFont(new Font("Bauhaus 93", 30.0));
+        soundTxt.setLayoutX(410.0);
+        soundTxt.setLayoutY(692.0);
+        soundTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
+        soundTxt.setStrokeWidth(0.0);
+        soundTxt.setText("Sound");
+        soundTxt.setFont(new Font("Bauhaus 93", 30.0));
         setCenter(nickNameTxtField0);
 
         anchorPane.getChildren().add(registerBtn);
@@ -264,7 +264,7 @@ public abstract class OnlineSignupPage extends BorderPane {
         nickNameTxtField0.getChildren().add(ticTxt);
         nickNameTxtField0.getChildren().add(image);
         nickNameTxtField0.getChildren().add(soundBtn);
-        nickNameTxtField0.getChildren().add(soundTxtt);
+        nickNameTxtField0.getChildren().add(soundTxt);
 
     }
 }

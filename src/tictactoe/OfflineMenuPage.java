@@ -11,7 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class OfflineMenuPage extends BorderPane {
+public abstract class OfflineMenuPage extends BorderPane {
 
     protected final AnchorPane anchorPane;
     protected final Glow glow;
@@ -98,7 +98,7 @@ public class OfflineMenuPage extends BorderPane {
         menuTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         menuTxt.setStrokeWidth(0.0);
         menuTxt.setText("Menu");
-        menuTxt.setFont(new Font(96.0));
+        menuTxt.setFont(new Font("Bauhaus 93", 96.0));
 
         menuTxt.setEffect(glow0);
 

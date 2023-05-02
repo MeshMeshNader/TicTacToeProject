@@ -13,7 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public abstract class ComputerLevelPage extends BorderPane {
+public class ComputerLevelPage extends BorderPane {
 
     protected final AnchorPane anchorPane;
     protected final AnchorPane anchorPane0;
@@ -34,7 +34,7 @@ public abstract class ComputerLevelPage extends BorderPane {
     protected final DropShadow dropShadow1;
     protected final Button hardBtn;
     protected final DropShadow dropShadow2;
-    protected final TextField enterYourNameValueTxt;
+    protected final TextField enterYourNameValueTxtField;
     protected final Text enterYourNameTxt;
     protected final RadioButton xRadioBtn;
     protected final RadioButton oRadioBtn;
@@ -65,7 +65,7 @@ public abstract class ComputerLevelPage extends BorderPane {
         dropShadow1 = new DropShadow();
         hardBtn = new Button();
         dropShadow2 = new DropShadow();
-        enterYourNameValueTxt = new TextField();
+        enterYourNameValueTxtField = new TextField();
         enterYourNameTxt = new Text();
         xRadioBtn = new RadioButton();
         oRadioBtn = new RadioButton();
@@ -141,7 +141,7 @@ public abstract class ComputerLevelPage extends BorderPane {
         gameBoradImg.setLayoutY(277.0);
         gameBoradImg.setPickOnBounds(true);
         gameBoradImg.setPreserveRatio(true);
-        gameBoradImg.setImage(new Image(getClass().getResource("../../../labs/Java/TicTacToe/TicTacToe_Design_P3_P4/src/tictactoe_design_p3_p4/images/game.png").toExternalForm()));
+        gameBoradImg.setImage(new Image(getClass().getResource("images/game.png").toExternalForm()));
 
         soundToggleBtn.setLayoutX(519.0);
         soundToggleBtn.setLayoutY(656.0);
@@ -199,10 +199,10 @@ public abstract class ComputerLevelPage extends BorderPane {
 
         hardBtn.setEffect(dropShadow2);
 
-        enterYourNameValueTxt.setLayoutX(180.0);
-        enterYourNameValueTxt.setLayoutY(410.0);
-        enterYourNameValueTxt.setPrefHeight(35.0);
-        enterYourNameValueTxt.setPrefWidth(154.0);
+        enterYourNameValueTxtField.setLayoutX(180.0);
+        enterYourNameValueTxtField.setLayoutY(410.0);
+        enterYourNameValueTxtField.setPrefHeight(35.0);
+        enterYourNameValueTxtField.setPrefWidth(154.0);
 
         enterYourNameTxt.setLayoutX(13.0);
         enterYourNameTxt.setLayoutY(434.0);
@@ -262,7 +262,7 @@ public abstract class ComputerLevelPage extends BorderPane {
         anchorPane1.getChildren().add(easyBtn);
         anchorPane1.getChildren().add(mediumBtn);
         anchorPane1.getChildren().add(hardBtn);
-        anchorPane1.getChildren().add(enterYourNameValueTxt);
+        anchorPane1.getChildren().add(enterYourNameValueTxtField);
         anchorPane1.getChildren().add(enterYourNameTxt);
         anchorPane1.getChildren().add(xRadioBtn);
         anchorPane1.getChildren().add(oRadioBtn);

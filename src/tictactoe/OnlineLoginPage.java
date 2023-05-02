@@ -14,7 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public abstract class OnlineLoginPage extends BorderPane {
+public class OnlineLoginPage extends BorderPane {
 
     protected final AnchorPane anchorPane;
     protected final Glow glow;
@@ -31,7 +31,7 @@ public abstract class OnlineLoginPage extends BorderPane {
     protected final Text usernameTxt;
     protected final Text noAccountTxt;
     protected final InnerShadow innerShadow0;
-    protected final Hyperlink signupTxt;
+    protected final Hyperlink signupHyperlink;
     protected final AnchorPane anchorPane0;
     protected final Glow glow0;
     protected final Text xTxt;
@@ -39,8 +39,8 @@ public abstract class OnlineLoginPage extends BorderPane {
     protected final Text toeTxt;
     protected final Text aTxt;
     protected final Text ticTxt;
-    protected final ImageView image;
-    protected final ToggleButton soundBtn;
+    protected final ImageView xoImg;
+    protected final ToggleButton soundToggleBtn;
     protected final DropShadow dropShadow2;
     protected final Text soundTxt;
 
@@ -61,7 +61,7 @@ public abstract class OnlineLoginPage extends BorderPane {
         usernameTxt = new Text();
         noAccountTxt = new Text();
         innerShadow0 = new InnerShadow();
-        signupTxt = new Hyperlink();
+        signupHyperlink = new Hyperlink();
         anchorPane0 = new AnchorPane();
         glow0 = new Glow();
         xTxt = new Text();
@@ -69,8 +69,8 @@ public abstract class OnlineLoginPage extends BorderPane {
         toeTxt = new Text();
         aTxt = new Text();
         ticTxt = new Text();
-        image = new ImageView();
-        soundBtn = new ToggleButton();
+        xoImg = new ImageView();
+        soundToggleBtn = new ToggleButton();
         dropShadow2 = new DropShadow();
         soundTxt = new Text();
 
@@ -154,10 +154,10 @@ public abstract class OnlineLoginPage extends BorderPane {
 
         noAccountTxt.setEffect(innerShadow0);
 
-        signupTxt.setLayoutX(240.0);
-        signupTxt.setLayoutY(383.0);
-        signupTxt.setText("Sign up");
-        signupTxt.setFont(new Font("Bauhaus 93", 18.0));
+        signupHyperlink.setLayoutX(240.0);
+        signupHyperlink.setLayoutY(383.0);
+        signupHyperlink.setText("Sign up");
+        signupHyperlink.setFont(new Font("Bauhaus 93", 18.0));
         setLeft(anchorPane);
 
         BorderPane.setAlignment(anchorPane0, javafx.geometry.Pos.CENTER);
@@ -204,23 +204,23 @@ public abstract class OnlineLoginPage extends BorderPane {
         ticTxt.setText("T   I   C");
         ticTxt.setFont(new Font("Bauhaus 93", 50.0));
 
-        image.setFitHeight(350.0);
-        image.setFitWidth(350.0);
-        image.setLayoutX(163.0);
-        image.setLayoutY(277.0);
-        image.setPickOnBounds(true);
-        image.setPreserveRatio(true);
-        image.setImage(new Image(getClass().getResource("images/game.png").toExternalForm()));
+        xoImg.setFitHeight(350.0);
+        xoImg.setFitWidth(350.0);
+        xoImg.setLayoutX(163.0);
+        xoImg.setLayoutY(277.0);
+        xoImg.setPickOnBounds(true);
+        xoImg.setPreserveRatio(true);
+        xoImg.setImage(new Image(getClass().getResource("images/game.png").toExternalForm()));
 
-        soundBtn.setLayoutX(519.0);
-        soundBtn.setLayoutY(656.0);
-        soundBtn.setMnemonicParsing(false);
-        soundBtn.setPrefHeight(42.0);
-        soundBtn.setPrefWidth(130.0);
-        soundBtn.setText("On / Off");
+        soundToggleBtn.setLayoutX(519.0);
+        soundToggleBtn.setLayoutY(656.0);
+        soundToggleBtn.setMnemonicParsing(false);
+        soundToggleBtn.setPrefHeight(42.0);
+        soundToggleBtn.setPrefWidth(130.0);
+        soundToggleBtn.setText("On / Off");
 
-        soundBtn.setEffect(dropShadow2);
-        soundBtn.setFont(new Font("Bauhaus 93", 19.0));
+        soundToggleBtn.setEffect(dropShadow2);
+        soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
 
         soundTxt.setLayoutX(410.0);
         soundTxt.setLayoutY(692.0);
@@ -238,14 +238,14 @@ public abstract class OnlineLoginPage extends BorderPane {
         anchorPane.getChildren().add(passwordTxt);
         anchorPane.getChildren().add(usernameTxt);
         anchorPane.getChildren().add(noAccountTxt);
-        anchorPane.getChildren().add(signupTxt);
+        anchorPane.getChildren().add(signupHyperlink);
         anchorPane0.getChildren().add(xTxt);
         anchorPane0.getChildren().add(oTxt);
         anchorPane0.getChildren().add(toeTxt);
         anchorPane0.getChildren().add(aTxt);
         anchorPane0.getChildren().add(ticTxt);
-        anchorPane0.getChildren().add(image);
-        anchorPane0.getChildren().add(soundBtn);
+        anchorPane0.getChildren().add(xoImg);
+        anchorPane0.getChildren().add(soundToggleBtn);
         anchorPane0.getChildren().add(soundTxt);
 
     }

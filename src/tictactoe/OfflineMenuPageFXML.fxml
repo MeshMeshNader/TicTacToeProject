@@ -28,7 +28,7 @@
             </Button>
             <Text fx:id="menuTxt" fill="WHITE" layoutX="58.0" layoutY="130.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Menu">
                <font>
-                  <Font size="96.0" />
+                  <Font name="Bauhaus 93" size="96.0" />
                </font>
                <effect>
                   <Glow />

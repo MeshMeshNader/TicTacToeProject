@@ -9,15 +9,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public  class AdminLoginPage extends BorderPane {
+public class AdminLoginPage extends BorderPane {
 
     protected final AnchorPane anchorPane;
     protected final Text ticTacToeServerTxt;
     protected final Glow glow;
     protected final Text userNameTxt;
     protected final Text passwardTxt;
-    protected final TextField userNameTxtField;
-    protected final TextField passwardTxtField;
+    protected final TextField userNameValueTxtField;
+    protected final TextField passwardValueTxtField;
     protected final Button serverLoginBtn;
     protected final DropShadow dropShadow;
 
@@ -28,8 +28,8 @@ public  class AdminLoginPage extends BorderPane {
         glow = new Glow();
         userNameTxt = new Text();
         passwardTxt = new Text();
-        userNameTxtField = new TextField();
-        passwardTxtField = new TextField();
+        userNameValueTxtField = new TextField();
+        passwardValueTxtField = new TextField();
         serverLoginBtn = new Button();
         dropShadow = new DropShadow();
 
@@ -69,15 +69,15 @@ public  class AdminLoginPage extends BorderPane {
         passwardTxt.setText("PaSSward");
         passwardTxt.setFont(new Font("Bauhaus 93", 40.0));
 
-        userNameTxtField.setLayoutX(354.0);
-        userNameTxtField.setLayoutY(246.0);
-        userNameTxtField.setPrefHeight(40.0);
-        userNameTxtField.setPrefWidth(440.0);
+        userNameValueTxtField.setLayoutX(354.0);
+        userNameValueTxtField.setLayoutY(246.0);
+        userNameValueTxtField.setPrefHeight(40.0);
+        userNameValueTxtField.setPrefWidth(440.0);
 
-        passwardTxtField.setLayoutX(354.0);
-        passwardTxtField.setLayoutY(338.0);
-        passwardTxtField.setPrefHeight(40.0);
-        passwardTxtField.setPrefWidth(440.0);
+        passwardValueTxtField.setLayoutX(354.0);
+        passwardValueTxtField.setLayoutY(338.0);
+        passwardValueTxtField.setPrefHeight(40.0);
+        passwardValueTxtField.setPrefWidth(440.0);
 
         serverLoginBtn.setAlignment(javafx.geometry.Pos.CENTER);
         serverLoginBtn.setContentDisplay(javafx.scene.control.ContentDisplay.CENTER);
@@ -97,8 +97,8 @@ public  class AdminLoginPage extends BorderPane {
         anchorPane.getChildren().add(ticTacToeServerTxt);
         anchorPane.getChildren().add(userNameTxt);
         anchorPane.getChildren().add(passwardTxt);
-        anchorPane.getChildren().add(userNameTxtField);
-        anchorPane.getChildren().add(passwardTxtField);
+        anchorPane.getChildren().add(userNameValueTxtField);
+        anchorPane.getChildren().add(passwardValueTxtField);
         anchorPane.getChildren().add(serverLoginBtn);
 
     }

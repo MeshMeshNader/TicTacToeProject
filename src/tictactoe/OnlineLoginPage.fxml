@@ -76,7 +76,7 @@
                   <InnerShadow />
                </effect>
             </Text>
-            <Hyperlink fx:id="signupTxt" layoutX="240.0" layoutY="383.0" text="Sign up">
+            <Hyperlink fx:id="signupHyperlink" layoutX="240.0" layoutY="383.0" text="Sign up">
                <font>
                   <Font name="Bauhaus 93" size="18.0" />
                </font>
@@ -115,12 +115,12 @@
                   <Font name="Bauhaus 93" size="50.0" />
                </font>
             </Text>
-            <ImageView fx:id="image" fitHeight="350.0" fitWidth="350.0" layoutX="163.0" layoutY="277.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="350.0" fitWidth="350.0" layoutX="163.0" layoutY="277.0" pickOnBounds="true" preserveRatio="true" fx:id="xoImg">
                <image>
                   <Image url="@images/game.png" />
                </image>
             </ImageView>
-            <ToggleButton fx:id="soundBtn" layoutX="519.0" layoutY="656.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="130.0" text="On / Off">
+            <ToggleButton fx:id="soundToggleBtn" layoutX="519.0" layoutY="656.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="130.0" text="On / Off">
                <effect>
                   <DropShadow />
                </effect>

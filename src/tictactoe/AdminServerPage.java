@@ -14,14 +14,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public abstract class AdminServerPage extends BorderPane {
+public class AdminServerPage extends BorderPane {
 
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button logOutBtn;
     protected final DropShadow dropShadow;
     protected final TableView onlineUsersTable;
-    protected final TableColumn userNameOnnlineTableCol;
+    protected final TableColumn userNameOnlineTableCol;
     protected final TableColumn statusOnlineTableCol;
     protected final DropShadow dropShadow0;
     protected final Text onlineUsersValueTxt;
@@ -52,7 +52,7 @@ public abstract class AdminServerPage extends BorderPane {
         logOutBtn = new Button();
         dropShadow = new DropShadow();
         onlineUsersTable = new TableView();
-        userNameOnnlineTableCol = new TableColumn();
+        userNameOnlineTableCol = new TableColumn();
         statusOnlineTableCol = new TableColumn();
         dropShadow0 = new DropShadow();
         onlineUsersValueTxt = new Text();
@@ -107,10 +107,10 @@ public abstract class AdminServerPage extends BorderPane {
         onlineUsersTable.setPrefWidth(272.0);
         onlineUsersTable.setStyle("-fx-background-color: #ffffff;");
 
-        userNameOnnlineTableCol.setEditable(false);
-        userNameOnnlineTableCol.setPrefWidth(75.0);
-        userNameOnnlineTableCol.setStyle("-fx-font-size: 18; -fx-font-family: Bauhaus 93;");
-        userNameOnnlineTableCol.setText("User Name");
+        userNameOnlineTableCol.setEditable(false);
+        userNameOnlineTableCol.setPrefWidth(75.0);
+        userNameOnlineTableCol.setStyle("-fx-font-size: 18; -fx-font-family: Bauhaus 93;");
+        userNameOnlineTableCol.setText("User Name");
 
         statusOnlineTableCol.setEditable(false);
         statusOnlineTableCol.setPrefWidth(75.0);
@@ -227,7 +227,7 @@ public abstract class AdminServerPage extends BorderPane {
         setCenter(anchorPane0);
 
         anchorPane.getChildren().add(logOutBtn);
-        onlineUsersTable.getColumns().add(userNameOnnlineTableCol);
+        onlineUsersTable.getColumns().add(userNameOnlineTableCol);
         onlineUsersTable.getColumns().add(statusOnlineTableCol);
         anchorPane.getChildren().add(onlineUsersTable);
         anchorPane.getChildren().add(onlineUsersValueTxt);

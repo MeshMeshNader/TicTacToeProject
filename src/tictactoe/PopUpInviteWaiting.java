@@ -1,19 +1,21 @@
 package tictactoe;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public abstract class PopUpInviteWaiting extends AnchorPane {
+public class PopUpInviteWaiting extends AnchorPane {
 
     protected final Text waitingForResponseTxt;
     protected final Button startBtn;
     protected final DropShadow dropShadow;
     protected final Button cancelBtn;
     protected final DropShadow dropShadow0;
+    protected final ProgressIndicator progressIndicator;
     protected final Glow glow;
 
     public PopUpInviteWaiting() {
@@ -23,6 +25,7 @@ public abstract class PopUpInviteWaiting extends AnchorPane {
         dropShadow = new DropShadow();
         cancelBtn = new Button();
         dropShadow0 = new DropShadow();
+        progressIndicator = new ProgressIndicator();
         glow = new Glow();
 
         setPrefHeight(400.0);
@@ -61,11 +64,17 @@ public abstract class PopUpInviteWaiting extends AnchorPane {
 
         cancelBtn.setEffect(dropShadow0);
 
+        progressIndicator.setLayoutX(224.0);
+        progressIndicator.setLayoutY(202.0);
+        progressIndicator.setPrefHeight(83.0);
+        progressIndicator.setPrefWidth(111.0);
+
         setEffect(glow);
 
         getChildren().add(waitingForResponseTxt);
         getChildren().add(startBtn);
         getChildren().add(cancelBtn);
+        getChildren().add(progressIndicator);
 
     }
 }

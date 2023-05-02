@@ -7,13 +7,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public abstract class PopUpInviteAccepting extends AnchorPane {
+public class PopUpInviteAccepting extends AnchorPane {
 
     protected final Text incomingInviteTxt;
     protected final Button acceptBtn;
     protected final DropShadow dropShadow;
     protected final Button cancelBtn;
     protected final DropShadow dropShadow0;
+    protected final Text userNameValueTxt;
     protected final Glow glow;
 
     public PopUpInviteAccepting() {
@@ -23,17 +24,18 @@ public abstract class PopUpInviteAccepting extends AnchorPane {
         dropShadow = new DropShadow();
         cancelBtn = new Button();
         dropShadow0 = new DropShadow();
+        userNameValueTxt = new Text();
         glow = new Glow();
 
         setPrefHeight(400.0);
         setPrefWidth(500.0);
         setStyle("-fx-background-color: #F27B7A;");
 
-        incomingInviteTxt.setLayoutX(81.0);
-        incomingInviteTxt.setLayoutY(153.0);
+        incomingInviteTxt.setLayoutX(160.0);
+        incomingInviteTxt.setLayoutY(150.0);
         incomingInviteTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         incomingInviteTxt.setStrokeWidth(0.0);
-        incomingInviteTxt.setText("Ahmed Wants To Play With You?");
+        incomingInviteTxt.setText("Wants To Play With You?");
         incomingInviteTxt.setFont(new Font("Bauhaus 93", 24.0));
 
         acceptBtn.setLayoutX(304.0);
@@ -60,11 +62,19 @@ public abstract class PopUpInviteAccepting extends AnchorPane {
 
         cancelBtn.setEffect(dropShadow0);
 
+        userNameValueTxt.setLayoutX(81.0);
+        userNameValueTxt.setLayoutY(150.0);
+        userNameValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
+        userNameValueTxt.setStrokeWidth(0.0);
+        userNameValueTxt.setText("Ahmed");
+        userNameValueTxt.setFont(new Font("Bauhaus 93", 24.0));
+
         setEffect(glow);
 
         getChildren().add(incomingInviteTxt);
         getChildren().add(acceptBtn);
         getChildren().add(cancelBtn);
+        getChildren().add(userNameValueTxt);
 
     }
 }

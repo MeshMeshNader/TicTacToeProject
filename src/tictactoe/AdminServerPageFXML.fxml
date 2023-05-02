@@ -31,7 +31,7 @@
             </Button>
             <TableView fx:id="onlineUsersTable" layoutX="40.0" layoutY="70.0" prefHeight="230.0" prefWidth="272.0" style="-fx-background-color: #ffffff;">
                <columns>
-                  <TableColumn fx:id="userNameOnnlineTableCol" editable="false" prefWidth="75.0" style="-fx-font-size: 18; -fx-font-family: Bauhaus 93;" text="User Name" />
+                  <TableColumn fx:id="userNameOnlineTableCol" editable="false" prefWidth="75.0" style="-fx-font-size: 18; -fx-font-family: Bauhaus 93;" text="User Name" />
                   <TableColumn fx:id="statusOnlineTableCol" editable="false" prefWidth="75.0" style="-fx-font-size: 18; -fx-font-family: Bauhaus 93;" text="Status" />
                </columns>
                <effect>

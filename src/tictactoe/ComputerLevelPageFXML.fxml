@@ -49,7 +49,7 @@
                   </Text>
                   <ImageView fx:id="gameBoradImg" fitHeight="350.0" fitWidth="350.0" layoutX="163.0" layoutY="277.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../labs/Java/TicTacToe/TicTacToe_Design_P3_P4/src/tictactoe_design_p3_p4/images/game.png" />
+                        <Image url="@images/game.png" />
                      </image>
                   </ImageView>
                   <ToggleButton fx:id="soundToggleBtn" layoutX="519.0" layoutY="656.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="130.0" text="On / Off">
@@ -97,7 +97,7 @@
                   <DropShadow />
                </effect>
             </Button>
-            <TextField fx:id="enterYourNameValueTxt" layoutX="180.0" layoutY="410.0" prefHeight="35.0" prefWidth="154.0" />
+            <TextField fx:id="enterYourNameValueTxtField" layoutX="180.0" layoutY="410.0" prefHeight="35.0" prefWidth="154.0" />
             <Text fx:id="enterYourNameTxt" layoutX="13.0" layoutY="434.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter Your Name">
                <font>
                   <Font name="Bauhaus 93" size="20.0" />

@@ -31,8 +31,8 @@
                   <Font name="Bauhaus 93" size="40.0" />
                </font>
             </Text>
-            <TextField fx:id="userNameTxtField" layoutX="354.0" layoutY="246.0" prefHeight="40.0" prefWidth="440.0" />
-            <TextField fx:id="passwardTxtField" layoutX="354.0" layoutY="338.0" prefHeight="40.0" prefWidth="440.0" />
+            <TextField fx:id="userNameValueTxtField" layoutX="354.0" layoutY="246.0" prefHeight="40.0" prefWidth="440.0" />
+            <TextField fx:id="passwardValueTxtField" layoutX="354.0" layoutY="338.0" prefHeight="40.0" prefWidth="440.0" />
             <Button fx:id="serverLoginBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="429.0" layoutY="458.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="209.0" style="-fx-background-color: #f79594;" text="Login" textAlignment="CENTER">
                <font>
                   <Font name="Bauhaus 93" size="36.0" />

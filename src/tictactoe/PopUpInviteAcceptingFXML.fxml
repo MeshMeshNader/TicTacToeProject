@@ -9,7 +9,7 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="500.0" style="-fx-background-color: #F27B7A;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Text fx:id="incomingInviteTxt" layoutX="81.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ahmed Wants To Play With You?">
+      <Text fx:id="incomingInviteTxt" layoutX="160.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wants To Play With You?">
          <font>
             <Font name="Bauhaus 93" size="24.0" />
          </font>
@@ -30,6 +30,11 @@
             <DropShadow />
          </effect>
       </Button>
+      <Text fx:id="userNameValueTxt" layoutX="81.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ahmed">
+         <font>
+            <Font name="Bauhaus 93" size="24.0" />
+         </font>
+      </Text>
    </children>
    <effect>
       <Glow />
