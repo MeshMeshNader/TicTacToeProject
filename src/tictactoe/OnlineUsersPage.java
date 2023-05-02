@@ -1,5 +1,8 @@
 package tictactoe;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -12,9 +15,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class OnlineUsersPage extends BorderPane {
 
+    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final ImageView userImg;
@@ -43,8 +48,9 @@ public class OnlineUsersPage extends BorderPane {
     protected final Button inviteBtn;
     protected final DropShadow dropShadow6;
 
-    public OnlineUsersPage() {
+    public OnlineUsersPage(Stage stage) {
 
+        parentStage = stage;
         anchorPane = new AnchorPane();
         glow = new Glow();
         userImg = new ImageView();
@@ -238,6 +244,65 @@ public class OnlineUsersPage extends BorderPane {
         anchorPane0.getChildren().add(usersTable);
         anchorPane0.getChildren().add(viewBtn);
         anchorPane0.getChildren().add(inviteBtn);
+
+        myProfileBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                MyProfilePage root = new MyProfilePage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+
+        onlineUsersBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                OnlineUsersPage root = new OnlineUsersPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+
+        viewBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                //Don't Forget To Handel Ex (cannot press withour select user)
+                //Show PopUpViewProfile
+            }
+        });
+
+        inviteBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                //Don't Forget To Handel Ex (cannot press withour select user)
+                //Show PopUpInviteUser
+            }
+        });
+
+        homeBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                WelcomPage root = new WelcomPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+
+        backBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                OnlineLoginPage root = new OnlineLoginPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+
+            }
+        });
 
     }
 }

@@ -1,5 +1,8 @@
 package tictactoe;
 
+import javafx.scene.Scene;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -13,9 +16,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class AdminServerPage extends BorderPane {
 
+    
+    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button logOutBtn;
@@ -45,8 +51,10 @@ public class AdminServerPage extends BorderPane {
     protected final NumberAxis usersNumbersAxis;
     protected final BarChart usersBarChart;
 
-    public AdminServerPage() {
+    public AdminServerPage(Stage stage) {
 
+        
+        parentStage = stage;
         anchorPane = new AnchorPane();
         glow = new Glow();
         logOutBtn = new Button();
@@ -243,6 +251,18 @@ public class AdminServerPage extends BorderPane {
         anchorPane0.getChildren().add(usersInfoTable);
         anchorPane0.getChildren().add(onlineUsersPlayingInfoTxt);
         anchorPane0.getChildren().add(usersBarChart);
+        
+        
+        logOutBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                AdminLoginPage root = new AdminLoginPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+        
 
     }
 }

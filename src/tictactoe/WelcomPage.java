@@ -1,5 +1,8 @@
 package tictactoe;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.DropShadow;
@@ -10,9 +13,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class WelcomPage extends BorderPane {
 
+    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final ImageView offlineImg;
@@ -36,8 +41,9 @@ public class WelcomPage extends BorderPane {
     protected final DropShadow dropShadow2;
     protected final Text soundTxt;
 
-    public WelcomPage() {
+    public WelcomPage(Stage stage) {
 
+        parentStage = stage;
         anchorPane = new AnchorPane();
         glow = new Glow();
         offlineImg = new ImageView();
@@ -218,5 +224,51 @@ public class WelcomPage extends BorderPane {
         anchorPane0.getChildren().add(soundToggleBtn);
         anchorPane0.getChildren().add(soundTxt);
 
+        
+        offlineBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                OfflineMenuPage root = new OfflineMenuPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+        
+        
+        onlineBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                OnlineLoginPage root = new OnlineLoginPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+        
+        
+        aboutBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                
+                //OPen PopUp
+                
+            }
+        });
+        
+        
+        
+        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+               
+                //Toggle Btn Function
+                
+            }
+        });
+        
+        
+        
+        
+        
+        
     }
 }

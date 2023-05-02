@@ -1,5 +1,8 @@
 package tictactoe;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -15,9 +18,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class OnlineSignupPage extends BorderPane {
 
+    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button registerBtn;
@@ -48,8 +53,9 @@ public class OnlineSignupPage extends BorderPane {
     protected final DropShadow dropShadow2;
     protected final Text soundTxt;
 
-    public OnlineSignupPage() {
+    public OnlineSignupPage(Stage stage) {
 
+        parentStage = stage;
         anchorPane = new AnchorPane();
         glow = new Glow();
         registerBtn = new Button();
@@ -265,6 +271,36 @@ public class OnlineSignupPage extends BorderPane {
         nickNameTxtField0.getChildren().add(image);
         nickNameTxtField0.getChildren().add(soundBtn);
         nickNameTxtField0.getChildren().add(soundTxt);
+
+        registerBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                OnlineUsersPage root = new OnlineUsersPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+
+        backBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                OnlineLoginPage root = new OnlineLoginPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+
+        homeBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                WelcomPage root = new WelcomPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
 
     }
 }

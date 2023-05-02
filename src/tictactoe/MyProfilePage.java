@@ -1,5 +1,8 @@
 package tictactoe;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.DropShadow;
@@ -10,9 +13,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class MyProfilePage extends BorderPane {
 
+    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final ImageView userImg;
@@ -46,8 +51,9 @@ public class MyProfilePage extends BorderPane {
     protected final Text scoreTxt;
     protected final Text scoreValueTxt;
 
-    public MyProfilePage() {
+    public MyProfilePage(Stage stage) {
 
+        parentStage = stage;
         anchorPane = new AnchorPane();
         glow = new Glow();
         userImg = new ImageView();
@@ -311,6 +317,50 @@ public class MyProfilePage extends BorderPane {
         anchorPane0.getChildren().add(noOfLossesValueTxt);
         anchorPane0.getChildren().add(scoreTxt);
         anchorPane0.getChildren().add(scoreValueTxt);
+        
+        
+        
+        myProfileBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                MyProfilePage root = new MyProfilePage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+
+        onlineUsersBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                OnlineUsersPage root = new OnlineUsersPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+
+
+        homeBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                WelcomPage root = new WelcomPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+
+        backBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                OnlineLoginPage root = new OnlineLoginPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+
+            }
+        });
 
     }
 }

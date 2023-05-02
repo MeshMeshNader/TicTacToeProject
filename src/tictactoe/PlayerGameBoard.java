@@ -1,7 +1,10 @@
 package tictactoe;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -18,9 +21,11 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class PlayerGameBoard extends BorderPane {
 
+    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button backBtn;
@@ -81,8 +86,10 @@ public class PlayerGameBoard extends BorderPane {
     protected final Button cellPos2_0;
     protected final ColorAdjust colorAdjust7;
 
-    public PlayerGameBoard() {
+    public PlayerGameBoard(Stage stage) {
 
+        
+        parentStage = stage;
         anchorPane = new AnchorPane();
         glow = new Glow();
         backBtn = new Button();
@@ -549,6 +556,35 @@ public class PlayerGameBoard extends BorderPane {
         xoGridBane.getChildren().add(cellPos0_1);
         xoGridBane.getChildren().add(cellPos2_0);
         anchorPane0.getChildren().add(xoGridBane);
+        
+        
+        backBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                OfflineMenuPage root = new OfflineMenuPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+
+        rematchBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                // Rematch The Game
+            }
+        });
+
+        homeBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                WelcomPage root = new WelcomPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
 
     }
 }

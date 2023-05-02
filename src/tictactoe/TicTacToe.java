@@ -19,12 +19,13 @@ public class TicTacToe extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        //Parent root = new WelcomePage();
+        Parent root = new WelcomPage(stage);
         
-        //Scene scene = new Scene(root);
+        Scene scene = new Scene(root);
         
-        //stage.setScene(scene);
-        //stage.show();
+        stage.setScene(scene);
+        stage.setTitle("Tic Tac Toe Game");
+        stage.show();
     }
 
     /**

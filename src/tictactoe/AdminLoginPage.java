@@ -1,5 +1,8 @@
 package tictactoe;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
@@ -8,9 +11,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class AdminLoginPage extends BorderPane {
 
+    
+    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Text ticTacToeServerTxt;
     protected final Glow glow;
@@ -21,8 +27,9 @@ public class AdminLoginPage extends BorderPane {
     protected final Button serverLoginBtn;
     protected final DropShadow dropShadow;
 
-    public AdminLoginPage() {
+    public AdminLoginPage(Stage stage) {
 
+        parentStage = stage;
         anchorPane = new AnchorPane();
         ticTacToeServerTxt = new Text();
         glow = new Glow();
@@ -101,5 +108,15 @@ public class AdminLoginPage extends BorderPane {
         anchorPane.getChildren().add(passwardValueTxtField);
         anchorPane.getChildren().add(serverLoginBtn);
 
+        
+        serverLoginBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                AdminServerPage root = new AdminServerPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+        
     }
 }

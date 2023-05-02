@@ -1,5 +1,8 @@
 package tictactoe;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -12,9 +15,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class ComputerLevelPage extends BorderPane {
 
+    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final AnchorPane anchorPane0;
     protected final Glow glow;
@@ -44,8 +49,9 @@ public class ComputerLevelPage extends BorderPane {
     protected final DropShadow dropShadow4;
     protected final Glow glow0;
 
-    public ComputerLevelPage() {
+    public ComputerLevelPage(Stage stage) {
 
+        parentStage = stage;
         anchorPane = new AnchorPane();
         anchorPane0 = new AnchorPane();
         glow = new Glow();
@@ -268,6 +274,58 @@ public class ComputerLevelPage extends BorderPane {
         anchorPane1.getChildren().add(oRadioBtn);
         anchorPane1.getChildren().add(backBtn);
         anchorPane1.getChildren().add(startBtn);
+
+        easyBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                //Make it Easy
+            }
+        });
+
+        easyBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                //Make it Easy
+            }
+        });
+
+        mediumBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                //Make it Medium
+            }
+        });
+
+        hardBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                //Make it Hard
+            }
+        });
+
+        backBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                OfflineMenuPage root = new OfflineMenuPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+
+        startBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                ComputerGameBoard root = new ComputerGameBoard(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
 
     }
 }

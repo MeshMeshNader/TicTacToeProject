@@ -1,5 +1,8 @@
 package tictactoe;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.DropShadow;
@@ -10,9 +13,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
-public abstract class OfflineMenuPage extends BorderPane {
-
+public class OfflineMenuPage extends BorderPane {
+    
+    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button vsComputerBtn;
@@ -39,8 +44,9 @@ public abstract class OfflineMenuPage extends BorderPane {
     protected final DropShadow dropShadow3;
     protected final Text soundTxt;
 
-    public OfflineMenuPage() {
+    public OfflineMenuPage(Stage stage) {
 
+        parentStage = stage;
         anchorPane = new AnchorPane();
         glow = new Glow();
         vsComputerBtn = new Button();
@@ -223,6 +229,48 @@ public abstract class OfflineMenuPage extends BorderPane {
         anchorPane0.getChildren().add(xoImg);
         anchorPane0.getChildren().add(soundToggleBtn);
         anchorPane0.getChildren().add(soundTxt);
+        
+        
+        
+        vsComputerBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ComputerLevelPage root = new ComputerLevelPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+        
+        vsPersonBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                PlayerGameBoard root = new PlayerGameBoard(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+        
+        
+        recordsBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                RecordsLoadPage root = new RecordsLoadPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+        
+        
+        backBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                WelcomPage root = new WelcomPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+            }
+        });
+        
+        
 
     }
 }
