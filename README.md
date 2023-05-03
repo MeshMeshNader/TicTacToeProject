@@ -1,7 +1,7 @@
 # TicTacToeProject
 
 <h2>  Tic Tac Toe  Game</h2> 
-The Tic-Tac-Toe game will be implemented using the JavaFX framework, which provides a modern and robust GUI toolkit. The game will be designed to run on both offline and online modes. In offline mode, the user can play against the computer or against another player on the same machine, and in online mode, the user can play against another player over the network. The game will be implemented using the client/server architecture.<br>
+The Tic-Tac-Toe game will be implemented using the JavaFX framework, which provides a modern and robust GUI toolkit. The game will be designed to run on both offline and online modes. In offline mode, the user can play against the computer or against another player on the same machine, and in online mode, the user can play against another player over the network. The game will be implemented using the client/server architecture.
 
 <h2>  Contributers: </h2> 
 1-Mohamed Mohamed Nader Mohamed<br>
