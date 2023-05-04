@@ -1,5 +1,6 @@
 package tictactoe;
 
+import tictactoe.hardAi.HardWithAi;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -302,7 +303,9 @@ public class ComputerLevelPage extends BorderPane {
         hardBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+ HardWithAi root = new HardWithAi(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
                 //Make it Hard
             }
         });
