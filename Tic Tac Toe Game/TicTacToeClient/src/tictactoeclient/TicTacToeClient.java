@@ -15,7 +15,7 @@ import javafx.stage.Stage;
  *
  * @author meshm
  */
-public class TicTacToe extends Application {
+public class TicTacToeClient extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
