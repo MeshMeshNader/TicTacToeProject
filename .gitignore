@@ -1,11 +1,9 @@
 #Client Program auto generated Files when Running
-
 /TicTacToeGame/TicTacToeClient/nbproject/private/
-/TicTacToeGame/TicTacToeServer/nbproject/private/
+/TicTacToeGame/TicTacToeClient/build/
 /TicTacToeGame/TicTacToeClient/dist/
 
 #Server Program auto generated Files when Running
-
-/TicTacToeGame/TicTacToeClient/build/
-/TicTacToeGame/TicTacToeServer/dist/
+/TicTacToeGame/TicTacToeServer/nbproject/private/
 /TicTacToeGame/TicTacToeServer/build/
+/TicTacToeGame/TicTacToeServer/dist/
