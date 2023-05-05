@@ -797,6 +797,7 @@ public class ComputerGameBoard extends BorderPane {
     }
 
     int checkWinner(Button[][] board) {
+        
         //  2: X winner
         // -2: O winner
         //  0: Tie
