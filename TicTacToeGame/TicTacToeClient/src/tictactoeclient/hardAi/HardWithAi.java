@@ -1,5 +1,8 @@
-package tictactoe.hardAi;
+package tictactoeclient;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -7,12 +10,14 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.effect.Reflection;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -22,11 +27,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import tictactoe.ComputerLevelPage;
-import tictactoe.WelcomPage;
+import tictactoeclient.ComputerLevelPage.Difficulty;
+import tictactoeclient.ComputerLevelPage.xOrO;
 
-public class HardWithAi extends BorderPane {
+public class ComputerGameBoard extends BorderPane {
 
+    GameManager gameManager;
+    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final AnchorPane anchorPane0;
     protected final Glow glow;
@@ -36,7 +43,7 @@ public class HardWithAi extends BorderPane {
     protected final DropShadow dropShadow0;
     protected final Button homeBtn;
     protected final DropShadow dropShadow1;
-    protected final Text computerTxt;
+    protected final Text playerTwoUserNameLTxt;
     protected final Text toeLTxt;
     protected final Text aLTxt;
     protected final Text ticLTxt;
@@ -47,7 +54,7 @@ public class HardWithAi extends BorderPane {
     protected final AnchorPane anchorPane1;
     protected final AnchorPane anchorPane2;
     protected final Glow glow0;
-    protected final Text computerRTxt;
+    protected final Text playerTwoUserNameRTxt;
     protected final Text toeRTxt;
     protected final Text aRTxt;
     protected final Text ticRTxt;
@@ -83,16 +90,15 @@ public class HardWithAi extends BorderPane {
     protected final ColorAdjust colorAdjust6;
     protected final Button cellPos2_0;
     protected final ColorAdjust colorAdjust7;
-    Stage parentStage;
-    Button[][] cellsBtn;
+    private ArrayList<Button> buttonsBoard;
     private int playerTurn = 0;
     private boolean gameIsOver = false;
     String playerOneNameValue;
     boolean hasWinner = false;
 
-    public HardWithAi(Stage parentStage) {
+    public ComputerGameBoard(Stage stage, String playerName, Difficulty mode, xOrO xoState) {
 
-        this.parentStage = parentStage;
+        parentStage = stage;
         anchorPane = new AnchorPane();
         anchorPane0 = new AnchorPane();
         glow = new Glow();
@@ -102,7 +108,7 @@ public class HardWithAi extends BorderPane {
         dropShadow0 = new DropShadow();
         homeBtn = new Button();
         dropShadow1 = new DropShadow();
-        computerTxt = new Text();
+        playerTwoUserNameLTxt = new Text();
         toeLTxt = new Text();
         aLTxt = new Text();
         ticLTxt = new Text();
@@ -113,7 +119,7 @@ public class HardWithAi extends BorderPane {
         anchorPane1 = new AnchorPane();
         anchorPane2 = new AnchorPane();
         glow0 = new Glow();
-        computerRTxt = new Text();
+        playerTwoUserNameRTxt = new Text();
         toeRTxt = new Text();
         aRTxt = new Text();
         ticRTxt = new Text();
@@ -140,6 +146,7 @@ public class HardWithAi extends BorderPane {
         cellPos1_2 = new Button();
         colorAdjust2 = new ColorAdjust();
         cellPos0_2 = new Button();
+
         colorAdjust3 = new ColorAdjust();
         cellPos1_0 = new Button();
         colorAdjust4 = new ColorAdjust();
@@ -200,12 +207,12 @@ public class HardWithAi extends BorderPane {
 
         homeBtn.setEffect(dropShadow1);
 
-        computerTxt.setLayoutX(199.0);
-        computerTxt.setLayoutY(517.0);
-        computerTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
-        computerTxt.setStrokeWidth(0.0);
-        computerTxt.setText("Computer");
-        computerTxt.setFont(new Font("Bauhaus 93", 31.0));
+        playerTwoUserNameLTxt.setLayoutX(199.0);
+        playerTwoUserNameLTxt.setLayoutY(517.0);
+        playerTwoUserNameLTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
+        playerTwoUserNameLTxt.setStrokeWidth(0.0);
+        playerTwoUserNameLTxt.setText("Computer");
+        playerTwoUserNameLTxt.setFont(new Font("Bauhaus 93", 31.0));
 
         toeLTxt.setFill(javafx.scene.paint.Color.valueOf("#f8e3e3"));
         toeLTxt.setLayoutX(169.0);
@@ -235,7 +242,7 @@ public class HardWithAi extends BorderPane {
         playerOneUserNameLValueTxt.setLayoutY(411.0);
         playerOneUserNameLValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         playerOneUserNameLValueTxt.setStrokeWidth(0.0);
-        playerOneUserNameLValueTxt.setText("player");
+        playerOneUserNameLValueTxt.setText(playerName);
         playerOneUserNameLValueTxt.setFont(new Font("Bauhaus 93", 31.0));
 
         recordToggleBtn.setLayoutX(174.0);
@@ -265,12 +272,12 @@ public class HardWithAi extends BorderPane {
 
         anchorPane2.setEffect(glow0);
 
-        computerRTxt.setLayoutX(351.0);
-        computerRTxt.setLayoutY(157.0);
-        computerRTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
-        computerRTxt.setStrokeWidth(0.0);
-        computerRTxt.setText("Computer");
-        computerRTxt.setFont(new Font("Bauhaus 93", 24.0));
+        playerTwoUserNameRTxt.setLayoutX(351.0);
+        playerTwoUserNameRTxt.setLayoutY(157.0);
+        playerTwoUserNameRTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
+        playerTwoUserNameRTxt.setStrokeWidth(0.0);
+        playerTwoUserNameRTxt.setText("Computer");
+        playerTwoUserNameRTxt.setFont(new Font("Bauhaus 93", 24.0));
 
         toeRTxt.setFill(javafx.scene.paint.Color.valueOf("#f27b7a"));
         toeRTxt.setLayoutX(312.0);
@@ -317,7 +324,7 @@ public class HardWithAi extends BorderPane {
         playerOneUserNameRValueTxt.setLayoutY(81.0);
         playerOneUserNameRValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         playerOneUserNameRValueTxt.setStrokeWidth(0.0);
-        playerOneUserNameRValueTxt.setText("player");
+        playerOneUserNameRValueTxt.setText(playerName);
         playerOneUserNameRValueTxt.setFont(new Font("Bauhaus 93", 24.0));
 
         xoGridPane.setHgap(10.0);
@@ -377,9 +384,12 @@ public class HardWithAi extends BorderPane {
         GridPane.setColumnIndex(cellPos2_1, 1);
         GridPane.setRowIndex(cellPos2_1, 2);
         cellPos2_1.setMnemonicParsing(false);
-        cellPos2_1.setPrefHeight(107.0);
+        cellPos2_1.setPrefHeight(121.0);
         cellPos2_1.setPrefWidth(118.0);
+        cellPos2_1.setMaxWidth(cellPos2_1.getPrefWidth());
         cellPos2_1.setFont(new Font("Bauhaus 93", 64.0));
+        cellPos2_1.setCursor(Cursor.HAND);
+        cellPos2_1.setId("7");
 
         colorAdjust.setBrightness(-0.02);
         colorAdjust.setContrast(0.19);
@@ -387,6 +397,12 @@ public class HardWithAi extends BorderPane {
         colorAdjust.setSaturation(0.25);
         cellPos2_1.setEffect(colorAdjust);
         cellPos2_1.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
+        cellPos0_1.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
+        cellPos1_1.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
+        cellPos1_0.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
+        cellPos1_2.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
+        cellPos0_0.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
+        cellPos0_2.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
 
         GridPane.setColumnIndex(cellPos1_1, 1);
         GridPane.setRowIndex(cellPos1_1, 1);
@@ -394,6 +410,8 @@ public class HardWithAi extends BorderPane {
         cellPos1_1.setPrefHeight(121.0);
         cellPos1_1.setPrefWidth(118.0);
         cellPos1_1.setFont(new Font("Bauhaus 93", 64.0));
+        cellPos1_1.setCursor(Cursor.HAND);
+        cellPos1_1.setId("4");
 
         colorAdjust0.setBrightness(-0.02);
         colorAdjust0.setContrast(0.19);
@@ -411,6 +429,8 @@ public class HardWithAi extends BorderPane {
         colorAdjust1.setHue(-0.04);
         colorAdjust1.setSaturation(0.25);
         cellPos0_0.setEffect(colorAdjust1);
+        cellPos0_0.setCursor(Cursor.HAND);
+        cellPos0_0.setId("0");
 
         GridPane.setColumnIndex(cellPos1_2, 2);
         GridPane.setRowIndex(cellPos1_2, 1);
@@ -418,6 +438,8 @@ public class HardWithAi extends BorderPane {
         cellPos1_2.setPrefHeight(121.0);
         cellPos1_2.setPrefWidth(118.0);
         cellPos1_2.setFont(new Font("Bauhaus 93", 64.0));
+        cellPos1_2.setCursor(Cursor.HAND);
+        cellPos1_2.setId("5");
 
         colorAdjust2.setBrightness(-0.02);
         colorAdjust2.setContrast(0.19);
@@ -438,12 +460,15 @@ public class HardWithAi extends BorderPane {
         colorAdjust3.setSaturation(0.25);
         cellPos0_2.setEffect(colorAdjust3);
         cellPos0_2.setCursor(Cursor.HAND);
+        cellPos0_2.setId("2");
 
         GridPane.setRowIndex(cellPos1_0, 1);
         cellPos1_0.setMnemonicParsing(false);
         cellPos1_0.setPrefHeight(121.0);
         cellPos1_0.setPrefWidth(118.0);
         cellPos1_0.setFont(new Font("Bauhaus 93", 64.0));
+        cellPos1_0.setCursor(Cursor.HAND);
+        cellPos1_0.setId("3");
 
         colorAdjust4.setBrightness(-0.02);
         colorAdjust4.setContrast(0.19);
@@ -454,9 +479,11 @@ public class HardWithAi extends BorderPane {
         GridPane.setColumnIndex(cellPos2_2, 2);
         GridPane.setRowIndex(cellPos2_2, 2);
         cellPos2_2.setMnemonicParsing(false);
-        cellPos2_2.setPrefHeight(107.0);
+        cellPos2_2.setPrefHeight(121.0);
         cellPos2_2.setPrefWidth(118.0);
         cellPos2_2.setFont(new Font("Bauhaus 93", 64.0));
+        cellPos2_2.setCursor(Cursor.HAND);
+        cellPos2_2.setId("8");
 
         colorAdjust5.setBrightness(-0.02);
         colorAdjust5.setContrast(0.19);
@@ -470,7 +497,8 @@ public class HardWithAi extends BorderPane {
         cellPos0_1.setPrefHeight(121.0);
         cellPos0_1.setPrefWidth(118.0);
         cellPos0_1.setFont(new Font("Bauhaus 93", 64.0));
-
+        cellPos0_1.setCursor(Cursor.HAND);
+        cellPos0_1.setId("1");
         colorAdjust6.setBrightness(-0.02);
         colorAdjust6.setContrast(0.19);
         colorAdjust6.setHue(-0.04);
@@ -479,9 +507,11 @@ public class HardWithAi extends BorderPane {
 
         GridPane.setRowIndex(cellPos2_0, 2);
         cellPos2_0.setMnemonicParsing(false);
-        cellPos2_0.setPrefHeight(107.0);
+        cellPos2_0.setPrefHeight(121.0);
         cellPos2_0.setPrefWidth(118.0);
         cellPos2_0.setFont(new Font("Bauhaus 93", 64.0));
+        cellPos2_0.setCursor(Cursor.HAND);
+        cellPos2_0.setId("6");
 
         colorAdjust7.setBrightness(-0.02);
         colorAdjust7.setContrast(0.19);
@@ -495,7 +525,7 @@ public class HardWithAi extends BorderPane {
         anchorPane0.getChildren().add(backBtn);
         anchorPane0.getChildren().add(rematchBtn);
         anchorPane0.getChildren().add(homeBtn);
-        anchorPane0.getChildren().add(computerTxt);
+        anchorPane0.getChildren().add(playerTwoUserNameLTxt);
         anchorPane0.getChildren().add(toeLTxt);
         anchorPane0.getChildren().add(aLTxt);
         anchorPane0.getChildren().add(ticLTxt);
@@ -503,7 +533,7 @@ public class HardWithAi extends BorderPane {
         anchorPane0.getChildren().add(recordToggleBtn);
         anchorPane0.getChildren().add(recordTxt);
         anchorPane.getChildren().add(anchorPane0);
-        anchorPane2.getChildren().add(computerRTxt);
+        anchorPane2.getChildren().add(playerTwoUserNameRTxt);
         anchorPane2.getChildren().add(toeRTxt);
         anchorPane2.getChildren().add(aRTxt);
         anchorPane2.getChildren().add(ticRTxt);
@@ -528,19 +558,15 @@ public class HardWithAi extends BorderPane {
         xoGridPane.getChildren().add(cellPos2_0);
         anchorPane2.getChildren().add(xoGridPane);
         anchorPane1.getChildren().add(anchorPane2);
-        cellPos2_1.setEffect(colorAdjust);
 
-        cellsBtn = new Button[][]{
-            {cellPos0_0, cellPos0_1, cellPos0_2},
-            {cellPos1_0, cellPos1_1, cellPos1_2},
-            {cellPos2_0, cellPos2_1, cellPos2_2}
-        };
-        for (Button[] row : cellsBtn) {
-            for (Button cell : row) {
-                setupButton(cell, cellsBtn);
-                cell.setFocusTraversable(false);
+        buttonsBoard = new ArrayList<>(Arrays.asList(cellPos0_0, cellPos0_1, cellPos0_2, cellPos1_0, cellPos1_1, cellPos1_2, cellPos2_0, cellPos2_1, cellPos2_2));
+
+        Button[][] buttonsBoardArray = new Button[3][3];
+        int index = 0;
+        for (int row = 0; row < buttonsBoardArray.length; row++) {
+            for (int col = 0; col < buttonsBoardArray[row].length; col++) {
+                buttonsBoardArray[row][col] = buttonsBoard.get(index++);
             }
-
         }
 
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -556,8 +582,8 @@ public class HardWithAi extends BorderPane {
         rematchBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // resetAllCells();
-                // Rematch The Game
+
+                newGame();
             }
         });
 
@@ -570,95 +596,196 @@ public class HardWithAi extends BorderPane {
                 parentStage.setScene(scene);
             }
         });
-    }
 
-    private void setupButton(Button cellBtn, Button[][] cells) {
-        cellBtn.setOnMouseClicked(mouseEvent -> {
-            if (!hasWinner) {
-                if (cellBtn.getText().equals("")) {
-                    cellBtn.setText("X");
-                    cellBtn.setDisable(true);
+        if (mode == Difficulty.EASY) {
+            buttonsBoard.forEach((button) -> {
+                setButtonsMouseListener(button, xoState);
+            });
 
-                    int result = minimax(cells, 500, false, true);
-                    System.out.println("result= " + result);
-
-                    hasWinner = checkWinner(cells) != 1;
-
-                    //game will contain when checkWinner return 1 as still
-                } else {
-                    System.out.println("The field is not empty \n");
-                }
+            gameManager = new GameManager(playerName);
+            newGame();
+            if (xoState == xOrO.O) {
+                generateCompStep(xoState);
             }
-            int result = checkWinner(cells);
-            if (result == 0) {
-                System.out.println("Tie \n");
-            } else {
-                if (result == 2) {
-                    System.out.println("X is winner");
-                } else if (result == -2) {
-
-                    System.out.println("O is winner");
-                } else {
-                    System.out.println("No winner yet");
-                }
+        } else if (mode == Difficulty.MEDIUM) {
+            
+            
+        } else if (mode == Difficulty.HARD) {
+            if (xoState == xOrO.O) {
+                gameManager = new GameManager(playerName);
+                newGame();
+                generateCompStep(xoState);
             }
-        });
-    }
+            for (Button[] row : buttonsBoardArray) {
+                for (Button cell : row) {
+                    setupButton(cell, buttonsBoardArray);
+                    cell.setFocusTraversable(false);
+                }
 
-    private void highlightWinningLine(int index) {
-        switch (index) {
-            case 0:
-                highlightCell(cellPos0_0, cellPos0_1, cellPos0_2);
-                break;
-            case 1:
-                highlightCell(cellPos1_0, cellPos1_1, cellPos1_2);
-                break;
-            case 2:
-                highlightCell(cellPos2_0, cellPos2_1, cellPos2_2);
-                break;
-            case 3:
-                highlightCell(cellPos0_0, cellPos1_0, cellPos2_0);
-                break;
-            case 4:
-                highlightCell(cellPos0_1, cellPos1_1, cellPos2_1);
-                break;
-            case 5:
-                highlightCell(cellPos0_2, cellPos1_2, cellPos2_2);
-                break;
-            case 6:
-                highlightCell(cellPos0_0, cellPos1_1, cellPos2_2);
-                break;
-            case 7:
-                highlightCell(cellPos2_0, cellPos1_1, cellPos0_2);
-                break;
-            default:
-                break;
+            }
         }
     }
 
-    private void highlightCell(Button cellBtnOne, Button cellBtnTwo, Button cellBtnThree) {
-        cellBtnOne.setStyle("-fx-background-color: gray");
-        cellBtnTwo.setStyle("-fx-background-color: gray");
-        cellBtnThree.setStyle("-fx-background-color: gray");
+    public void generateCompStep(xOrO state) {
+        int compStep = new Random().nextInt(9);
+
+        while (gameManager.getCell(compStep).state != CellState.EMPTY) {
+            compStep = new Random().nextInt(9);
+        }
+        if (state == xOrO.X) {
+            gameManager.setCell(compStep, CellState.OSTATE);
+            buttonsBoard.get(compStep).setText(gameManager.getCell(compStep).state.getCellState());
+            buttonsBoard.get(compStep).setMouseTransparent(true);
+            if (gameManager.isPlayerOWon()) {
+                setTextDisabled();
+            }
+        } else {
+            gameManager.setCell(compStep, CellState.XSTATE);
+            buttonsBoard.get(compStep).setText(gameManager.getCell(compStep).state.getCellState());
+            buttonsBoard.get(compStep).setMouseTransparent(true);
+            if (gameManager.isPlayerXWon()) {
+                setTextDisabled();
+            }
+        }
+
     }
 
-    private void unhighlightCell(Button cellBtn) {
-        cellBtn.setStyle("");
-        cellBtn.setText("");
-        cellBtn.setDisable(false);
+    public void setButtonsMouseListener(Button button, xOrO state) {
+
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+                int index = Integer.parseInt(button.getId());
+                if (state == xOrO.O) {
+                    gameManager.setCell(index, CellState.OSTATE);
+                    button.setText(gameManager.getCell(index).state.getCellState());
+                    button.setMouseTransparent(true);
+                    if (gameManager.isDraw()) {
+                        showGameState("The Ended With Draw!!");
+                    } else if (gameManager.isPlayerOWon()) {
+                        showGameState("You Won!!");
+                        setTextDisabled();
+                    } else {
+
+                        generateCompStep(xOrO.O);
+                    }
+
+                } else {
+                    gameManager.setCell(index, CellState.XSTATE);
+                    button.setText(gameManager.getCell(index).state.getCellState());
+                    button.setMouseTransparent(true);
+                    if (gameManager.isPlayerXWon()) {
+                        showGameState("You Won!!");
+                        setTextDisabled();
+                    } else if (gameManager.isDraw()) {
+                        showGameState("The Ended With Draw!!");
+                    } else {
+                        generateCompStep(xOrO.X);
+                    }
+                }
+
+            }
+
+        });
+
     }
 
-    private void resetAllCells() {
-        unhighlightCell(cellPos0_0);
-        unhighlightCell(cellPos0_1);
-        unhighlightCell(cellPos0_2);
-        unhighlightCell(cellPos1_0);
-        unhighlightCell(cellPos1_1);
-        unhighlightCell(cellPos1_2);
-        unhighlightCell(cellPos2_0);
-        unhighlightCell(cellPos2_1);
-        unhighlightCell(cellPos2_2);
-        gameIsOver = false;
+    private void setTextEnabled() {
+        for (int i = 0; i < buttonsBoard.size(); i++) {
+            buttonsBoard.get(i).setDisable(false);
+        }
+    }
+
+    private void setTextDisabled() {
+        for (int i = 0; i < buttonsBoard.size(); i++) {
+            buttonsBoard.get(i).setDisable(true);
+        }
+    }
+
+    void newGame() {
+
+        gameManager.newGame();
+
+        //for()
+        //button.setText(gameManager.getCell(index).state.getCellState());
+        for (int i = 0; i < buttonsBoard.size(); i++) {
+            buttonsBoard.get(i).setText("");
+            setTextEnabled();
+            buttonsBoard.get(i).setMouseTransparent(false);
+        }
+    }
+
+    void showGameState(String txt) {
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Game Status");
+        alert.setHeaderText(null);
+        alert.setContentText(txt);
+        alert.showAndWait();
+
+    }
+
+    //////////////////////////////////////////// End of morad Code And Start of Nasr Code //////////////////////
+    public int minimax(Button board[][], int depth, boolean isMaximizing, boolean fristTime) {
+        int result = checkWinner(board);
+        if (depth == 0 || result != 1) {//depth ==0 out
+            return result;
+        }
+        if (isMaximizing) {
+            //in maxmizing
+            int finalScore = -10;
+            int finalI = 0, finalJ = 0;
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (board[i][j].getText().equals("")) {
+                        board[i][j].setText("X");
+                        int score = minimax(board, depth - 1, false, false);
+                        board[i][j].setText("");
+                        if (score > finalScore) {
+                            finalScore = score;
+                            finalI = i;
+                            finalJ = j;
+                        }
+                        if (fristTime) {
+                            //System.out.println("score= " + score + ":: i= " + i + " :: j= " + j);
+                        }
+                    }
+                }
+            }
+            if (fristTime) {
+                board[finalI][finalJ].setText("O");
+                board[finalI][finalJ].setDisable(true);
+            }
+            return finalScore;
+        } else {
+            //in minimizing
+            int finalScore = 10;
+            int finalI = 0, finalJ = 0;
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (board[i][j].getText().equals("")) {
+                        board[i][j].setText("O");
+                        int score = minimax(board, depth - 1, true, false);
+                        board[i][j].setText("");
+                        if (score < finalScore) {
+                            finalScore = score;
+                            finalI = i;
+                            finalJ = j;
+                        }
+                        if (fristTime) {
+                            //System.out.println("score= " + score + ":: i= " + i + " :: j= " + j);
+                        }
+                    }
+                }
+
+            }
+            if (fristTime) {
+                board[finalI][finalJ].setText("O");
+                board[finalI][finalJ].setDisable(true);
+            }
+            return finalScore;
+        }
     }
 
     boolean haveTheSameValueAndNotEmpty(String x, String y, String z) {
@@ -716,64 +843,37 @@ public class HardWithAi extends BorderPane {
         return 1;
     }
 
-    public int minimax(Button[][] board, int depth, boolean isMaximizing, boolean fristTime) {
-        int result = checkWinner(board);
-        if (depth == 0 || result != 1) {//depth ==0 out
-            return result;
-        }
-        if (isMaximizing) {
-            //in maxmizing
-            int finalScore = -10;
-            int finalI = 0, finalJ = 0;
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if (board[i][j].getText().equals("")) {
-                        board[i][j].setText("X");
-                        int score = minimax(board, depth - 1, false, false);
-                        board[i][j].setText("");
-                        if (score > finalScore) {
-                            finalScore = score;
-                            finalI = i;
-                            finalJ = j;
-                        }
-                        if (fristTime) {
-                            //System.out.println("score= " + score + ":: i= " + i + " :: j= " + j);
-                        }
-                    }
-                }
-            }
-            if (fristTime) {
-                board[finalI][finalJ].setText("O");
-                board[finalI][finalJ].setDisable(true);
-            }
-            return finalScore;
-        } else {
-            //in minimizing
-            int finalScore = 10;
-            int finalI = 0, finalJ = 0;
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if (board[i][j].getText().equals("")) {
-                        board[i][j].setText("O");
-                        int score = minimax(board, depth - 1, true, false);
-                        board[i][j].setText("");
-                        if (score < finalScore) {
-                            finalScore = score;
-                            finalI = i;
-                            finalJ = j;
-                        }
-                        if (fristTime) {
-                            System.out.println("score= " + score + ":: i= " + i + " :: j= " + j);
-                        }
-                    }
-                }
+    private void setupButton(Button cellBtn, Button[][] cells) {
+        cellBtn.setOnMouseClicked(mouseEvent -> {
+            if (!hasWinner) {
+                if (cellBtn.getText().equals("")) {
+                    cellBtn.setText("X");
+                    cellBtn.setDisable(true);
 
+                    int result = minimax(cells, 100, false, true);
+                    //System.out.println("result= " + result);
+
+                    hasWinner = checkWinner(cells) != 1;
+
+                    //game will contain when checkWinner return 1 as still
+                } else {
+                    System.out.println("The field is not empty \n");
+                }
             }
-            if (fristTime) {
-                board[finalI][finalJ].setText("O");
-                board[finalI][finalJ].setDisable(true);
+            int result = checkWinner(cells);
+            if (result == 0) {
+                // System.out.println("Tie \n");
+            } else {
+                if (result == 2) {
+                    //  System.out.println("X is winner");
+                } else if (result == -2) {
+
+                    // System.out.println("O is winner");
+                } else {
+                    // System.out.println("No winner yet");
+                }
             }
-            return finalScore;
-        }
+        });
     }
+
 }

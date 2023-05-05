@@ -1,6 +1,5 @@
 package tictactoeclient;
 
-import tictactoe.hardAi.HardWithAi;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -318,11 +317,14 @@ public class ComputerLevelPage extends BorderPane {
         hardBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+<<<<<<< HEAD
 
  HardWithAi root = new HardWithAi(parentStage);
                 Scene scene = new Scene(root);
                 parentStage.setScene(scene);
 
+=======
+>>>>>>> 4cd62cb4a5487eabbb94a2107da2a73772faa5c1
                 setSelectedButton(hardBtn);
                 mode = Difficulty.HARD;
             }

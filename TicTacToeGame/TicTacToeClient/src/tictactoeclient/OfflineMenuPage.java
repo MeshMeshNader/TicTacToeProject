@@ -244,7 +244,7 @@ public class OfflineMenuPage extends BorderPane {
         vsPersonBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                PopUpInsertTowPlayerName root = new PopUpInsertTowPlayerName(parentStage);
+                PlayerGameBoard root = new PlayerGameBoard(parentStage);
                 Scene scene = new Scene(root);
                 parentStage.setScene(scene);
             }

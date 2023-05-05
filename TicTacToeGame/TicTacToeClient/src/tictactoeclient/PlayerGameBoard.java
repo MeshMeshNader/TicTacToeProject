@@ -1,13 +1,12 @@
 package tictactoeclient;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.ColorAdjust;
@@ -26,6 +25,7 @@ import javafx.stage.Stage;
 
 public class PlayerGameBoard extends BorderPane {
 
+    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button backBtn;
@@ -44,9 +44,9 @@ public class PlayerGameBoard extends BorderPane {
     protected final Text recordTxt;
     protected final Text playerOneUserNameLLValueTxt;
     protected final Text playerTwoUserNameLLValueTxt;
-    protected final Text ScoreTxt;
-    protected final Text playerOneScore;
-    protected final Text playerTwoScore;
+    protected final Text enterYourNameTxt;
+    protected final TextField playerOneUserNameLLValueTxtField;
+    protected final TextField playerTwoUserNameLLValueTxtField;
     protected final AnchorPane anchorPane0;
     protected final Glow glow0;
     protected final Text playerTwoUserNameRValueTxt;
@@ -86,19 +86,10 @@ public class PlayerGameBoard extends BorderPane {
     protected final Button cellPos2_0;
     protected final ColorAdjust colorAdjust7;
 
-    Stage parentStage;
-    private int playerTurn = 0;
-    private boolean gameIsOver = false;
-    ArrayList<Button> cells;
-    String playerOneNameValue;
-    String playerTwoNameValue;
-    int playerOneScoreValue=0;
-    int playerTwoScoreValue=0;
-    public PlayerGameBoard(Stage stage, String playerOneNameValue, String playerTwoNameValue) {
+    public PlayerGameBoard(Stage stage) {
 
+        
         parentStage = stage;
-        this.playerOneNameValue = playerOneNameValue;
-        this.playerTwoNameValue = playerTwoNameValue;
         anchorPane = new AnchorPane();
         glow = new Glow();
         backBtn = new Button();
@@ -117,9 +108,9 @@ public class PlayerGameBoard extends BorderPane {
         recordTxt = new Text();
         playerOneUserNameLLValueTxt = new Text();
         playerTwoUserNameLLValueTxt = new Text();
-        ScoreTxt = new Text();
-        playerOneScore = new Text();
-        playerTwoScore = new Text();
+        enterYourNameTxt = new Text();
+        playerOneUserNameLLValueTxtField = new TextField();
+        playerTwoUserNameLLValueTxtField = new TextField();
         anchorPane0 = new AnchorPane();
         glow0 = new Glow();
         playerTwoUserNameRValueTxt = new Text();
@@ -210,7 +201,7 @@ public class PlayerGameBoard extends BorderPane {
         playerTwoUserNameLValueTxt.setLayoutY(514.0);
         playerTwoUserNameLValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         playerTwoUserNameLValueTxt.setStrokeWidth(0.0);
-        playerTwoUserNameLValueTxt.setText(playerTwoNameValue);
+        playerTwoUserNameLValueTxt.setText("player");
         playerTwoUserNameLValueTxt.setFont(new Font("Bauhaus 93", 36.0));
 
         toeLTxt.setFill(javafx.scene.paint.Color.valueOf("#f8e3e3"));
@@ -237,12 +228,11 @@ public class PlayerGameBoard extends BorderPane {
         ticLTxt.setText("T     I     C");
         ticLTxt.setFont(new Font("Bauhaus 93", 36.0));
 
-        playerOneUserNameLValueTxt.setLayoutX(26.0);
-        playerOneUserNameLValueTxt.setLayoutY(412.0);
+        playerOneUserNameLValueTxt.setLayoutX(30.0);
+        playerOneUserNameLValueTxt.setLayoutY(411.0);
         playerOneUserNameLValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         playerOneUserNameLValueTxt.setStrokeWidth(0.0);
-        playerOneUserNameLValueTxt.setText(playerOneNameValue);
-        playerOneUserNameLValueTxt.setWrappingWidth(136.21875);
+        playerOneUserNameLValueTxt.setText("player");
         playerOneUserNameLValueTxt.setFont(new Font("Bauhaus 93", 36.0));
 
         recordToggleBtn.setLayoutX(174.0);
@@ -266,36 +256,32 @@ public class PlayerGameBoard extends BorderPane {
         playerOneUserNameLLValueTxt.setLayoutY(210.0);
         playerOneUserNameLLValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         playerOneUserNameLLValueTxt.setStrokeWidth(0.0);
-        playerOneUserNameLLValueTxt.setText(playerOneNameValue+" (X) :");
+        playerOneUserNameLLValueTxt.setText("player 1 (X) :");
         playerOneUserNameLLValueTxt.setFont(new Font("Bauhaus 93", 24.0));
 
         playerTwoUserNameLLValueTxt.setLayoutX(31.0);
         playerTwoUserNameLLValueTxt.setLayoutY(280.0);
         playerTwoUserNameLLValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         playerTwoUserNameLLValueTxt.setStrokeWidth(0.0);
-        playerTwoUserNameLLValueTxt.setText(playerTwoNameValue+"(O) :");
+        playerTwoUserNameLLValueTxt.setText("player 2 (O) :");
         playerTwoUserNameLLValueTxt.setFont(new Font("Bauhaus 93", 24.0));
 
-        ScoreTxt.setLayoutX(31.0);
-        ScoreTxt.setLayoutY(149.0);
-        ScoreTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
-        ScoreTxt.setStrokeWidth(0.0);
-        ScoreTxt.setText("Score");
-        ScoreTxt.setFont(new Font("Bauhaus 93", 36.0));
+        enterYourNameTxt.setLayoutX(31.0);
+        enterYourNameTxt.setLayoutY(149.0);
+        enterYourNameTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
+        enterYourNameTxt.setStrokeWidth(0.0);
+        enterYourNameTxt.setText("Enter Your Names :");
+        enterYourNameTxt.setFont(new Font("Bauhaus 93", 30.0));
 
-        playerOneScore.setLayoutX(184.0);
-        playerOneScore.setLayoutY(215.0);
-        playerOneScore.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
-        playerOneScore.setStrokeWidth(0.0);
-        playerOneScore.setText("0");
-        playerOneScore.setFont(new Font("Bauhaus 93", 36.0));
+        playerOneUserNameLLValueTxtField.setLayoutX(178.0);
+        playerOneUserNameLLValueTxtField.setLayoutY(190.0);
+        playerOneUserNameLLValueTxtField.setPrefHeight(27.0);
+        playerOneUserNameLLValueTxtField.setPrefWidth(162.0);
 
-        playerTwoScore.setLayoutX(184.0);
-        playerTwoScore.setLayoutY(283.0);
-        playerTwoScore.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
-        playerTwoScore.setStrokeWidth(0.0);
-        playerTwoScore.setText("0");
-        playerTwoScore.setFont(new Font("Bauhaus 93", 36.0));
+        playerTwoUserNameLLValueTxtField.setLayoutX(180.0);
+        playerTwoUserNameLLValueTxtField.setLayoutY(259.0);
+        playerTwoUserNameLLValueTxtField.setPrefHeight(27.0);
+        playerTwoUserNameLLValueTxtField.setPrefWidth(161.0);
         setLeft(anchorPane);
 
         BorderPane.setAlignment(anchorPane0, javafx.geometry.Pos.CENTER);
@@ -308,7 +294,7 @@ public class PlayerGameBoard extends BorderPane {
         playerTwoUserNameRValueTxt.setLayoutY(157.0);
         playerTwoUserNameRValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         playerTwoUserNameRValueTxt.setStrokeWidth(0.0);
-        playerTwoUserNameRValueTxt.setText(playerTwoNameValue);
+        playerTwoUserNameRValueTxt.setText("player");
         playerTwoUserNameRValueTxt.setFont(new Font("Bauhaus 93", 24.0));
 
         toeRTxt.setFill(javafx.scene.paint.Color.valueOf("#f27b7a"));
@@ -356,7 +342,7 @@ public class PlayerGameBoard extends BorderPane {
         playerOneUserNameRValueTxt.setLayoutY(81.0);
         playerOneUserNameRValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         playerOneUserNameRValueTxt.setStrokeWidth(0.0);
-        playerOneUserNameRValueTxt.setText(playerOneNameValue);
+        playerOneUserNameRValueTxt.setText("player");
         playerOneUserNameRValueTxt.setFont(new Font("Bauhaus 93", 24.0));
 
         xoGridBane.setHgap(10.0);
@@ -543,9 +529,9 @@ public class PlayerGameBoard extends BorderPane {
         anchorPane.getChildren().add(recordTxt);
         anchorPane.getChildren().add(playerOneUserNameLLValueTxt);
         anchorPane.getChildren().add(playerTwoUserNameLLValueTxt);
-        anchorPane.getChildren().add(ScoreTxt);
-        anchorPane.getChildren().add(playerOneScore);
-        anchorPane.getChildren().add(playerTwoScore);
+        anchorPane.getChildren().add(enterYourNameTxt);
+        anchorPane.getChildren().add(playerOneUserNameLLValueTxtField);
+        anchorPane.getChildren().add(playerTwoUserNameLLValueTxtField);
         anchorPane0.getChildren().add(playerTwoUserNameRValueTxt);
         anchorPane0.getChildren().add(toeRTxt);
         anchorPane0.getChildren().add(aRTxt);
@@ -570,11 +556,8 @@ public class PlayerGameBoard extends BorderPane {
         xoGridBane.getChildren().add(cellPos0_1);
         xoGridBane.getChildren().add(cellPos2_0);
         anchorPane0.getChildren().add(xoGridBane);
-        cells = new ArrayList<>(Arrays.asList(cellPos0_0, cellPos0_1, cellPos0_2, cellPos1_0, cellPos1_1, cellPos1_2, cellPos2_0, cellPos2_1, cellPos2_2));
-        cells.forEach(cellBtn -> {
-            setupButton(cellBtn);
-            cellBtn.setFocusTraversable(false);
-        });
+        
+        
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -588,7 +571,7 @@ public class PlayerGameBoard extends BorderPane {
         rematchBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                resetAllCells();
+
                 // Rematch The Game
             }
         });
@@ -602,129 +585,6 @@ public class PlayerGameBoard extends BorderPane {
                 parentStage.setScene(scene);
             }
         });
-    }
 
-    private void setupButton(Button cellBtn) {
-        cellBtn.setOnMouseClicked(mouseEvent -> {
-            if (gameIsOver) {
-                return;
-            }
-            setPlayerSymbol(cellBtn);
-            cellBtn.setDisable(true);
-            int winningLineIndex = checkIfGameIsOver();
-            if (winningLineIndex != -1) {
-                highlightWinningLine(winningLineIndex);
-                if (playerTurn % 2 == 0) {
-                    playerTwoScore.setText(String.valueOf(++playerTwoScoreValue));
-                } else {
-                    playerOneScore.setText(String.valueOf(++playerOneScoreValue));
-                }
-                gameIsOver = true;
-            }
-        });
-    }
-
-    private void highlightWinningLine(int index) {
-        switch (index) {
-            case 0:
-                highlightCell(cellPos0_0, cellPos0_1, cellPos0_2);
-                break;
-            case 1:
-                highlightCell(cellPos1_0, cellPos1_1, cellPos1_2);
-                break;
-            case 2:
-                highlightCell(cellPos2_0, cellPos2_1, cellPos2_2);
-                break;
-            case 3:
-                highlightCell(cellPos0_0, cellPos1_0, cellPos2_0);
-                break;
-            case 4:
-                highlightCell(cellPos0_1, cellPos1_1, cellPos2_1);
-                break;
-            case 5:
-                highlightCell(cellPos0_2, cellPos1_2, cellPos2_2);
-                break;
-            case 6:
-                highlightCell(cellPos0_0, cellPos1_1, cellPos2_2);
-                break;
-            case 7:
-                highlightCell(cellPos2_0, cellPos1_1, cellPos0_2);
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void highlightCell(Button cellBtnOne, Button cellBtnTwo, Button cellBtnThree) {
-        cellBtnOne.setStyle("-fx-background-color: gray");
-        cellBtnTwo.setStyle("-fx-background-color: gray");
-        cellBtnThree.setStyle("-fx-background-color: gray");
-    }
-
-    private void unhighlightCell(Button cellBtn) {
-        cellBtn.setStyle("");
-        cellBtn.setText("");
-        cellBtn.setDisable(false);
-    }
-
-    private void resetAllCells() {
-        unhighlightCell(cellPos0_0);
-        unhighlightCell(cellPos0_1);
-        unhighlightCell(cellPos0_2);
-        unhighlightCell(cellPos1_0);
-        unhighlightCell(cellPos1_1);
-        unhighlightCell(cellPos1_2);
-        unhighlightCell(cellPos2_0);
-        unhighlightCell(cellPos2_1);
-        unhighlightCell(cellPos2_2);
-        gameIsOver = false;
-        playerTurn = 0;
-    }
-
-    private void setPlayerSymbol(Button cellBtn) {
-
-        if (playerTurn % 2 == 0) {
-            cellBtn.setText("X");
-            playerTurn = 1;
-        } else {
-            cellBtn.setText("O");
-            playerTurn = 0;
-        }
-
-    }
-
-    public int checkIfGameIsOver() {
-        int indexValue = -1;
-
-        for (int index = 0; index < 8; index++) {
-
-            String line = "";
-            if (index == 0) {
-                line = cellPos0_0.getText() + cellPos0_1.getText() + cellPos0_2.getText();
-            } else if (index == 1) {
-                line = cellPos1_0.getText() + cellPos1_1.getText() + cellPos1_2.getText();
-            } else if (index == 2) {
-                line = cellPos2_0.getText() + cellPos2_1.getText() + cellPos2_2.getText();
-            } else if (index == 3) {
-                line = cellPos0_0.getText() + cellPos1_0.getText() + cellPos2_0.getText();
-            } else if (index == 4) {
-                line = cellPos0_1.getText() + cellPos1_1.getText() + cellPos2_1.getText();
-            } else if (index == 5) {
-                line = cellPos0_2.getText() + cellPos1_2.getText() + cellPos2_2.getText();
-            } else if (index == 6) {
-                line = cellPos0_0.getText() + cellPos1_1.getText() + cellPos2_2.getText();
-            } else if (index == 7) {
-                line = cellPos2_0.getText() + cellPos1_1.getText() + cellPos0_2.getText();
-            }
-
-            if (line.equals("XXX")) {
-                // X wins
-                indexValue = index;
-            } else if (line.equals("OOO")) {
-                // O wins
-                indexValue = index;
-            }
-        }
-        return indexValue;
     }
 }
