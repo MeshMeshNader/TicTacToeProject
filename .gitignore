@@ -1,3 +1,7 @@
-/nbproject/private/
-/build/
-/dist/
+/Tic Tac Toe Game/TicTacToeClient/nbproject/private/
+/Tic Tac Toe Game/TicTacToeClient/build/
+/Tic Tac Toe Game/TicTacToeClient/dist/
+
+/Tic Tac Toe Game/TicTacToeServer/nbproject/private/
+/Tic Tac Toe Game/TicTacToeServer/build/
+/Tic Tac Toe Game/TicTacToeServer/dist/
