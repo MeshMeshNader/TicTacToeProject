@@ -3,6 +3,7 @@ package tictactoeserver;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
@@ -112,11 +113,30 @@ public class AdminLoginPage extends BorderPane {
         serverLoginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                AdminServerPage root = new AdminServerPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                if (isAdminValid()) {
+                    AdminServerPage root = new AdminServerPage(parentStage);
+                    Scene scene = new Scene(root);
+                    parentStage.setScene(scene);
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Alert");
+                    alert.setHeaderText(null);
+                    alert.setContentText("ops!! wrong user or password");
+                    alert.showAndWait();
+                }
             }
         });
-        
     }
+
+    boolean isAdminValid() {
+        boolean isValid = false;
+        boolean userNameValid = userNameValueTxtField.getText().equals("root");
+        boolean passwordValid = passwardValueTxtField.getText().equals("root");
+        if (userNameValid && passwordValid) {
+            isValid = true;
+        }
+        return isValid;
+    }
+        
+    
 }

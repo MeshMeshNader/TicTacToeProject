@@ -22,6 +22,7 @@ public class AdminServerPage extends BorderPane {
 
     
     Stage parentStage;
+    ServerHandeller server;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button logOutBtn;
@@ -252,7 +253,18 @@ public class AdminServerPage extends BorderPane {
         anchorPane0.getChildren().add(onlineUsersPlayingInfoTxt);
         anchorPane0.getChildren().add(usersBarChart);
         
-        
+       connectionToggleBtn.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue) {
+                connectionToggleBtn.setText("On");
+                connectionToggleBtn.setStyle("-fx-background-color: green;");
+               server= new ServerHandeller();
+                
+            } else {
+                server.closeConnection();
+                connectionToggleBtn.setText("Off");
+                connectionToggleBtn.setStyle("");
+            }
+        });
         logOutBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

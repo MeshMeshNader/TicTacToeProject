@@ -20,10 +20,9 @@ public class TicTacToeClient extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         
-        Parent root = new WelcomPage(stage);
+       Parent root = new WelcomPage(stage);
         
-        //Parent root = new AdminLoginPage(stage);
-        
+       
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
@@ -36,6 +35,7 @@ public class TicTacToeClient extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+         //new CleintTemp();
     }
     
 }

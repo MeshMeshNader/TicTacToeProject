@@ -258,7 +258,8 @@ public class OnlineLoginPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                OnlineUsersPage root = new OnlineUsersPage(parentStage);
+               OnlineUsersPage root = new OnlineUsersPage(parentStage);
+                
                 Scene scene = new Scene(root);
                 parentStage.setScene(scene);
             }

@@ -1,5 +1,13 @@
 package tictactoeclient;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -41,6 +49,10 @@ public class WelcomPage extends BorderPane {
     protected final ToggleButton soundToggleBtn;
     protected final DropShadow dropShadow2;
     protected final Text soundTxt;
+
+    Socket s;
+    DataInputStream dis;
+    PrintStream ps;
 
     public WelcomPage(Stage stage) {
 
@@ -225,7 +237,6 @@ public class WelcomPage extends BorderPane {
         anchorPane0.getChildren().add(soundToggleBtn);
         anchorPane0.getChildren().add(soundTxt);
 
-        
         offlineBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -234,48 +245,52 @@ public class WelcomPage extends BorderPane {
                 parentStage.setScene(scene);
             }
         });
-        
-        
+
         onlineBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                OnlineLoginPage root = new OnlineLoginPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                /*OnlineLoginPage root = new OnlineLoginPage(parentStage);
+                    Scene scene = new Scene(root);
+                    parentStage.setScene(scene);*/
+                temp p = new temp();
+                try {
+                    s = new Socket("192.168.1.11", 5005);
+                    // ps = new PrintStream(s.getOutputStream());
+                    OutputStream os = s.getOutputStream();
+                    ObjectOutputStream oos = new ObjectOutputStream(os);
+                    dis = new DataInputStream(s.getInputStream());
+                    oos.writeObject(p);
+                    String str = dis.readLine();
+                    System.out.println(str);
+                } catch (IOException ex) {
+                    Logger.getLogger(WelcomPage.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
             }
         });
-        
-        
+
         aboutBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                
+
                 //OPen PopUp
                 Stage popUpStage = new Stage();
                 Scene popUpPage = new Scene(new PopUpAbout(popUpStage));
-                
+
                 popUpStage.setScene(popUpPage);
                 popUpStage.initModality(Modality.APPLICATION_MODAL);
                 popUpStage.showAndWait();
-                
+
             }
         });
-        
-        
-        
+
         soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-               
+
                 //Toggle Btn Function
-                
             }
         });
-        
-        
-        
-        
-        
-        
+
     }
 }
