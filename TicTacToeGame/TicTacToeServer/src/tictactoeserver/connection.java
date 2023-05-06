@@ -16,6 +16,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import java.io.InputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import tictactoeclient.UserDTO;
 import tictactoeclient.temp;
 
 /**
@@ -23,23 +26,30 @@ import tictactoeclient.temp;
  * @author dell
  */
 public class connection {
-    InputStream dis;
-    PrintStream ps;
-     Socket socket;
-     String ip;
-     int portNum;
-     ObjectInputStream ois;
+    InputStream inputstream;
+    OutputStream outputstream;
+    ObjectInputStream objectinputstream;
+    ObjectOutputStream objectoutputstream;
+    Socket socket;
+    String ip;
+    int portNum;
+    UserDTO obj;
      
      
-     public connection(Socket cs){
+     
+     public connection(Socket socket){
         try {
-            socket = cs;
+            this.socket = socket;
             ip = socket.getInetAddress().getHostAddress();
             portNum = socket.getPort();
-            dis = cs.getInputStream();
-            ois = new ObjectInputStream(dis);
-            ps = new PrintStream(cs.getOutputStream());
+            inputstream = socket.getInputStream();
+            outputstream = socket.getOutputStream();
+            objectinputstream = new ObjectInputStream(inputstream);
             readMessage();
+            /*int isValid = loginValidation();
+            objectoutputstream = new ObjectOutputStream(outputstream);
+            objectoutputstream.write(isValid);*/
+            
         } catch (IOException ex) {
             Logger.getLogger(connection.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -55,12 +65,10 @@ public class connection {
 
                 while (!socket.isClosed() && socket.isConnected()) {
                     try {
-                       
-                       temp obj =(temp) ois.readObject();
-                       System.out.println(obj.getIP());
-                        System.err.println(obj.getName());
-                        System.err.println(obj.n);
-                        
+
+                        obj = (UserDTO) objectinputstream.readObject();
+                        System.out.println(obj.getUserName());
+                        System.out.println(obj.getPassword());
 
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
@@ -71,6 +79,21 @@ public class connection {
 
             }
         }.start();
+
+    }
+    public void sendMessage(){
+    
+    
+    }
+    
+    public int loginValidation() {
+        int result;
+        if (obj.getUserName() == "root" && obj.getPassword() == "root") {
+            result = 1;
+        } else {
+            result = 0;
+        }
+        return result;
 
     }
 }

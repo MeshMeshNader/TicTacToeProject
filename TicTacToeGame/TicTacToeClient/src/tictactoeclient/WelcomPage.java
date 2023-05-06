@@ -2,6 +2,8 @@ package tictactoeclient;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -50,9 +52,11 @@ public class WelcomPage extends BorderPane {
     protected final DropShadow dropShadow2;
     protected final Text soundTxt;
 
-    Socket s;
-    DataInputStream dis;
-    PrintStream ps;
+    InputStream inputstream;
+    OutputStream outpuststream;
+    ObjectInputStream objectinputstream;
+    ObjectOutputStream objectoutputstream;
+    Socket socket;
 
     public WelcomPage(Stage stage) {
 
@@ -249,23 +253,24 @@ public class WelcomPage extends BorderPane {
         onlineBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                /*OnlineLoginPage root = new OnlineLoginPage(parentStage);
-                    Scene scene = new Scene(root);
-                    parentStage.setScene(scene);*/
-                temp p = new temp();
-                try {
-                    s = new Socket("192.168.1.11", 5005);
-                    // ps = new PrintStream(s.getOutputStream());
-                    OutputStream os = s.getOutputStream();
-                    ObjectOutputStream oos = new ObjectOutputStream(os);
-                    dis = new DataInputStream(s.getInputStream());
-                    oos.writeObject(p);
-                    String str = dis.readLine();
-                    System.out.println(str);
-                } catch (IOException ex) {
-                    Logger.getLogger(WelcomPage.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                OnlineLoginPage root = new OnlineLoginPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+              /*  new Thread() {
+                    @Override
+                    public void run() {
+                        temp p = new temp();
+                        try {
+                            socket = new Socket("192.168.1.11", 5005);
+                            outpuststream = socket.getOutputStream();
+                            objectoutputstream = new ObjectOutputStream(outpuststream);
+                            objectoutputstream.writeObject(p);
+                        } catch (IOException ex) {
+                            Logger.getLogger(WelcomPage.class.getName()).log(Level.SEVERE, null, ex);
+                        }
 
+                    }
+                }.start();*/
             }
         });
 

@@ -1,8 +1,17 @@
 package tictactoeclient;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
@@ -48,6 +57,12 @@ public class OnlineLoginPage extends BorderPane {
     protected final ToggleButton soundToggleBtn;
     protected final DropShadow dropShadow2;
     protected final Text soundTxt;
+    
+    InputStream inputstream;
+    OutputStream outpuststream;
+    ObjectInputStream objectinputstream;
+    ObjectOutputStream objectoutputstream;
+    Socket socket;
 
     public OnlineLoginPage(Stage stage) {
 
@@ -257,21 +272,68 @@ public class OnlineLoginPage extends BorderPane {
         loginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                //inputstream = socket.getInputStream();
 
-               OnlineUsersPage root = new OnlineUsersPage(parentStage);
-                
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                try {
+                   
+                    socket = new Socket("192.168.1.11", 5005);
+                    outpuststream = socket.getOutputStream();
+                    objectoutputstream = new ObjectOutputStream(outpuststream);
+                    
+                    /*inputstream = socket.getInputStream();
+                    objectinputstream = new ObjectInputStream(inputstream);
+                    
+                   int i = objectinputstream.readInt();
+                   
+                   if (i==1){
+                       OnlineUsersPage root = new OnlineUsersPage(parentStage);
+                       Scene scene = new Scene(root);
+                       parentStage.setScene(scene);
+                   }
+                   else 
+                   {
+                       Alert alert = new Alert(Alert.AlertType.ERROR);
+                       alert.setContentText("user name and password are not correct");
+                       alert.showAndWait();
+                       
+                   }*/
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            UserDTO userobj = new UserDTO();
+                            userobj.setUserName(usernameTxtField.getText());
+                            userobj.setPassword(passwordTxtField.getText());
+                            try {
+                                
+                                objectoutputstream.writeObject(userobj);
+                            } catch (IOException ex) {
+                                Logger.getLogger(WelcomPage.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            
+                        }
+                    }.start();
+                } catch (IOException ex) {
+                    Logger.getLogger(OnlineLoginPage.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
+        
+            
         });
 
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
-                WelcomPage root = new WelcomPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                try {
+                    WelcomPage root = new WelcomPage(parentStage);
+                    Scene scene = new Scene(root);
+                    parentStage.setScene(scene);
+                    socket.close();
+                    outpuststream.close();
+                    objectinputstream.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(OnlineLoginPage.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
