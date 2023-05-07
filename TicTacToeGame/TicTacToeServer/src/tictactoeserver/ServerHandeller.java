@@ -23,7 +23,7 @@ public class ServerHandeller {
     ServerSocket serverSocket;
     Socket socket;
 
-    static Vector<connection> ClinetsNum = new Vector<connection>();
+    static Vector<ServerConnection> ClinetsNum = new Vector<ServerConnection>();
 
     public ServerHandeller() {
         try {
@@ -42,10 +42,10 @@ public class ServerHandeller {
                 while (!serverSocket.isClosed()) {
 
                     try {
-                        System.out.println("anu thiidhhd");
+                        System.out.println("hello server ");
                         socket = serverSocket.accept();
                         System.out.println("Client connected from " + socket.getInetAddress());
-                        ClinetsNum.add(new connection(socket));
+                        ClinetsNum.add(new ServerConnection(socket));
                         System.out.println("server number of clients " + ClinetsNum.size());
 
                         //System.out.println("Accept new Client is running.......");

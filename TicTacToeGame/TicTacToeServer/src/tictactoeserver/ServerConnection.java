@@ -6,6 +6,7 @@
 package tictactoeserver;
 
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.PrintStream;
@@ -18,6 +19,7 @@ import java.util.logging.Logger;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import tictactoeclient.PopUpIP;
 import tictactoeclient.UserDTO;
 import tictactoeclient.temp;
 
@@ -25,7 +27,8 @@ import tictactoeclient.temp;
  *
  * @author dell
  */
-public class connection {
+public class ServerConnection {
+
     InputStream inputstream;
     OutputStream outputstream;
     ObjectInputStream objectinputstream;
@@ -33,11 +36,9 @@ public class connection {
     Socket socket;
     String ip;
     int portNum;
-    UserDTO obj;
-     
-     
-     
-     public connection(Socket socket){
+  UserDTO obj;
+
+    public ServerConnection(Socket socket) {
         try {
             this.socket = socket;
             ip = socket.getInetAddress().getHostAddress();
@@ -45,19 +46,19 @@ public class connection {
             inputstream = socket.getInputStream();
             outputstream = socket.getOutputStream();
             objectinputstream = new ObjectInputStream(inputstream);
-            readMessage();
-            /*int isValid = loginValidation();
             objectoutputstream = new ObjectOutputStream(outputstream);
-            objectoutputstream.write(isValid);*/
-            
+
+            readMessage();
+
         } catch (IOException ex) {
-            Logger.getLogger(connection.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
-     }
-     
-     public String getIp() {
+    }
+
+    public String getIp() {
         return ip;
     }
+
     public void readMessage() {
         new Thread() {
             @Override
@@ -70,29 +71,34 @@ public class connection {
                         System.out.println(obj.getUserName());
                         System.out.println(obj.getPassword());
 
+                        Integer isValid = loginValidation();
+                        objectoutputstream.writeObject(isValid);
+
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException ex) {
-                        Logger.getLogger(connection.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                        //Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println("end of file ");
+                    } 
                 }
+
 
             }
         }.start();
 
     }
-    public void sendMessage(){
-    
-    
+
+    public void sendMessage() {
+
     }
-    
-    public int loginValidation() {
-        int result;
-        if (obj.getUserName() == "root" && obj.getPassword() == "root") {
+
+    public Integer loginValidation() {
+        int result = 1;
+        /*if (obj.getUserName() == "root" && obj.getPassword() == "root") {
             result = 1;
         } else {
             result = 0;
-        }
+        }*/
         return result;
 
     }

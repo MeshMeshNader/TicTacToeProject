@@ -74,7 +74,7 @@ public class AdminLoginPage extends BorderPane {
         passwardTxt.setLayoutY(364.0);
         passwardTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         passwardTxt.setStrokeWidth(0.0);
-        passwardTxt.setText("PaSSward");
+        passwardTxt.setText("PaSSword");
         passwardTxt.setFont(new Font("Bauhaus 93", 40.0));
 
         userNameValueTxtField.setLayoutX(354.0);

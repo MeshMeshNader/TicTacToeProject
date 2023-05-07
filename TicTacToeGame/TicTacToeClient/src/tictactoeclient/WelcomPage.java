@@ -253,24 +253,13 @@ public class WelcomPage extends BorderPane {
         onlineBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                OnlineLoginPage root = new OnlineLoginPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
-              /*  new Thread() {
-                    @Override
-                    public void run() {
-                        temp p = new temp();
-                        try {
-                            socket = new Socket("192.168.1.11", 5005);
-                            outpuststream = socket.getOutputStream();
-                            objectoutputstream = new ObjectOutputStream(outpuststream);
-                            objectoutputstream.writeObject(p);
-                        } catch (IOException ex) {
-                            Logger.getLogger(WelcomPage.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                 Stage popUpStage = new Stage();
+                Scene popUpPage = new Scene(new PopUpIP(parentStage,popUpStage));
 
-                    }
-                }.start();*/
+                popUpStage.setScene(popUpPage);
+                popUpStage.initModality(Modality.APPLICATION_MODAL);
+                popUpStage.showAndWait();
+              
             }
         });
 

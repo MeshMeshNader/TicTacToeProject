@@ -13,6 +13,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -63,6 +64,9 @@ public class OnlineLoginPage extends BorderPane {
     ObjectInputStream objectinputstream;
     ObjectOutputStream objectoutputstream;
     Socket socket;
+    ClientConnection clientconnection;
+    UserDTO user ;
+    
 
     public OnlineLoginPage(Stage stage) {
 
@@ -272,52 +276,37 @@ public class OnlineLoginPage extends BorderPane {
         loginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //inputstream = socket.getInputStream();
+                new Thread() {
+                    public void run() {
+                        UserDTO user = new UserDTO();
 
-                try {
-                   
-                    socket = new Socket("192.168.1.11", 5005);
-                    outpuststream = socket.getOutputStream();
-                    objectoutputstream = new ObjectOutputStream(outpuststream);
-                    
-                    /*inputstream = socket.getInputStream();
-                    objectinputstream = new ObjectInputStream(inputstream);
-                    
-                   int i = objectinputstream.readInt();
-                   
-                   if (i==1){
-                       OnlineUsersPage root = new OnlineUsersPage(parentStage);
-                       Scene scene = new Scene(root);
-                       parentStage.setScene(scene);
-                   }
-                   else 
-                   {
-                       Alert alert = new Alert(Alert.AlertType.ERROR);
-                       alert.setContentText("user name and password are not correct");
-                       alert.showAndWait();
-                       
-                   }*/
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            UserDTO userobj = new UserDTO();
-                            userobj.setUserName(usernameTxtField.getText());
-                            userobj.setPassword(passwordTxtField.getText());
-                            try {
-                                
-                                objectoutputstream.writeObject(userobj);
-                            } catch (IOException ex) {
-                                Logger.getLogger(WelcomPage.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                            
+                        user.setUserName(usernameTxtField.getText());
+                        user.setPassword(passwordTxtField.getText());
+                        clientconnection = new ClientConnection(user);
+                        clientconnection.writeMessage(user);
+                        if (clientconnection.readMessage() == 1){
+                            OnlineUsersPage root = new OnlineUsersPage(parentStage);
+                            Scene scene = new Scene(root);
+                            parentStage.setScene(scene);
+                            System.out.println("yeas");
+                        
                         }
-                    }.start();
-                } catch (IOException ex) {
-                    Logger.getLogger(OnlineLoginPage.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                        else {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setContentText("you shoud enter the correct name and password !");
+                            ButtonType okButton = new ButtonType("OK");
+                            alert.getButtonTypes().setAll(okButton);
+
+                            alert.showAndWait();
+                        
+                        }
+                    }
+                }.start();
+                 OnlineUsersPage root = new OnlineUsersPage(parentStage);
+                Scene scene = new Scene(root);
+                parentStage.setScene(scene);
+                
             }
-        
-            
         });
 
         backBtn.setOnAction(new EventHandler<ActionEvent>() {

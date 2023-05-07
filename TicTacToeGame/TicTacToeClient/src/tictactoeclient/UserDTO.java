@@ -21,7 +21,9 @@ public class UserDTO implements Serializable{
     private boolean isPlaying;
     Date createdAt;
 
-    public UserDTO(){}
+    public UserDTO(){
+      
+    }
     public UserDTO(int userID, String userName, String userNickName, String password, int score, int noOfWins, int noOfLosses, boolean isOnline, boolean isPlaying, Date createdAt) {
         this.userID = userID;
         this.userName = userName;
