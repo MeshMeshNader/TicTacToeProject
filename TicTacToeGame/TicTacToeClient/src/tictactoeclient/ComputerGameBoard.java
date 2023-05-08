@@ -24,16 +24,20 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import tictactoeclient.ComputerLevelPage.Difficulty;
 import tictactoeclient.ComputerLevelPage.xOrO;
 
-public class ComputerGameBoard extends BorderPane {
+public class ComputerGameBoard extends BorderPane 
+{
 
     GameManager gameManager;
     Stage parentStage;
@@ -311,7 +315,7 @@ public class ComputerGameBoard extends BorderPane {
         soundToggleBtn.setMnemonicParsing(false);
         soundToggleBtn.setPrefHeight(42.0);
         soundToggleBtn.setPrefWidth(130.0);
-        soundToggleBtn.setText("On / Off");
+        soundToggleBtn.setText("On");
 
         soundToggleBtn.setEffect(dropShadow3);
         soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
@@ -758,14 +762,39 @@ public class ComputerGameBoard extends BorderPane {
         }
     }
 
-    void showGameState(String txt) {
+    void showGameState(String txt) 
+    {
+        //this section concern to show a winning video when the player x won 
+        if (gameManager.isPlayerXWon()) 
+        {
+            // show the game over video
+            Stage dialogStage = new Stage();
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Game Status");
-        alert.setHeaderText(null);
-        alert.setContentText(txt);
-        alert.showAndWait();
+            File videoFile = new File("C:\\Users\\ahmed\\Desktop\\Helper\\winnerVideo.mp4");
+            Media media = new Media(videoFile.toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            MediaView mediaView = new MediaView(mediaPlayer);
+            StackPane root = new StackPane();
+            root.getChildren().add(mediaView);
+            
+            Scene scene = new Scene(root, 640, 360);
 
+            dialogStage.setTitle("Winner");
+            dialogStage.setScene(scene);
+            dialogStage.show();
+
+            mediaPlayer.play();
+            mediaPlayer.setOnEndOfMedia(() -> 
+            {
+                    mediaPlayer.stop();
+                    dialogStage.close();
+            });
+            dialogStage.setOnCloseRequest(event -> 
+            {
+                    mediaPlayer.stop();
+            });
+        }
     }
 
     //////////////////////////////////////////// End of morad Code And Start of Nasr Code //////////////////////
