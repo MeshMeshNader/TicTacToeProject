@@ -22,12 +22,10 @@ import javafx.stage.Stage;
 public class ComputerLevelPage extends BorderPane {
 
     static public enum Difficulty {
-
         EASY, MEDIUM, HARD;
     }
 
     static public enum xOrO {
-
         X, O;
     }
 

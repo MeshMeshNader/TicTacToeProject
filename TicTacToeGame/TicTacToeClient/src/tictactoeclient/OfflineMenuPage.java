@@ -1,8 +1,10 @@
 package tictactoeclient;
 
+import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.DropShadow;
@@ -14,9 +16,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tictactoeclient.RelatedRecored.OfflineGameDTO;
+import tictactoeclient.RelatedRecored.RecordOperation;
 
 public class OfflineMenuPage extends BorderPane {
-    
+
     Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
@@ -229,9 +233,7 @@ public class OfflineMenuPage extends BorderPane {
         anchorPane0.getChildren().add(xoImg);
         anchorPane0.getChildren().add(soundToggleBtn);
         anchorPane0.getChildren().add(soundTxt);
-        
-        
-        
+
         vsComputerBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -240,7 +242,7 @@ public class OfflineMenuPage extends BorderPane {
                 parentStage.setScene(scene);
             }
         });
-        
+
         vsPersonBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -249,18 +251,25 @@ public class OfflineMenuPage extends BorderPane {
                 parentStage.setScene(scene);
             }
         });
-        
-        
+
         recordsBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                RecordsLoadPage root = new RecordsLoadPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                ArrayList<OfflineGameDTO> listOfRecords = RecordOperation.readRecordFromFile("fullRecorde.json");
+                if (listOfRecords != null && !listOfRecords.isEmpty()) {
+                    RecordsLoadPage root = new RecordsLoadPage(parentStage, listOfRecords);
+                    Scene scene = new Scene(root);
+                    parentStage.setScene(scene);
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Tic-Tay-Toc");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Oops!! You don't have any records.");
+                    alert.showAndWait();
+                }
             }
         });
-        
-        
+
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -269,8 +278,6 @@ public class OfflineMenuPage extends BorderPane {
                 parentStage.setScene(scene);
             }
         });
-        
-        
 
     }
 }

@@ -1,7 +1,6 @@
 package tictactoeclient;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -23,6 +22,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tictactoeclient.RelatedRecored.OfflineGameDTO;
+import tictactoeclient.RelatedRecored.OfflineMoveDTO;
+import java.util.Date;
+import tictactoeclient.RelatedRecored.RecordOperation;
 
 public class PlayerGameBoard extends BorderPane {
 
@@ -85,6 +88,7 @@ public class PlayerGameBoard extends BorderPane {
     protected final ColorAdjust colorAdjust6;
     protected final Button cellPos2_0;
     protected final ColorAdjust colorAdjust7;
+    boolean isRecorded = false;
 
     Stage parentStage;
     private int playerTurn = 0;
@@ -92,8 +96,14 @@ public class PlayerGameBoard extends BorderPane {
     ArrayList<Button> cells;
     String playerOneNameValue;
     String playerTwoNameValue;
-    int playerOneScoreValue=0;
-    int playerTwoScoreValue=0;
+    int playerOneScoreValue = 0;
+    int playerTwoScoreValue = 0;
+    ArrayList<OfflineGameDTO> fullRecord = new ArrayList<>();
+    private ArrayList<OfflineMoveDTO> record = new ArrayList<>();
+    Button[][] cellsBtn;
+
+    int moveId = 0;
+
     public PlayerGameBoard(Stage stage, String playerOneNameValue, String playerTwoNameValue) {
 
         parentStage = stage;
@@ -250,7 +260,7 @@ public class PlayerGameBoard extends BorderPane {
         recordToggleBtn.setMnemonicParsing(false);
         recordToggleBtn.setPrefHeight(42.0);
         recordToggleBtn.setPrefWidth(130.0);
-        recordToggleBtn.setText("On / Off");
+        recordToggleBtn.setText("Off");
 
         recordToggleBtn.setEffect(dropShadow2);
         recordToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
@@ -266,14 +276,14 @@ public class PlayerGameBoard extends BorderPane {
         playerOneUserNameLLValueTxt.setLayoutY(210.0);
         playerOneUserNameLLValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         playerOneUserNameLLValueTxt.setStrokeWidth(0.0);
-        playerOneUserNameLLValueTxt.setText(playerOneNameValue+" (X) :");
+        playerOneUserNameLLValueTxt.setText(playerOneNameValue + " (X) :");
         playerOneUserNameLLValueTxt.setFont(new Font("Bauhaus 93", 24.0));
 
         playerTwoUserNameLLValueTxt.setLayoutX(31.0);
         playerTwoUserNameLLValueTxt.setLayoutY(280.0);
         playerTwoUserNameLLValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         playerTwoUserNameLLValueTxt.setStrokeWidth(0.0);
-        playerTwoUserNameLLValueTxt.setText(playerTwoNameValue+"(O) :");
+        playerTwoUserNameLLValueTxt.setText(playerTwoNameValue + "(O) :");
         playerTwoUserNameLLValueTxt.setFont(new Font("Bauhaus 93", 24.0));
 
         ScoreTxt.setLayoutX(31.0);
@@ -570,10 +580,32 @@ public class PlayerGameBoard extends BorderPane {
         xoGridBane.getChildren().add(cellPos0_1);
         xoGridBane.getChildren().add(cellPos2_0);
         anchorPane0.getChildren().add(xoGridBane);
-        cells = new ArrayList<>(Arrays.asList(cellPos0_0, cellPos0_1, cellPos0_2, cellPos1_0, cellPos1_1, cellPos1_2, cellPos2_0, cellPos2_1, cellPos2_2));
-        cells.forEach(cellBtn -> {
-            setupButton(cellBtn);
-            cellBtn.setFocusTraversable(false);
+
+        cellsBtn = new Button[][]{
+            {cellPos0_0, cellPos0_1, cellPos0_2},
+            {cellPos1_0, cellPos1_1, cellPos1_2},
+            {cellPos2_0, cellPos2_1, cellPos2_2}
+        };
+
+        for (int i = 0; i < cellsBtn.length; i++) {
+            for (int j = 0; j < cellsBtn[i].length; j++) {
+                Button cell = cellsBtn[i][j];
+                setupButton(cell, i, j);
+                cell.setFocusTraversable(false);
+            }
+        }
+
+        recordToggleBtn.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                recordToggleBtn.setText("On");
+                recordToggleBtn.setStyle("-fx-background-color: green;");
+                isRecorded = true;
+                //new obj           
+            } else {
+                recordToggleBtn.setText("Off");
+                recordToggleBtn.setStyle("");
+                isRecorded = false;
+            }
         });
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -589,6 +621,8 @@ public class PlayerGameBoard extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
                 resetAllCells();
+
+                moveId = 0;
                 // Rematch The Game
             }
         });
@@ -596,7 +630,6 @@ public class PlayerGameBoard extends BorderPane {
         homeBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
                 WelcomPage root = new WelcomPage(parentStage);
                 Scene scene = new Scene(root);
                 parentStage.setScene(scene);
@@ -604,14 +637,17 @@ public class PlayerGameBoard extends BorderPane {
         });
     }
 
-    private void setupButton(Button cellBtn) {
+    private void setupButton(Button cellBtn, int row, int col) {
         cellBtn.setOnMouseClicked(mouseEvent -> {
             if (gameIsOver) {
                 return;
             }
+
             setPlayerSymbol(cellBtn);
             cellBtn.setDisable(true);
+            record.add(new OfflineMoveDTO(moveId++, playerTurn, row, col));
             int winningLineIndex = checkIfGameIsOver();
+
             if (winningLineIndex != -1) {
                 highlightWinningLine(winningLineIndex);
                 if (playerTurn % 2 == 0) {
@@ -619,7 +655,30 @@ public class PlayerGameBoard extends BorderPane {
                 } else {
                     playerOneScore.setText(String.valueOf(++playerOneScoreValue));
                 }
+                
                 gameIsOver = true;
+                
+                fullRecord = RecordOperation.readRecordFromFile("fullRecorde.json"); 
+                Date date = new Date();
+                
+                if (fullRecord== null||fullRecord.isEmpty()) {
+                fullRecord.add(new OfflineGameDTO(playerTurn % 2, playerOneNameValue, playerTwoNameValue, date, new ArrayList<>(record)));
+                }else {
+                fullRecord.add(new OfflineGameDTO(playerTurn % 2, playerOneNameValue, playerTwoNameValue, date, new ArrayList<>(record)));
+                }
+ fullRecord.add(new OfflineGameDTO(playerTurn % 2, playerOneNameValue, playerTwoNameValue, date, new ArrayList<>(record)));
+
+                if (isRecorded) {
+                    RecordOperation.writeRecordToFile(fullRecord, "fullRecorde.json");
+                    System.out.println("Game record saved.");
+                }
+            } else if (record.size() == 9) { // game is a tie
+                gameIsOver = true;
+
+                if (isRecorded) {
+                    RecordOperation.writeRecordToFile(fullRecord, "fullRecorde.json");
+                    System.out.println("Game record saved.");
+                }
             }
         });
     }
@@ -627,28 +686,28 @@ public class PlayerGameBoard extends BorderPane {
     private void highlightWinningLine(int index) {
         switch (index) {
             case 0:
-                highlightCell(cellPos0_0, cellPos0_1, cellPos0_2);
+                highlightCell(cellsBtn[0][0], cellsBtn[0][1], cellsBtn[0][2]);
                 break;
             case 1:
-                highlightCell(cellPos1_0, cellPos1_1, cellPos1_2);
+                highlightCell(cellsBtn[1][0], cellsBtn[1][1], cellsBtn[1][2]);
                 break;
             case 2:
-                highlightCell(cellPos2_0, cellPos2_1, cellPos2_2);
+                highlightCell(cellsBtn[2][0], cellsBtn[2][1], cellsBtn[2][2]);
                 break;
             case 3:
-                highlightCell(cellPos0_0, cellPos1_0, cellPos2_0);
+                highlightCell(cellsBtn[0][0], cellsBtn[1][0], cellsBtn[2][0]);
                 break;
             case 4:
-                highlightCell(cellPos0_1, cellPos1_1, cellPos2_1);
+                highlightCell(cellsBtn[0][1], cellsBtn[1][1], cellsBtn[2][1]);
                 break;
             case 5:
-                highlightCell(cellPos0_2, cellPos1_2, cellPos2_2);
+                highlightCell(cellsBtn[0][2], cellsBtn[1][2], cellsBtn[2][2]);
                 break;
             case 6:
-                highlightCell(cellPos0_0, cellPos1_1, cellPos2_2);
+                highlightCell(cellsBtn[0][0], cellsBtn[1][1], cellsBtn[2][2]);
                 break;
             case 7:
-                highlightCell(cellPos2_0, cellPos1_1, cellPos0_2);
+                highlightCell(cellsBtn[2][0], cellsBtn[1][1], cellsBtn[0][2]);
                 break;
             default:
                 break;
@@ -668,15 +727,12 @@ public class PlayerGameBoard extends BorderPane {
     }
 
     private void resetAllCells() {
-        unhighlightCell(cellPos0_0);
-        unhighlightCell(cellPos0_1);
-        unhighlightCell(cellPos0_2);
-        unhighlightCell(cellPos1_0);
-        unhighlightCell(cellPos1_1);
-        unhighlightCell(cellPos1_2);
-        unhighlightCell(cellPos2_0);
-        unhighlightCell(cellPos2_1);
-        unhighlightCell(cellPos2_2);
+        for (Button[] row : cellsBtn) {
+            for (Button cell : row) {
+                unhighlightCell(cell);
+            }
+        }
+        record = new ArrayList<>();
         gameIsOver = false;
         playerTurn = 0;
     }
@@ -695,26 +751,26 @@ public class PlayerGameBoard extends BorderPane {
 
     public int checkIfGameIsOver() {
         int indexValue = -1;
-
+        indexValue = (record.size() == 9 ? -2 : -1);
         for (int index = 0; index < 8; index++) {
 
             String line = "";
             if (index == 0) {
-                line = cellPos0_0.getText() + cellPos0_1.getText() + cellPos0_2.getText();
+                line = cellsBtn[0][0].getText() + cellsBtn[0][1].getText() + cellsBtn[0][2].getText();
             } else if (index == 1) {
-                line = cellPos1_0.getText() + cellPos1_1.getText() + cellPos1_2.getText();
+                line = cellsBtn[1][0].getText() + cellsBtn[1][1].getText() + cellsBtn[1][2].getText();
             } else if (index == 2) {
-                line = cellPos2_0.getText() + cellPos2_1.getText() + cellPos2_2.getText();
+                line = cellsBtn[2][0].getText() + cellsBtn[2][1].getText() + cellsBtn[2][2].getText();
             } else if (index == 3) {
-                line = cellPos0_0.getText() + cellPos1_0.getText() + cellPos2_0.getText();
+                line = cellsBtn[0][0].getText() + cellsBtn[1][0].getText() + cellsBtn[2][0].getText();
             } else if (index == 4) {
-                line = cellPos0_1.getText() + cellPos1_1.getText() + cellPos2_1.getText();
+                line = cellsBtn[0][1].getText() + cellsBtn[1][1].getText() + cellsBtn[2][1].getText();
             } else if (index == 5) {
-                line = cellPos0_2.getText() + cellPos1_2.getText() + cellPos2_2.getText();
+                line = cellsBtn[0][2].getText() + cellsBtn[1][2].getText() + cellsBtn[2][2].getText();
             } else if (index == 6) {
-                line = cellPos0_0.getText() + cellPos1_1.getText() + cellPos2_2.getText();
+                line = cellsBtn[0][0].getText() + cellsBtn[1][1].getText() + cellsBtn[2][2].getText();
             } else if (index == 7) {
-                line = cellPos2_0.getText() + cellPos1_1.getText() + cellPos0_2.getText();
+                line = cellsBtn[2][0].getText() + cellsBtn[1][1].getText() + cellsBtn[0][2].getText();
             }
 
             if (line.equals("XXX")) {
@@ -725,6 +781,8 @@ public class PlayerGameBoard extends BorderPane {
                 indexValue = index;
             }
         }
+
         return indexValue;
     }
+
 }

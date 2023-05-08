@@ -1,5 +1,14 @@
 package tictactoeclient;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -48,6 +57,8 @@ public class OnlineLoginPage extends BorderPane {
     protected final ToggleButton soundToggleBtn;
     protected final DropShadow dropShadow2;
     protected final Text soundTxt;
+    ObjectOutputStream objectOutputStream = null;
+    Socket socket = null;
 
     public OnlineLoginPage(Stage stage) {
 
@@ -257,10 +268,28 @@ public class OnlineLoginPage extends BorderPane {
         loginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                /*try {
+                //usernameTxtField,passwordTxtField
+                socket = new Socket("0.0.0.0", 5005);
+                objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+                System.out.println("Connected to server...");
+                
+                // Person person = new Person(usernameTxtField.getText(), Integer.parseInt(passwordTxtField.getText()));
+                Person person2 = new Person("khaled", 15);
+                objectOutputStream.writeObject(person2);
+                objectOutputStream.flush();
+                //objectOutputStream.writeObject(person);
+                
+                // objectOutputStream.flush();
+                System.out.println("Object sent to server.");
+                
+                } catch (IOException ex) {
+                Logger.getLogger(OnlineLoginPage.class.getName()).log(Level.SEVERE, null, ex);
+                }*/
                 OnlineUsersPage root = new OnlineUsersPage(parentStage);
                 Scene scene = new Scene(root);
                 parentStage.setScene(scene);
+
             }
         });
 
@@ -268,9 +297,17 @@ public class OnlineLoginPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                WelcomPage root = new WelcomPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                try {
+                    WelcomPage root = new WelcomPage(parentStage);
+                    Scene scene = new Scene(root);
+                    parentStage.setScene(scene);
+                    objectOutputStream.close();
+
+                    // Clean up
+                    socket.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(OnlineLoginPage.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -283,8 +320,7 @@ public class OnlineLoginPage extends BorderPane {
                 parentStage.setScene(scene);
             }
         });
-        
-        
+
         signupHyperlink.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

@@ -1,5 +1,7 @@
 package tictactoeserver;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.Scene;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,7 +19,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 public class AdminServerPage extends BorderPane {
 
     
@@ -257,8 +258,7 @@ public class AdminServerPage extends BorderPane {
             if(newValue) {
                 connectionToggleBtn.setText("On");
                 connectionToggleBtn.setStyle("-fx-background-color: green;");
-                //new obj
-                
+                //new obj           
             } else {
                 connectionToggleBtn.setText("Off");
                 connectionToggleBtn.setStyle("");
