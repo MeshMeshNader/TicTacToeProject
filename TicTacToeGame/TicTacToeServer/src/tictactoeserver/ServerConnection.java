@@ -5,30 +5,24 @@
  */
 package tictactoeserver;
 
-import java.io.DataInputStream;
-import java.io.EOFException;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.PrintStream;
-import static java.lang.System.in;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import tictactoeclient.PopUpIP;
+import tictactoeclient.Messages;
 import tictactoeclient.UserDTO;
-import tictactoeclient.temp;
 
 /**
  *
  * @author dell
  */
 public class ServerConnection {
-
+    
     InputStream inputstream;
     OutputStream outputstream;
     ObjectInputStream objectinputstream;
@@ -36,7 +30,8 @@ public class ServerConnection {
     Socket socket;
     String ip;
     int portNum;
-  UserDTO obj;
+    UserDTO obj;
+    String msg;
 
     public ServerConnection(Socket socket) {
         try {
@@ -66,40 +61,60 @@ public class ServerConnection {
 
                 while (!socket.isClosed() && socket.isConnected()) {
                     try {
+                        msg = (String) objectinputstream.readObject();
 
-                        obj = (UserDTO) objectinputstream.readObject();
-                        System.out.println(obj.getUserName());
-                        System.out.println(obj.getPassword());
+                        if (msg.equals(Messages.loginRequest)) {
 
-                        Integer isValid = loginValidation();
-                        objectoutputstream.writeObject(isValid);
+                            obj = (UserDTO) objectinputstream.readObject();
+                            sendMessage(Messages.loginResponse, loginValidation());
 
-                    } catch (ClassNotFoundException e) {
+                        } else if (msg.equals(Messages.registrationRequest)) {
+
+                            obj = (UserDTO) objectinputstream.readObject();
+                            sendMessage(Messages.registrationResponse, registrationValidation());
+
+                        }
+
+                    } catch (ClassNotFoundException | IOException e) {
                         e.printStackTrace();
-                    } catch (IOException ex) {
-                        //Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
-                        System.out.println("end of file ");
-                    } 
+                    }
                 }
-
 
             }
         }.start();
 
     }
 
-    public void sendMessage() {
+    public void sendMessage(String msg, Boolean status) {
+        new Thread() {
+            @Override
+            public void run() {
 
+                try {
+                    objectoutputstream.writeObject(msg);
+                    objectoutputstream.writeObject(status);
+                } catch (IOException ex) {
+                    Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+        }.start();
     }
 
-    public Integer loginValidation() {
-        int result = 1;
-        /*if (obj.getUserName() == "root" && obj.getPassword() == "root") {
-            result = 1;
+    public Boolean loginValidation() {
+        // check database and return true if exist and true and false if failed
+        System.out.println("Login Validation Test");
+        if (obj.getUserName().equals("mohamed") && obj.getPassword().equals("1234")) {
+            return true;
         } else {
-            result = 0;
-        }*/
-        return result;
-
+            return false;
+        }
     }
+
+    public boolean registrationValidation() {
+        // insert in database and return true if sucess and false if failed
+        System.out.println("Login Validation Test");
+        return false;
+    }
+
 }

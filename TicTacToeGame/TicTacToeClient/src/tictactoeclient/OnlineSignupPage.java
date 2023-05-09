@@ -52,6 +52,7 @@ public class OnlineSignupPage extends BorderPane {
     protected final ToggleButton soundBtn;
     protected final DropShadow dropShadow2;
     protected final Text soundTxt;
+    ClientConnection clientconnection;
 
     public OnlineSignupPage(Stage stage) {
 
@@ -276,9 +277,15 @@ public class OnlineSignupPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                OnlineUsersPage root = new OnlineUsersPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                
+                UserDTO user = new UserDTO();
+
+                user.setUserName(userNameTxtField.getText());
+                user.setPassword(passwordTxtField.getText());
+                clientconnection = ClientConnection.getInstance();
+                clientconnection.writeMessage(Messages.registrationRequest, user);
+                clientconnection.readMessage(parentStage);
+                
             }
         });
 

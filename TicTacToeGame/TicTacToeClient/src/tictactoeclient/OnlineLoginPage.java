@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -58,15 +59,13 @@ public class OnlineLoginPage extends BorderPane {
     protected final ToggleButton soundToggleBtn;
     protected final DropShadow dropShadow2;
     protected final Text soundTxt;
-    
+
     InputStream inputstream;
     OutputStream outpuststream;
     ObjectInputStream objectinputstream;
     ObjectOutputStream objectoutputstream;
     Socket socket;
     ClientConnection clientconnection;
-    UserDTO user ;
-    
 
     public OnlineLoginPage(Stage stage) {
 
@@ -276,36 +275,15 @@ public class OnlineLoginPage extends BorderPane {
         loginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                new Thread() {
-                    public void run() {
-                        UserDTO user = new UserDTO();
 
-                        user.setUserName(usernameTxtField.getText());
-                        user.setPassword(passwordTxtField.getText());
-                        clientconnection = new ClientConnection(user);
-                        clientconnection.writeMessage(user);
-                        if (clientconnection.readMessage() == 1){
-                            OnlineUsersPage root = new OnlineUsersPage(parentStage);
-                            Scene scene = new Scene(root);
-                            parentStage.setScene(scene);
-                            System.out.println("yeas");
-                        
-                        }
-                        else {
-                            Alert alert = new Alert(Alert.AlertType.ERROR);
-                            alert.setContentText("you shoud enter the correct name and password !");
-                            ButtonType okButton = new ButtonType("OK");
-                            alert.getButtonTypes().setAll(okButton);
+                UserDTO user = new UserDTO();
 
-                            alert.showAndWait();
-                        
-                        }
-                    }
-                }.start();
-                 OnlineUsersPage root = new OnlineUsersPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
-                
+                user.setUserName(usernameTxtField.getText());
+                user.setPassword(passwordTxtField.getText());
+                clientconnection = ClientConnection.getInstance();
+                clientconnection.writeMessage(Messages.loginRequest, user);
+                clientconnection.readMessage(parentStage);
+
             }
         });
 
@@ -317,6 +295,7 @@ public class OnlineLoginPage extends BorderPane {
                     WelcomPage root = new WelcomPage(parentStage);
                     Scene scene = new Scene(root);
                     parentStage.setScene(scene);
+                    
                     socket.close();
                     outpuststream.close();
                     objectinputstream.close();
@@ -335,8 +314,7 @@ public class OnlineLoginPage extends BorderPane {
                 parentStage.setScene(scene);
             }
         });
-        
-        
+
         signupHyperlink.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
