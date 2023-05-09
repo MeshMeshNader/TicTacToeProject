@@ -666,7 +666,7 @@ public class PlayerGameBoard extends BorderPane {
                 }else {
                 fullRecord.add(new OfflineGameDTO(playerTurn % 2, playerOneNameValue, playerTwoNameValue, date, new ArrayList<>(record)));
                 }
- fullRecord.add(new OfflineGameDTO(playerTurn % 2, playerOneNameValue, playerTwoNameValue, date, new ArrayList<>(record)));
+ //fullRecord.add(new OfflineGameDTO(playerTurn % 2, playerOneNameValue, playerTwoNameValue, date, new ArrayList<>(record)));
 
                 if (isRecorded) {
                     RecordOperation.writeRecordToFile(fullRecord, "fullRecorde.json");

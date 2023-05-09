@@ -23,7 +23,7 @@ public class OfflineGameDTO implements Serializable {
     String idUserTwo="1";
     String createdAt;
 
-    private ArrayList<OfflineMoveDTO> record;
+    private ArrayList<OfflineMoveDTO> record=new ArrayList<>();
     // Date createdAt;
 
     public OfflineGameDTO(int winnerID, String idUserOneName, String idUserTwoName, Date currentDate, ArrayList<OfflineMoveDTO> record) {
