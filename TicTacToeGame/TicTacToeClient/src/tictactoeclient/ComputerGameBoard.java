@@ -65,7 +65,7 @@ public class ComputerGameBoard extends BorderPane
     protected final Text toeRTxt;
     protected final Text aRTxt;
     protected final Text ticRTxt;
-    protected final ToggleButton soundToggleBtn;
+    protected final ToggleButton soundToggleBtn;  //************************
     protected final DropShadow dropShadow3;
     protected final Text soundTxt;
     protected final Text playerOneUserNameRValueTxt;
@@ -130,9 +130,9 @@ public class ComputerGameBoard extends BorderPane
         toeRTxt = new Text();
         aRTxt = new Text();
         ticRTxt = new Text();
-        soundToggleBtn = new ToggleButton();
+        soundToggleBtn = new ToggleButton();           //************************
         dropShadow3 = new DropShadow();
-        soundTxt = new Text();
+        soundTxt = new Text();                                  //************************
         playerOneUserNameRValueTxt = new Text();
         xoGridPane = new GridPane();
         columnConstraints = new ColumnConstraints();
@@ -257,7 +257,7 @@ public class ComputerGameBoard extends BorderPane
         recordToggleBtn.setMnemonicParsing(false);
         recordToggleBtn.setPrefHeight(42.0);
         recordToggleBtn.setPrefWidth(130.0);
-        recordToggleBtn.setText("On / Off");
+        recordToggleBtn.setText("On / Off");            
 
         recordToggleBtn.setEffect(dropShadow2);
         recordToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
@@ -315,7 +315,7 @@ public class ComputerGameBoard extends BorderPane
         soundToggleBtn.setMnemonicParsing(false);
         soundToggleBtn.setPrefHeight(42.0);
         soundToggleBtn.setPrefWidth(130.0);
-        soundToggleBtn.setText("On");
+        soundToggleBtn.setText("On");                                  //************************
 
         soundToggleBtn.setEffect(dropShadow3);
         soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
@@ -577,9 +577,11 @@ public class ComputerGameBoard extends BorderPane
             }
         }
         
+                                                                                        //************************
+        
         //generate the sound file from a given path
         //creating an object from media player 
-        String soundFile = "C:\\Users\\ahmed\\Desktop\\Final Project\\sound.mp3"; //**********************************
+        String soundFile = "C:\\Users\\ahmed\\Desktop\\Final Project\\sound.mp3"; 
         Media sound;
         try {
                  sound = new Media(new File(soundFile).toURI().toString());
@@ -761,7 +763,8 @@ public class ComputerGameBoard extends BorderPane
             buttonsBoard.get(i).setMouseTransparent(false);
         }
     }
-
+ 
+                                                                       //************************
     void showGameState(String txt) 
     {
         //this section concern to show a winning video when the player x won 

@@ -1,5 +1,6 @@
 package tictactoeclient;
 
+import java.io.File;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -11,6 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -211,7 +214,7 @@ public class MyProfilePage extends BorderPane {
         soundToggleBtn.setMnemonicParsing(false);
         soundToggleBtn.setPrefHeight(42.0);
         soundToggleBtn.setPrefWidth(130.0);
-        soundToggleBtn.setText("On / Off");
+        soundToggleBtn.setText("On");
 
         soundToggleBtn.setEffect(dropShadow3);
         soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
@@ -317,8 +320,47 @@ public class MyProfilePage extends BorderPane {
         anchorPane0.getChildren().add(noOfLossesValueTxt);
         anchorPane0.getChildren().add(scoreTxt);
         anchorPane0.getChildren().add(scoreValueTxt);
+        soundToggleBtn.setStyle("-fx-background-color: green;");
         
         
+        //generate the sound file from a given path
+        //creating an object from media player 
+        String soundFile = "C:\\Users\\ahmed\\Desktop\\Final Project\\sound.mp3"; 
+        Media sound;
+        try {
+                 sound = new Media(new File(soundFile).toURI().toString());
+             } 
+        catch (Exception e) 
+             {
+                System.err.println("Failed to load sound file: " + e.getMessage());
+                return;
+              }
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        //this property will make the sound to run automatically when the app starts
+        mediaPlayer.setAutoPlay(true);  
+        
+        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>()
+        {
+             @Override
+            public void handle(ActionEvent event)
+            {
+            
+                 if (soundToggleBtn.isSelected()) 
+                    {
+                         mediaPlayer.pause();
+                         soundToggleBtn.setText("Off");
+                         soundToggleBtn.setStyle("-fx-background-color: red;");
+    
+                     } 
+                else 
+                 {
+                      mediaPlayer.play();
+                      soundToggleBtn.setText("On");
+                      soundToggleBtn.setStyle("-fx-background-color: green;");
+                  }
+            }
+        });
+
         
         myProfileBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override

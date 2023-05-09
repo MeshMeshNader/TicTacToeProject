@@ -1,5 +1,6 @@
 package tictactoeclient;
 
+import java.io.File;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -19,6 +20,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -429,7 +432,7 @@ public class RecordsLoadPage extends BorderPane {
         soundToggleBtn.setMnemonicParsing(false);
         soundToggleBtn.setPrefHeight(42.0);
         soundToggleBtn.setPrefWidth(130.0);
-        soundToggleBtn.setText("On / Off");
+        soundToggleBtn.setText("On");
 
         soundToggleBtn.setEffect(dropShadow2);
         soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
@@ -466,6 +469,7 @@ public class RecordsLoadPage extends BorderPane {
         anchorPane0.getChildren().add(ticRightTxt);
         anchorPane0.getChildren().add(playerTwoUserNameRValueTxt);
         anchorPane0.getChildren().add(soundToggleBtn);
+        soundToggleBtn.setStyle("-fx-background-color: green;");
         
         
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -495,6 +499,45 @@ public class RecordsLoadPage extends BorderPane {
                 parentStage.setScene(scene);
             }
         });
+        
+        //generate the sound file from a given path
+        //creating an object from media player 
+        String soundFile = "C:\\Users\\ahmed\\Desktop\\Final Project\\sound.mp3"; 
+        Media sound;
+        try {
+                 sound = new Media(new File(soundFile).toURI().toString());
+             } 
+        catch (Exception e) 
+             {
+                System.err.println("Failed to load sound file: " + e.getMessage());
+                return;
+              }
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        //this property will make the sound to run automatically when the app starts
+        mediaPlayer.setAutoPlay(true);  
+        
+        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>()
+        {
+             @Override
+            public void handle(ActionEvent event)
+            {
+            
+                 if (soundToggleBtn.isSelected()) 
+                    {
+                         mediaPlayer.pause();
+                         soundToggleBtn.setText("Off");
+                         soundToggleBtn.setStyle("-fx-background-color: red;");
+    
+                     } 
+                else 
+                 {
+                      mediaPlayer.play();
+                      soundToggleBtn.setText("On");
+                      soundToggleBtn.setStyle("-fx-background-color: green;");
+                  }
+            }
+        });
+        
 
     }
 }
