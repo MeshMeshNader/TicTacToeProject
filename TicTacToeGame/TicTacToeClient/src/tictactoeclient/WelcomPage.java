@@ -1,5 +1,15 @@
 package tictactoeclient;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -18,7 +28,6 @@ import javafx.stage.Stage;
 
 public class WelcomPage extends BorderPane {
 
-    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final ImageView offlineImg;
@@ -42,9 +51,14 @@ public class WelcomPage extends BorderPane {
     protected final DropShadow dropShadow2;
     protected final Text soundTxt;
 
-    public WelcomPage(Stage stage) {
+    InputStream inputstream;
+    OutputStream outpuststream;
+    ObjectInputStream objectinputstream;
+    ObjectOutputStream objectoutputstream;
+    Socket socket;
 
-        parentStage = stage;
+    public WelcomPage() {
+
         anchorPane = new AnchorPane();
         glow = new Glow();
         offlineImg = new ImageView();
@@ -225,57 +239,50 @@ public class WelcomPage extends BorderPane {
         anchorPane0.getChildren().add(soundToggleBtn);
         anchorPane0.getChildren().add(soundTxt);
 
-        
         offlineBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                OfflineMenuPage root = new OfflineMenuPage(parentStage);
+                OfflineMenuPage root = new OfflineMenuPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
-        
-        
+
         onlineBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                OnlineLoginPage root = new OnlineLoginPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
-            }
-        });
-        
-        
-        aboutBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                
-                //OPen PopUp
                 Stage popUpStage = new Stage();
-                Scene popUpPage = new Scene(new PopUpAbout(popUpStage));
-                
+                Scene popUpPage = new Scene(new PopUpIP(popUpStage));
+
                 popUpStage.setScene(popUpPage);
                 popUpStage.initModality(Modality.APPLICATION_MODAL);
                 popUpStage.showAndWait();
-                
+              
             }
         });
-        
-        
-        
+
+        aboutBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                //OPen PopUp
+                Stage popUpStage = new Stage();
+                Scene popUpPage = new Scene(new PopUpAbout(popUpStage));
+
+                popUpStage.setScene(popUpPage);
+                popUpStage.initModality(Modality.APPLICATION_MODAL);
+                popUpStage.showAndWait();
+
+            }
+        });
+
         soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-               
+
                 //Toggle Btn Function
-                
             }
         });
-        
-        
-        
-        
-        
-        
+
     }
 }

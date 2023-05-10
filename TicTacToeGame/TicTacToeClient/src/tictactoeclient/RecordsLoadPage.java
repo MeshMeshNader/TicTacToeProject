@@ -27,7 +27,6 @@ import javafx.stage.Stage;
 public class RecordsLoadPage extends BorderPane {
 
     
-    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button backBtn;
@@ -79,10 +78,9 @@ public class RecordsLoadPage extends BorderPane {
     protected final ToggleButton soundToggleBtn;
     protected final DropShadow dropShadow2;
 
-    public RecordsLoadPage(Stage stage) {
+    public RecordsLoadPage() {
 
         
-        parentStage = stage;
         anchorPane = new AnchorPane();
         glow = new Glow();
         backBtn = new Button();
@@ -472,9 +470,9 @@ public class RecordsLoadPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                OfflineMenuPage root = new OfflineMenuPage(parentStage);
+                OfflineMenuPage root = new OfflineMenuPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
@@ -490,9 +488,9 @@ public class RecordsLoadPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                WelcomPage root = new WelcomPage(parentStage);
+                WelcomPage root = new WelcomPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 

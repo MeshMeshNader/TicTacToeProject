@@ -1,9 +1,19 @@
 package tictactoeclient;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -20,7 +30,6 @@ import javafx.stage.Stage;
 
 public class OnlineLoginPage extends BorderPane {
 
-    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button loginBtn;
@@ -49,9 +58,14 @@ public class OnlineLoginPage extends BorderPane {
     protected final DropShadow dropShadow2;
     protected final Text soundTxt;
 
-    public OnlineLoginPage(Stage stage) {
+    InputStream inputstream;
+    OutputStream outpuststream;
+    ObjectInputStream objectinputstream;
+    ObjectOutputStream objectoutputstream;
+    ClientConnection clientconnection;
 
-        parentStage = stage;
+    public OnlineLoginPage() {
+
         anchorPane = new AnchorPane();
         glow = new Glow();
         loginBtn = new Button();
@@ -253,14 +267,22 @@ public class OnlineLoginPage extends BorderPane {
         anchorPane0.getChildren().add(xoImg);
         anchorPane0.getChildren().add(soundToggleBtn);
         anchorPane0.getChildren().add(soundTxt);
+        
+        ClientConnection.flag.addListener((observable , oldValue , newValue) -> {
+            loginBtn.setText("Helloo");
+        });
 
         loginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
-                OnlineUsersPage root = new OnlineUsersPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                UserDTO user = new UserDTO();
+
+                user.setUserName(usernameTxtField.getText());
+                user.setPassword(passwordTxtField.getText());
+                clientconnection = ClientConnection.getInstance();
+                clientconnection.writeMessage(Messages.loginRequest, user);
+
             }
         });
 
@@ -268,9 +290,10 @@ public class OnlineLoginPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                WelcomPage root = new WelcomPage(parentStage);
+                WelcomPage root = new WelcomPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
+
             }
         });
 
@@ -278,19 +301,18 @@ public class OnlineLoginPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                WelcomPage root = new WelcomPage(parentStage);
+                WelcomPage root = new WelcomPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
-        
-        
+
         signupHyperlink.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                OnlineSignupPage root = new OnlineSignupPage(parentStage);
+                OnlineSignupPage root = new OnlineSignupPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 

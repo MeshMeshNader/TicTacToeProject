@@ -20,7 +20,6 @@ import javafx.stage.Stage;
 
 public class OnlineUsersPage extends BorderPane {
 
-    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final ImageView userImg;
@@ -49,9 +48,8 @@ public class OnlineUsersPage extends BorderPane {
     protected final Button inviteBtn;
     protected final DropShadow dropShadow6;
 
-    public OnlineUsersPage(Stage stage) {
+    public OnlineUsersPage() {
 
-        parentStage = stage;
         anchorPane = new AnchorPane();
         glow = new Glow();
         userImg = new ImageView();
@@ -250,9 +248,9 @@ public class OnlineUsersPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                MyProfilePage root = new MyProfilePage(parentStage);
+                MyProfilePage root = new MyProfilePage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
@@ -260,9 +258,9 @@ public class OnlineUsersPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                OnlineUsersPage root = new OnlineUsersPage(parentStage);
+                OnlineUsersPage root = new OnlineUsersPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
@@ -304,9 +302,9 @@ public class OnlineUsersPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                WelcomPage root = new WelcomPage(parentStage);
+                WelcomPage root = new WelcomPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
@@ -314,9 +312,9 @@ public class OnlineUsersPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                OnlineLoginPage root = new OnlineLoginPage(parentStage);
+                OnlineLoginPage root = new OnlineLoginPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
 
             }
         });

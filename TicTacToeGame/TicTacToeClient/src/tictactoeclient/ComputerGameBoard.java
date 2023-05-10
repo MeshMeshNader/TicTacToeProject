@@ -33,7 +33,7 @@ import tictactoeclient.ComputerLevelPage.xOrO;
 public class ComputerGameBoard extends BorderPane {
 
     GameManager gameManager;
-    Stage parentStage;
+    
     protected final AnchorPane anchorPane;
     protected final AnchorPane anchorPane0;
     protected final Glow glow;
@@ -96,9 +96,8 @@ public class ComputerGameBoard extends BorderPane {
     String playerOneNameValue;
     boolean hasWinner = false;
 
-    public ComputerGameBoard(Stage stage, String playerName, Difficulty mode, xOrO xoState) {
+    public ComputerGameBoard(String playerName, Difficulty mode, xOrO xoState) {
 
-        parentStage = stage;
         anchorPane = new AnchorPane();
         anchorPane0 = new AnchorPane();
         glow = new Glow();
@@ -573,9 +572,9 @@ public class ComputerGameBoard extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                ComputerLevelPage root = new ComputerLevelPage(parentStage);
+                ComputerLevelPage root = new ComputerLevelPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
@@ -591,9 +590,9 @@ public class ComputerGameBoard extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                WelcomPage root = new WelcomPage(parentStage);
+                WelcomPage root = new WelcomPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 

@@ -33,7 +33,6 @@ public class ComputerLevelPage extends BorderPane {
 
     Difficulty mode;
     xOrO xoState;
-    Stage parentStage;
 
     protected final ToggleGroup radioGroup;
     protected final AnchorPane anchorPane;
@@ -65,9 +64,8 @@ public class ComputerLevelPage extends BorderPane {
     protected final DropShadow dropShadow4;
     protected final Glow glow0;
 
-    public ComputerLevelPage(Stage stage) {
+    public ComputerLevelPage() {
 
-        parentStage = stage;
         radioGroup = new ToggleGroup();
         anchorPane = new AnchorPane();
         anchorPane0 = new AnchorPane();
@@ -326,9 +324,9 @@ public class ComputerLevelPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                OfflineMenuPage root = new OfflineMenuPage(parentStage);
+                OfflineMenuPage root = new OfflineMenuPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
@@ -340,9 +338,9 @@ public class ComputerLevelPage extends BorderPane {
                 xoState = (xRadioBtn.isSelected()) ? xOrO.X : xOrO.O;
 
                 if (!enterYourNameValueTxtField.getText().isEmpty()) {
-                    ComputerGameBoard root = new ComputerGameBoard(parentStage, enterYourNameValueTxtField.getText(), mode, xoState);
+                    ComputerGameBoard root = new ComputerGameBoard(enterYourNameValueTxtField.getText(), mode, xoState);
                     Scene scene = new Scene(root);
-                    parentStage.setScene(scene);
+                    TicTacToeClient.stage.setScene(scene);
                 } else {
                     showValidationAlert();
                 }

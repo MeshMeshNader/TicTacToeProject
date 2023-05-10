@@ -25,7 +25,6 @@ import javafx.stage.Stage;
 
 public class PlayerGameBoard extends BorderPane {
 
-    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button backBtn;
@@ -86,10 +85,9 @@ public class PlayerGameBoard extends BorderPane {
     protected final Button cellPos2_0;
     protected final ColorAdjust colorAdjust7;
 
-    public PlayerGameBoard(Stage stage) {
+    public PlayerGameBoard() {
 
         
-        parentStage = stage;
         anchorPane = new AnchorPane();
         glow = new Glow();
         backBtn = new Button();
@@ -562,9 +560,9 @@ public class PlayerGameBoard extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                OfflineMenuPage root = new OfflineMenuPage(parentStage);
+                OfflineMenuPage root = new OfflineMenuPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
@@ -580,9 +578,9 @@ public class PlayerGameBoard extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                WelcomPage root = new WelcomPage(parentStage);
+                WelcomPage root = new WelcomPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 

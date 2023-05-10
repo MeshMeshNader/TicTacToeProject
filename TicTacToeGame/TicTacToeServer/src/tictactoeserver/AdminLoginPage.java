@@ -3,10 +3,13 @@ package tictactoeserver;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
@@ -15,7 +18,6 @@ import javafx.stage.Stage;
 
 public class AdminLoginPage extends BorderPane {
 
-    
     Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Text ticTacToeServerTxt;
@@ -73,7 +75,7 @@ public class AdminLoginPage extends BorderPane {
         passwardTxt.setLayoutY(364.0);
         passwardTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         passwardTxt.setStrokeWidth(0.0);
-        passwardTxt.setText("PaSSward");
+        passwardTxt.setText("PaSSword");
         passwardTxt.setFont(new Font("Bauhaus 93", 40.0));
 
         userNameValueTxtField.setLayoutX(354.0);
@@ -108,15 +110,67 @@ public class AdminLoginPage extends BorderPane {
         anchorPane.getChildren().add(passwardValueTxtField);
         anchorPane.getChildren().add(serverLoginBtn);
 
-        
         serverLoginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                AdminServerPage root = new AdminServerPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                handelLogin();
             }
         });
         
+        serverLoginBtn.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode() == KeyCode.ENTER){
+                    handelLogin();
+                }
+            }
+        });
+        
+        
+        userNameValueTxtField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode() == KeyCode.ENTER){
+                    handelLogin();
+                }
+            }
+        });
+        
+        passwardValueTxtField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode() == KeyCode.ENTER){
+                    handelLogin();
+                }
+            }
+        });
+        
+        
+        
     }
+
+    void handelLogin() {
+        if (isAdminValid()) {
+            AdminServerPage root = new AdminServerPage(parentStage);
+            Scene scene = new Scene(root);
+            parentStage.setScene(scene);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Alert");
+            alert.setHeaderText(null);
+            alert.setContentText("ops!! wrong user or password");
+            alert.showAndWait();
+        }
+    }
+
+    boolean isAdminValid() {
+        boolean isValid = false;
+        boolean userNameValid = userNameValueTxtField.getText().equals("root");
+        boolean passwordValid = passwardValueTxtField.getText().equals("root");
+        if (userNameValid && passwordValid) {
+            isValid = true;
+        }
+        return isValid;
+    }
+
 }

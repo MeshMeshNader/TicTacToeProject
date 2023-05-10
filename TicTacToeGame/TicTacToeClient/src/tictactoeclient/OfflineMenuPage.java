@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 
 public class OfflineMenuPage extends BorderPane {
     
-    Stage parentStage;
+    
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button vsComputerBtn;
@@ -44,9 +44,9 @@ public class OfflineMenuPage extends BorderPane {
     protected final DropShadow dropShadow3;
     protected final Text soundTxt;
 
-    public OfflineMenuPage(Stage stage) {
+    public OfflineMenuPage() {
 
-        parentStage = stage;
+        //parentStage = stage;
         anchorPane = new AnchorPane();
         glow = new Glow();
         vsComputerBtn = new Button();
@@ -235,18 +235,18 @@ public class OfflineMenuPage extends BorderPane {
         vsComputerBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                ComputerLevelPage root = new ComputerLevelPage(parentStage);
+                ComputerLevelPage root = new ComputerLevelPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
         
         vsPersonBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                PlayerGameBoard root = new PlayerGameBoard(parentStage);
+                PlayerGameBoard root = new PlayerGameBoard();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
         
@@ -254,9 +254,9 @@ public class OfflineMenuPage extends BorderPane {
         recordsBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                RecordsLoadPage root = new RecordsLoadPage(parentStage);
+                RecordsLoadPage root = new RecordsLoadPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
         
@@ -264,9 +264,9 @@ public class OfflineMenuPage extends BorderPane {
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                WelcomPage root = new WelcomPage(parentStage);
+                WelcomPage root = new WelcomPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
         

@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 
 public class OnlineSignupPage extends BorderPane {
 
-    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button registerBtn;
@@ -52,10 +51,10 @@ public class OnlineSignupPage extends BorderPane {
     protected final ToggleButton soundBtn;
     protected final DropShadow dropShadow2;
     protected final Text soundTxt;
+    ClientConnection clientconnection;
 
-    public OnlineSignupPage(Stage stage) {
+    public OnlineSignupPage() {
 
-        parentStage = stage;
         anchorPane = new AnchorPane();
         glow = new Glow();
         registerBtn = new Button();
@@ -276,9 +275,15 @@ public class OnlineSignupPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                OnlineUsersPage root = new OnlineUsersPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                
+                UserDTO user = new UserDTO();
+
+                user.setUserName(userNameTxtField.getText());
+                user.setPassword(passwordTxtField.getText());
+                clientconnection = ClientConnection.getInstance();
+                clientconnection.writeMessage(Messages.registrationRequest, user);
+                //clientconnection.readMessage(parentStage);
+                
             }
         });
 
@@ -286,9 +291,9 @@ public class OnlineSignupPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                OnlineLoginPage root = new OnlineLoginPage(parentStage);
+                OnlineLoginPage root = new OnlineLoginPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
@@ -296,9 +301,9 @@ public class OnlineSignupPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                WelcomPage root = new WelcomPage(parentStage);
+                WelcomPage root = new WelcomPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
