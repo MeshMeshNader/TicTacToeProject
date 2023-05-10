@@ -19,6 +19,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -35,7 +36,6 @@ public class ComputerLevelPage extends BorderPane {
 
     Difficulty mode;
     xOrO xoState;
-    Stage parentStage;
 
     protected final ToggleGroup radioGroup;
     protected final AnchorPane anchorPane;
@@ -67,9 +67,7 @@ public class ComputerLevelPage extends BorderPane {
     protected final DropShadow dropShadow4;
     protected final Glow glow0;
 
-    public ComputerLevelPage(Stage stage) {
-
-        parentStage = stage;
+    public ComputerLevelPage() {
         radioGroup = new ToggleGroup();
         anchorPane = new AnchorPane();
         anchorPane0 = new AnchorPane();
@@ -176,7 +174,6 @@ public class ComputerLevelPage extends BorderPane {
 
         soundToggleBtn.setEffect(dropShadow);
         soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
-        soundToggleBtn.setText("On");
 
         soundTxt.setLayoutX(410.0);
         soundTxt.setLayoutY(692.0);
@@ -293,9 +290,7 @@ public class ComputerLevelPage extends BorderPane {
         anchorPane1.getChildren().add(oRadioBtn);
         anchorPane1.getChildren().add(backBtn);
         anchorPane1.getChildren().add(startBtn);
-        soundToggleBtn.setStyle("-fx-background-color: green;");
 
-        //Select X or O  
         xRadioBtn.setToggleGroup(radioGroup);
         oRadioBtn.setToggleGroup(radioGroup);
         xRadioBtn.setSelected(true);
@@ -328,10 +323,9 @@ public class ComputerLevelPage extends BorderPane {
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
-                OfflineMenuPage root = new OfflineMenuPage(parentStage);
+                OfflineMenuPage root = new OfflineMenuPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
@@ -343,9 +337,10 @@ public class ComputerLevelPage extends BorderPane {
                 xoState = (xRadioBtn.isSelected()) ? xOrO.X : xOrO.O;
 
                 if (!enterYourNameValueTxtField.getText().isEmpty()) {
-                    ComputerGameBoard root = new ComputerGameBoard(parentStage, enterYourNameValueTxtField.getText(), mode, xoState);
+
+                    ComputerGameBoard root = new ComputerGameBoard(enterYourNameValueTxtField.getText(), mode, xoState);
                     Scene scene = new Scene(root);
-                    parentStage.setScene(scene);
+                    TicTacToeClient.stage.setScene(scene);
                 } else {
                     showValidationAlert();
                 }
@@ -411,9 +406,9 @@ public class ComputerLevelPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                OfflineMenuPage root = new OfflineMenuPage(parentStage);
+                OfflineMenuPage root = new OfflineMenuPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
@@ -425,9 +420,9 @@ public class ComputerLevelPage extends BorderPane {
                 xoState = (xRadioBtn.isSelected()) ? xOrO.X : xOrO.O;
 
                 if (!enterYourNameValueTxtField.getText().isEmpty()) {
-                    ComputerGameBoard root = new ComputerGameBoard(parentStage, enterYourNameValueTxtField.getText(), mode, xoState);
+                    ComputerGameBoard root = new ComputerGameBoard(enterYourNameValueTxtField.getText(), mode, xoState);
                     Scene scene = new Scene(root);
-                    parentStage.setScene(scene);
+                    TicTacToeClient.stage.setScene(scene);
                 } else {
                     showValidationAlert();
                 }

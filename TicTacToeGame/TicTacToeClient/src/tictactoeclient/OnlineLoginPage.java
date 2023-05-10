@@ -15,6 +15,20 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -33,7 +47,7 @@ import javafx.stage.Stage;
 
 public class OnlineLoginPage extends BorderPane {
 
-    Stage parentStage;
+    ClientConnection clientconnection;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button loginBtn;
@@ -61,12 +75,9 @@ public class OnlineLoginPage extends BorderPane {
     protected final ToggleButton soundToggleBtn;
     protected final DropShadow dropShadow2;
     protected final Text soundTxt;
-    ObjectOutputStream objectOutputStream = null;
-    Socket socket = null;
 
-    public OnlineLoginPage(Stage stage) {
+    public OnlineLoginPage() {
 
-        parentStage = stage;
         anchorPane = new AnchorPane();
         glow = new Glow();
         loginBtn = new Button();
@@ -239,8 +250,6 @@ public class OnlineLoginPage extends BorderPane {
         soundToggleBtn.setPrefHeight(42.0);
         soundToggleBtn.setPrefWidth(130.0);
 
-        soundToggleBtn.setText("On");
-
         soundToggleBtn.setEffect(dropShadow2);
         soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
 
@@ -270,32 +279,22 @@ public class OnlineLoginPage extends BorderPane {
         anchorPane0.getChildren().add(soundToggleBtn);
         anchorPane0.getChildren().add(soundTxt);
 
-        soundToggleBtn.setStyle("-fx-background-color: green;");
+        checkSoundToggleBtn();
+
+        ClientConnection.flag.addListener((observable, oldValue, newValue) -> {
+            loginBtn.setText("Helloo");
+        });
 
         loginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                /*try {
-                //usernameTxtField,passwordTxtField
-                socket = new Socket("0.0.0.0", 5005);
-                objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-                System.out.println("Connected to server...");
-                
-                // Person person = new Person(usernameTxtField.getText(), Integer.parseInt(passwordTxtField.getText()));
-                Person person2 = new Person("khaled", 15);
-                objectOutputStream.writeObject(person2);
-                objectOutputStream.flush();
-                //objectOutputStream.writeObject(person);
-                
-                // objectOutputStream.flush();
-                System.out.println("Object sent to server.");
-                
-                } catch (IOException ex) {
-                Logger.getLogger(OnlineLoginPage.class.getName()).log(Level.SEVERE, null, ex);
-                }*/
-                OnlineUsersPage root = new OnlineUsersPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+
+                UserDTO user = new UserDTO();
+
+                user.setUserName(usernameTxtField.getText());
+                user.setPassword(passwordTxtField.getText());
+                clientconnection = ClientConnection.getInstance();
+                clientconnection.writeMessage(Messages.loginRequest, user);
 
             }
         });
@@ -304,17 +303,10 @@ public class OnlineLoginPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                try {
-                    WelcomPage root = new WelcomPage(parentStage);
-                    Scene scene = new Scene(root);
-                    parentStage.setScene(scene);
-                    objectOutputStream.close();
+                WelcomPage root = new WelcomPage();
+                Scene scene = new Scene(root);
+                TicTacToeClient.stage.setScene(scene);
 
-                    // Clean up
-                    socket.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(OnlineLoginPage.class.getName()).log(Level.SEVERE, null, ex);
-                }
             }
         });
 
@@ -322,51 +314,51 @@ public class OnlineLoginPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                WelcomPage root = new WelcomPage(parentStage);
+                WelcomPage root = new WelcomPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
-            }
-        });
-
-        //generate the sound file from a given path
-        //creating an object from media player 
-        String soundFile = "src\\tictactoeclient\\sounds\\sound.mp3";
-        Media sound;
-        try {
-            sound = new Media(new File(soundFile).toURI().toString());
-        } catch (Exception e) {
-            System.err.println("Failed to load sound file: " + e.getMessage());
-            return;
-        }
-        MediaPlayer mediaPlayer = new MediaPlayer(sound);
-        //this property will make the sound to run automatically when the app starts
-        mediaPlayer.setAutoPlay(true);
-
-        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-                if (soundToggleBtn.isSelected()) {
-                    mediaPlayer.pause();
-                    soundToggleBtn.setText("Off");
-                    soundToggleBtn.setStyle("-fx-background-color: red;");
-
-                } else {
-                    mediaPlayer.play();
-                    soundToggleBtn.setText("On");
-                    soundToggleBtn.setStyle("-fx-background-color: green;");
-                }
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
         signupHyperlink.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                OnlineSignupPage root = new OnlineSignupPage(parentStage);
+
+                OnlineSignupPage root = new OnlineSignupPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
+    }
+    
+    void checkSoundToggleBtn(){
+        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            soundToggleBtn.setText("On");
+            soundToggleBtn.setStyle("-fx-background-color: green;");
+            soundToggleBtn.setSelected(true);
+        } else {
+            soundToggleBtn.setText("Off");
+            soundToggleBtn.setStyle("-fx-background-color: red;");
+            soundToggleBtn.setSelected(false);
+        }
+
+        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                if (soundToggleBtn.isSelected()) {
+                    WelcomPage.mediaPlayer.pause();
+                    soundToggleBtn.setText("Off");
+                    soundToggleBtn.setStyle("-fx-background-color: red;");
+                    soundToggleBtn.setSelected(true);
+                } else {
+                    WelcomPage.mediaPlayer.play();
+                    soundToggleBtn.setText("On");
+                    soundToggleBtn.setStyle("-fx-background-color: green;");
+                    soundToggleBtn.setSelected(false);
+                }
+            }
+        });
     }
 }

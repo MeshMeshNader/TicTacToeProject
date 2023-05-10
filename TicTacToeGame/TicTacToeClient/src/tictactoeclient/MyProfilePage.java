@@ -1,6 +1,5 @@
 package tictactoeclient;
 
-
 import java.io.File;
 
 import javafx.event.ActionEvent;
@@ -24,7 +23,7 @@ import javafx.stage.Stage;
 
 public class MyProfilePage extends BorderPane {
 
-    Stage parentStage;
+     
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final ImageView userImg;
@@ -58,9 +57,9 @@ public class MyProfilePage extends BorderPane {
     protected final Text scoreTxt;
     protected final Text scoreValueTxt;
 
-    public MyProfilePage(Stage stage) {
+    public MyProfilePage( ) {
 
-        parentStage = stage;
+         
         anchorPane = new AnchorPane();
         glow = new Glow();
         userImg = new ImageView();
@@ -221,7 +220,6 @@ public class MyProfilePage extends BorderPane {
 
         soundToggleBtn.setText("On");
 
-
         soundToggleBtn.setEffect(dropShadow3);
         soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
 
@@ -327,56 +325,13 @@ public class MyProfilePage extends BorderPane {
         anchorPane0.getChildren().add(scoreTxt);
         anchorPane0.getChildren().add(scoreValueTxt);
 
-        soundToggleBtn.setStyle("-fx-background-color: green;");
-        
-        
-        //generate the sound file from a given path
-        //creating an object from media player 
-        String soundFile = "src\\tictactoeclient\\sounds\\sound.mp3"; 
-        Media sound;
-        try {
-                 sound = new Media(new File(soundFile).toURI().toString());
-             } 
-        catch (Exception e) 
-             {
-                System.err.println("Failed to load sound file: " + e.getMessage());
-                return;
-              }
-        MediaPlayer mediaPlayer = new MediaPlayer(sound);
-        //this property will make the sound to run automatically when the app starts
-        mediaPlayer.setAutoPlay(true);  
-        
-        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>()
-        {
-             @Override
-            public void handle(ActionEvent event)
-            {
-            
-                 if (soundToggleBtn.isSelected()) 
-                    {
-                         mediaPlayer.pause();
-                         soundToggleBtn.setText("Off");
-                         soundToggleBtn.setStyle("-fx-background-color: red;");
-    
-                     } 
-                else 
-                 {
-                      mediaPlayer.play();
-                      soundToggleBtn.setText("On");
-                      soundToggleBtn.setStyle("-fx-background-color: green;");
-                  }
-            }
-        });
-
-
-        
         myProfileBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
-                MyProfilePage root = new MyProfilePage(parentStage);
+                MyProfilePage root = new MyProfilePage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
@@ -384,20 +339,19 @@ public class MyProfilePage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                OnlineUsersPage root = new OnlineUsersPage(parentStage);
+                OnlineUsersPage root = new OnlineUsersPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
-
 
         homeBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
-                WelcomPage root = new WelcomPage(parentStage);
+                WelcomPage root = new WelcomPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
@@ -405,9 +359,83 @@ public class MyProfilePage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                OnlineLoginPage root = new OnlineLoginPage(parentStage);
+                OnlineLoginPage root = new OnlineLoginPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
+
+            }
+        });
+
+        soundToggleBtn.setStyle("-fx-background-color: green;");
+
+        //generate the sound file from a given path
+        //creating an object from media player 
+        String soundFile = "src\\tictactoeclient\\sounds\\sound.mp3";
+        Media sound;
+        try {
+            sound = new Media(new File(soundFile).toURI().toString());
+        } catch (Exception e) {
+            System.err.println("Failed to load sound file: " + e.getMessage());
+            return;
+        }
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        //this property will make the sound to run automatically when the app starts
+        mediaPlayer.setAutoPlay(true);
+
+        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                if (soundToggleBtn.isSelected()) {
+                    mediaPlayer.pause();
+                    soundToggleBtn.setText("Off");
+                    soundToggleBtn.setStyle("-fx-background-color: red;");
+
+                } else {
+                    mediaPlayer.play();
+                    soundToggleBtn.setText("On");
+                    soundToggleBtn.setStyle("-fx-background-color: green;");
+                }
+            }
+        });
+
+        myProfileBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                MyProfilePage root = new MyProfilePage( );
+                Scene scene = new Scene(root);
+                TicTacToeClient.stage.setScene(scene);
+            }
+        });
+
+        onlineUsersBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                OnlineUsersPage root = new OnlineUsersPage( );
+                Scene scene = new Scene(root);
+                TicTacToeClient.stage.setScene(scene);
+            }
+        });
+
+        homeBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                WelcomPage root = new WelcomPage( );
+                Scene scene = new Scene(root);
+                TicTacToeClient.stage.setScene(scene);
+            }
+        });
+
+        backBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                OnlineLoginPage root = new OnlineLoginPage( );
+                Scene scene = new Scene(root);
+                TicTacToeClient.stage.setScene(scene);
 
             }
         });

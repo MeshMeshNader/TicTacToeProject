@@ -28,7 +28,6 @@ import javafx.stage.Stage;
 
 public class OnlineSignupPage extends BorderPane {
 
-    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button registerBtn;
@@ -57,13 +56,12 @@ public class OnlineSignupPage extends BorderPane {
     protected final ImageView image;
 
     protected final ToggleButton soundToggleBtn;
-
     protected final DropShadow dropShadow2;
     protected final Text soundTxt;
+    ClientConnection clientconnection;
 
-    public OnlineSignupPage(Stage stage) {
+    public OnlineSignupPage() {
 
-        parentStage = stage;
         anchorPane = new AnchorPane();
         glow = new Glow();
         registerBtn = new Button();
@@ -92,7 +90,6 @@ public class OnlineSignupPage extends BorderPane {
         image = new ImageView();
 
         soundToggleBtn = new ToggleButton();
-
         dropShadow2 = new DropShadow();
         soundTxt = new Text();
 
@@ -249,7 +246,7 @@ public class OnlineSignupPage extends BorderPane {
         soundToggleBtn.setMnemonicParsing(false);
         soundToggleBtn.setPrefHeight(42.0);
         soundToggleBtn.setPrefWidth(130.0);
-        soundToggleBtn.setText("On");
+        soundToggleBtn.setText("On / Off");
 
         soundToggleBtn.setEffect(dropShadow2);
         soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
@@ -282,46 +279,20 @@ public class OnlineSignupPage extends BorderPane {
 
         nickNameTxtField0.getChildren().add(soundToggleBtn);
         nickNameTxtField0.getChildren().add(soundTxt);
-        soundToggleBtn.setStyle("-fx-background-color: green;");
-
-        //generate the sound file from a given path
-        //creating an object from media player 
-        String soundFile = "src\\tictactoeclient\\sounds\\sound.mp3";
-        Media sound;
-        try {
-            sound = new Media(new File(soundFile).toURI().toString());
-        } catch (Exception e) {
-            System.err.println("Failed to load sound file: " + e.getMessage());
-            return;
-        }
-        MediaPlayer mediaPlayer = new MediaPlayer(sound);
-        //this property will make the sound to run automatically when the app starts
-        mediaPlayer.setAutoPlay(true);
-
-        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-                if (soundToggleBtn.isSelected()) {
-                    mediaPlayer.pause();
-                    soundToggleBtn.setText("Off");
-                    soundToggleBtn.setStyle("-fx-background-color: red;");
-
-                } else {
-                    mediaPlayer.play();
-                    soundToggleBtn.setText("On");
-                    soundToggleBtn.setStyle("-fx-background-color: green;");
-                }
-            }
-        });
+        checkSoundToggleBtn();
 
         registerBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
-                OnlineUsersPage root = new OnlineUsersPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                UserDTO user = new UserDTO();
+
+                user.setUserName(userNameTxtField.getText());
+                user.setPassword(passwordTxtField.getText());
+                clientconnection = ClientConnection.getInstance();
+                clientconnection.writeMessage(Messages.registrationRequest, user);
+                //clientconnection.readMessage(parentStage);
+
             }
         });
 
@@ -329,9 +300,9 @@ public class OnlineSignupPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                OnlineLoginPage root = new OnlineLoginPage(parentStage);
+                OnlineLoginPage root = new OnlineLoginPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
@@ -339,11 +310,41 @@ public class OnlineSignupPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                WelcomPage root = new WelcomPage(parentStage);
+                WelcomPage root = new WelcomPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
+    }
+    
+    void checkSoundToggleBtn(){
+        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            soundToggleBtn.setText("On");
+            soundToggleBtn.setStyle("-fx-background-color: green;");
+            soundToggleBtn.setSelected(true);
+        } else {
+            soundToggleBtn.setText("Off");
+            soundToggleBtn.setStyle("-fx-background-color: red;");
+            soundToggleBtn.setSelected(false);
+        }
+
+        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                if (soundToggleBtn.isSelected()) {
+                    WelcomPage.mediaPlayer.pause();
+                    soundToggleBtn.setText("Off");
+                    soundToggleBtn.setStyle("-fx-background-color: red;");
+                    soundToggleBtn.setSelected(true);
+                } else {
+                    WelcomPage.mediaPlayer.play();
+                    soundToggleBtn.setText("On");
+                    soundToggleBtn.setStyle("-fx-background-color: green;");
+                    soundToggleBtn.setSelected(false);
+                }
+            }
+        });
     }
 }
