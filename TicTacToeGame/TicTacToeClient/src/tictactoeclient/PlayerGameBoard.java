@@ -22,7 +22,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
- import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
  
 import javafx.scene.shape.Rectangle;
@@ -52,12 +51,10 @@ public class PlayerGameBoard extends BorderPane {
     protected final Text recordTxt;
     protected final Text playerOneUserNameLLValueTxt;
     protected final Text playerTwoUserNameLLValueTxt;
-     protected final Text ScoreTxt;
+    protected final Text ScoreTxt;
     protected final Text playerOneScore;
     protected final Text playerTwoScore;
-     protected final Text enterYourNameTxt;
-    protected final TextField playerOneUserNameLLValueTxtField;
-    protected final TextField playerTwoUserNameLLValueTxtField;
+
      protected final AnchorPane anchorPane0;
     protected final Glow glow0;
     protected final Text playerTwoUserNameRValueTxt;
@@ -137,9 +134,6 @@ public class PlayerGameBoard extends BorderPane {
          ScoreTxt = new Text();
         playerOneScore = new Text();
         playerTwoScore = new Text();
-         enterYourNameTxt = new Text();
-        playerOneUserNameLLValueTxtField = new TextField();
-        playerTwoUserNameLLValueTxtField = new TextField();
          anchorPane0 = new AnchorPane();
         glow0 = new Glow();
         playerTwoUserNameRValueTxt = new Text();
@@ -272,6 +266,7 @@ public class PlayerGameBoard extends BorderPane {
         recordToggleBtn.setMnemonicParsing(false);
         recordToggleBtn.setPrefHeight(42.0);
         recordToggleBtn.setPrefWidth(130.0);
+        recordToggleBtn.setText("off");
 
         recordToggleBtn.setEffect(dropShadow2);
         recordToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
@@ -567,10 +562,9 @@ public class PlayerGameBoard extends BorderPane {
         anchorPane.getChildren().add(recordTxt);
         anchorPane.getChildren().add(playerOneUserNameLLValueTxt);
         anchorPane.getChildren().add(playerTwoUserNameLLValueTxt);
-
-        anchorPane.getChildren().add(enterYourNameTxt);
-        anchorPane.getChildren().add(playerOneUserNameLLValueTxtField);
-        anchorPane.getChildren().add(playerTwoUserNameLLValueTxtField);
+        anchorPane.getChildren().add(ScoreTxt);
+        anchorPane.getChildren().add(playerOneScore);
+        anchorPane.getChildren().add(playerTwoScore);
 
         anchorPane0.getChildren().add(playerTwoUserNameRValueTxt);
         anchorPane0.getChildren().add(toeRTxt);
