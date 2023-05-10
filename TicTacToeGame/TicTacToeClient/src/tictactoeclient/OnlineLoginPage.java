@@ -1,5 +1,20 @@
 package tictactoeclient;
 
+import java.io.File;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -24,12 +39,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class OnlineLoginPage extends BorderPane {
 
+    ClientConnection clientconnection;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button loginBtn;
@@ -57,12 +75,6 @@ public class OnlineLoginPage extends BorderPane {
     protected final ToggleButton soundToggleBtn;
     protected final DropShadow dropShadow2;
     protected final Text soundTxt;
-
-    InputStream inputstream;
-    OutputStream outpuststream;
-    ObjectInputStream objectinputstream;
-    ObjectOutputStream objectoutputstream;
-    ClientConnection clientconnection;
 
     public OnlineLoginPage() {
 
@@ -237,7 +249,6 @@ public class OnlineLoginPage extends BorderPane {
         soundToggleBtn.setMnemonicParsing(false);
         soundToggleBtn.setPrefHeight(42.0);
         soundToggleBtn.setPrefWidth(130.0);
-        soundToggleBtn.setText("On / Off");
 
         soundToggleBtn.setEffect(dropShadow2);
         soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
@@ -267,8 +278,10 @@ public class OnlineLoginPage extends BorderPane {
         anchorPane0.getChildren().add(xoImg);
         anchorPane0.getChildren().add(soundToggleBtn);
         anchorPane0.getChildren().add(soundTxt);
-        
-        ClientConnection.flag.addListener((observable , oldValue , newValue) -> {
+
+        checkSoundToggleBtn();
+
+        ClientConnection.flag.addListener((observable, oldValue, newValue) -> {
             loginBtn.setText("Helloo");
         });
 
@@ -310,11 +323,42 @@ public class OnlineLoginPage extends BorderPane {
         signupHyperlink.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+
                 OnlineSignupPage root = new OnlineSignupPage();
                 Scene scene = new Scene(root);
                 TicTacToeClient.stage.setScene(scene);
             }
         });
 
+    }
+    
+    void checkSoundToggleBtn(){
+        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            soundToggleBtn.setText("On");
+            soundToggleBtn.setStyle("-fx-background-color: green;");
+            soundToggleBtn.setSelected(true);
+        } else {
+            soundToggleBtn.setText("Off");
+            soundToggleBtn.setStyle("-fx-background-color: red;");
+            soundToggleBtn.setSelected(false);
+        }
+
+        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                if (soundToggleBtn.isSelected()) {
+                    WelcomPage.mediaPlayer.pause();
+                    soundToggleBtn.setText("Off");
+                    soundToggleBtn.setStyle("-fx-background-color: red;");
+                    soundToggleBtn.setSelected(true);
+                } else {
+                    WelcomPage.mediaPlayer.play();
+                    soundToggleBtn.setText("On");
+                    soundToggleBtn.setStyle("-fx-background-color: green;");
+                    soundToggleBtn.setSelected(false);
+                }
+            }
+        });
     }
 }

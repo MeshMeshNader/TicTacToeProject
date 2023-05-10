@@ -1,5 +1,7 @@
 package tictactoeclient;
 
+import java.io.File;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -15,6 +17,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -22,12 +27,10 @@ import javafx.stage.Stage;
 public class ComputerLevelPage extends BorderPane {
 
     static public enum Difficulty {
-
         EASY, MEDIUM, HARD;
     }
 
     static public enum xOrO {
-
         X, O;
     }
 
@@ -65,7 +68,6 @@ public class ComputerLevelPage extends BorderPane {
     protected final Glow glow0;
 
     public ComputerLevelPage() {
-
         radioGroup = new ToggleGroup();
         anchorPane = new AnchorPane();
         anchorPane0 = new AnchorPane();
@@ -169,7 +171,6 @@ public class ComputerLevelPage extends BorderPane {
         soundToggleBtn.setMnemonicParsing(false);
         soundToggleBtn.setPrefHeight(42.0);
         soundToggleBtn.setPrefWidth(130.0);
-        soundToggleBtn.setText("On / Off");
 
         soundToggleBtn.setEffect(dropShadow);
         soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
@@ -290,6 +291,87 @@ public class ComputerLevelPage extends BorderPane {
         anchorPane1.getChildren().add(backBtn);
         anchorPane1.getChildren().add(startBtn);
 
+        xRadioBtn.setToggleGroup(radioGroup);
+        oRadioBtn.setToggleGroup(radioGroup);
+        xRadioBtn.setSelected(true);
+
+        easyBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                setSelectedButton(easyBtn);
+                mode = Difficulty.EASY;
+            }
+        });
+
+        mediumBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                setSelectedButton(mediumBtn);
+                mode = Difficulty.MEDIUM;
+
+            }
+        });
+
+        hardBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                setSelectedButton(hardBtn);
+                mode = Difficulty.HARD;
+            }
+        });
+
+        backBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                OfflineMenuPage root = new OfflineMenuPage();
+                Scene scene = new Scene(root);
+                TicTacToeClient.stage.setScene(scene);
+            }
+        });
+
+        startBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+
+            public void handle(ActionEvent event) {
+
+                xoState = (xRadioBtn.isSelected()) ? xOrO.X : xOrO.O;
+
+                if (!enterYourNameValueTxtField.getText().isEmpty()) {
+
+                    ComputerGameBoard root = new ComputerGameBoard(enterYourNameValueTxtField.getText(), mode, xoState);
+                    Scene scene = new Scene(root);
+                    TicTacToeClient.stage.setScene(scene);
+                } else {
+                    showValidationAlert();
+                }
+            }
+        });
+
+        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            soundToggleBtn.setText("On");
+            soundToggleBtn.setStyle("-fx-background-color: green;");
+        } else {
+            soundToggleBtn.setText("Off");
+            soundToggleBtn.setStyle("-fx-background-color: red;");
+        }
+
+        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                if (soundToggleBtn.isSelected()) {
+                    WelcomPage.mediaPlayer.pause();
+                    soundToggleBtn.setText("Off");
+                    soundToggleBtn.setStyle("-fx-background-color: red;");
+
+                } else {
+                    WelcomPage.mediaPlayer.play();
+                    soundToggleBtn.setText("On");
+                    soundToggleBtn.setStyle("-fx-background-color: green;");
+                }
+            }
+        });
+
         //Select X or O  
         xRadioBtn.setToggleGroup(radioGroup);
         oRadioBtn.setToggleGroup(radioGroup);
@@ -363,4 +445,5 @@ public class ComputerLevelPage extends BorderPane {
         alert.setContentText("Please Enter Your Name!!");
         alert.showAndWait();
     }
+
 }

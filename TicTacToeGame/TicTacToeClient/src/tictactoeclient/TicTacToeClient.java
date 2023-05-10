@@ -6,7 +6,6 @@
 package tictactoeclient;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -16,16 +15,18 @@ import javafx.stage.Stage;
  * @author meshm
  */
 public class TicTacToeClient extends Application {
+
     public static Stage stage;
+
     @Override
     public void start(Stage stage) throws Exception {
-        
+
         Parent root = new WelcomPage();
-        
+
         this.stage = stage;
-        
+
         Scene scene = new Scene(root);
-        
+
         stage.setScene(scene);
         stage.setTitle("Tic Tac Toe Game");
         stage.show();
@@ -36,7 +37,6 @@ public class TicTacToeClient extends Application {
      */
     public static void main(String[] args) {
         launch(args);
-         //new CleintTemp();
     }
-    
+
 }

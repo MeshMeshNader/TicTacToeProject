@@ -1,5 +1,8 @@
 package tictactoeclient;
 
+import java.util.ArrayList;
+
+import javafx.scene.control.Alert;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -11,13 +14,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.media.MediaPlayer;
+
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class OfflineMenuPage extends BorderPane {
-    
-    
+
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button vsComputerBtn;
@@ -46,7 +50,6 @@ public class OfflineMenuPage extends BorderPane {
 
     public OfflineMenuPage() {
 
-        //parentStage = stage;
         anchorPane = new AnchorPane();
         glow = new Glow();
         vsComputerBtn = new Button();
@@ -203,7 +206,6 @@ public class OfflineMenuPage extends BorderPane {
         soundToggleBtn.setMnemonicParsing(false);
         soundToggleBtn.setPrefHeight(42.0);
         soundToggleBtn.setPrefWidth(130.0);
-        soundToggleBtn.setText("On / Off");
 
         soundToggleBtn.setEffect(dropShadow3);
         soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
@@ -229,9 +231,8 @@ public class OfflineMenuPage extends BorderPane {
         anchorPane0.getChildren().add(xoImg);
         anchorPane0.getChildren().add(soundToggleBtn);
         anchorPane0.getChildren().add(soundTxt);
-        
-        
-        
+        checkSoundToggleBtn();
+
         vsComputerBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -240,27 +241,34 @@ public class OfflineMenuPage extends BorderPane {
                 TicTacToeClient.stage.setScene(scene);
             }
         });
-        
+
         vsPersonBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                PlayerGameBoard root = new PlayerGameBoard();
+                PopUpInsertTowPlayerName root = new PopUpInsertTowPlayerName();
                 Scene scene = new Scene(root);
                 TicTacToeClient.stage.setScene(scene);
             }
         });
-        
-        
+
         recordsBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                RecordsLoadPage root = new RecordsLoadPage();
-                Scene scene = new Scene(root);
-                TicTacToeClient.stage.setScene(scene);
+                ArrayList<OfflineGameDTO> listOfRecords = RecordOperation.readRecordFromFile("fullRecorde.json");
+                if (listOfRecords != null && !listOfRecords.isEmpty()) {
+                    RecordsLoadPage root = new RecordsLoadPage(listOfRecords);
+                    Scene scene = new Scene(root);
+                    TicTacToeClient.stage.setScene(scene);
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Tic-Tay-Toc");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Oops!! You don't have any records.");
+                    alert.showAndWait();
+                }
             }
         });
-        
-        
+
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -269,8 +277,56 @@ public class OfflineMenuPage extends BorderPane {
                 TicTacToeClient.stage.setScene(scene);
             }
         });
-        
-        
+
+        vsComputerBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ComputerLevelPage root = new ComputerLevelPage();
+                Scene scene = new Scene(root);
+                TicTacToeClient.stage.setScene(scene);
+            }
+        });
+
+      
+        backBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                WelcomPage root = new WelcomPage();
+                Scene scene = new Scene(root);
+                TicTacToeClient.stage.setScene(scene);
+            }
+        });
 
     }
+
+    void checkSoundToggleBtn() {
+        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            soundToggleBtn.setText("On");
+            soundToggleBtn.setStyle("-fx-background-color: green;");
+            soundToggleBtn.setSelected(true);
+        } else {
+            soundToggleBtn.setText("Off");
+            soundToggleBtn.setStyle("-fx-background-color: red;");
+            soundToggleBtn.setSelected(false);
+        }
+
+        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                if (soundToggleBtn.isSelected()) {
+                    WelcomPage.mediaPlayer.pause();
+                    soundToggleBtn.setText("Off");
+                    soundToggleBtn.setStyle("-fx-background-color: red;");
+                    soundToggleBtn.setSelected(true);
+                } else {
+                    WelcomPage.mediaPlayer.play();
+                    soundToggleBtn.setText("On");
+                    soundToggleBtn.setStyle("-fx-background-color: green;");
+                    soundToggleBtn.setSelected(false);
+                }
+            }
+        });
+    }
+
 }
