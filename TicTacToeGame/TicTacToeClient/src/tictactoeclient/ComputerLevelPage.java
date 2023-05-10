@@ -352,31 +352,25 @@ public class ComputerLevelPage extends BorderPane {
             }
         });
 
-        //generate the sound file from a given path
-        //creating an object from media player 
-        String soundFile = "src\\tictactoeclient\\sounds\\sound.mp3";
-        Media sound;
-        try {
-            sound = new Media(new File(soundFile).toURI().toString());
-        } catch (Exception e) {
-            System.err.println("Failed to load sound file: " + e.getMessage());
-            return;
+        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            soundToggleBtn.setText("On");
+            soundToggleBtn.setStyle("-fx-background-color: green;");
+        } else {
+            soundToggleBtn.setText("Off");
+            soundToggleBtn.setStyle("-fx-background-color: red;");
         }
-        MediaPlayer mediaPlayer = new MediaPlayer(sound);
-        //this property will make the sound to run automatically when the app starts
-        mediaPlayer.setAutoPlay(true);
 
         soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
                 if (soundToggleBtn.isSelected()) {
-                    mediaPlayer.pause();
+                    WelcomPage.mediaPlayer.pause();
                     soundToggleBtn.setText("Off");
                     soundToggleBtn.setStyle("-fx-background-color: red;");
 
                 } else {
-                    mediaPlayer.play();
+                    WelcomPage.mediaPlayer.play();
                     soundToggleBtn.setText("On");
                     soundToggleBtn.setStyle("-fx-background-color: green;");
                 }

@@ -22,6 +22,11 @@ import javafx.stage.Stage;
 public class WelcomPage extends BorderPane {
 
     Stage parentStage;
+    
+    public static String soundFile;
+    public static Media sound;
+    public static MediaPlayer mediaPlayer;
+    
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final ImageView offlineImg;
@@ -42,7 +47,7 @@ public class WelcomPage extends BorderPane {
     protected final Text ticTxt;
     protected final ImageView xoImg;
 
-    protected final ToggleButton soundToggleBtn;               //************1111************
+    protected final ToggleButton soundToggleBtn;              
 
     protected final DropShadow dropShadow2;
     protected final Text soundTxt;
@@ -235,6 +240,9 @@ public class WelcomPage extends BorderPane {
         anchorPane0.getChildren().add(soundTxt);
         soundToggleBtn.setStyle("-fx-background-color: green;");   //************************
 
+        
+        initSound();
+        
         offlineBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -272,35 +280,49 @@ public class WelcomPage extends BorderPane {
         //************************
         //generate the sound file from a given path
         //creating an object from media player 
-        String soundFile = "src\\tictactoeclient\\sounds\\sound.mp3";
-        Media sound;
-        try {
-            sound = new Media(new File(soundFile).toURI().toString());
-        } catch (Exception e) {
-            System.err.println("Failed to load sound file: " + e.getMessage());
-            return;
+        
+
+        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            soundToggleBtn.setText("On");
+            soundToggleBtn.setStyle("-fx-background-color: green;");
+        } else {
+            soundToggleBtn.setText("Off");
+            soundToggleBtn.setStyle("-fx-background-color: red;");
         }
-        MediaPlayer mediaPlayer = new MediaPlayer(sound);
-        //this property will make the sound to run automatically when the app starts
-        mediaPlayer.setAutoPlay(true);
 
         soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
                 if (soundToggleBtn.isSelected()) {
-                    mediaPlayer.pause();
+                    WelcomPage.mediaPlayer.pause();
                     soundToggleBtn.setText("Off");
                     soundToggleBtn.setStyle("-fx-background-color: red;");
 
                 } else {
-                    mediaPlayer.play();
+                    WelcomPage.mediaPlayer.play();
                     soundToggleBtn.setText("On");
                     soundToggleBtn.setStyle("-fx-background-color: green;");
                 }
-
             }
         });
 
     }
+    
+    
+    public static void initSound(){
+        WelcomPage.soundFile = "src\\tictactoeclient\\sounds\\sound.mp3";
+        try {
+            WelcomPage.sound = new Media(new File(soundFile).toURI().toString());
+        } catch (Exception e) {
+            System.err.println("Failed to load sound file: " + e.getMessage());
+            return;
+        }
+        WelcomPage.mediaPlayer = new MediaPlayer(WelcomPage.sound);
+        //this property will make the sound to run automatically when the app starts
+        WelcomPage.mediaPlayer.setAutoPlay(true);
+
+    }
+    
+    
 }
