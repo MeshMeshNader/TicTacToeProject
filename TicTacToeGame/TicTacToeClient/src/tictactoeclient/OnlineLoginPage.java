@@ -1,8 +1,16 @@
 package tictactoeclient;
 
-
 import java.io.File;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -17,10 +25,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -55,6 +61,8 @@ public class OnlineLoginPage extends BorderPane {
     protected final ToggleButton soundToggleBtn;
     protected final DropShadow dropShadow2;
     protected final Text soundTxt;
+    ObjectOutputStream objectOutputStream = null;
+    Socket socket = null;
 
     public OnlineLoginPage(Stage stage) {
 
@@ -233,7 +241,6 @@ public class OnlineLoginPage extends BorderPane {
 
         soundToggleBtn.setText("On");
 
-
         soundToggleBtn.setEffect(dropShadow2);
         soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
 
@@ -265,14 +272,31 @@ public class OnlineLoginPage extends BorderPane {
 
         soundToggleBtn.setStyle("-fx-background-color: green;");
 
-
         loginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                /*try {
+                //usernameTxtField,passwordTxtField
+                socket = new Socket("0.0.0.0", 5005);
+                objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+                System.out.println("Connected to server...");
+                
+                // Person person = new Person(usernameTxtField.getText(), Integer.parseInt(passwordTxtField.getText()));
+                Person person2 = new Person("khaled", 15);
+                objectOutputStream.writeObject(person2);
+                objectOutputStream.flush();
+                //objectOutputStream.writeObject(person);
+                
+                // objectOutputStream.flush();
+                System.out.println("Object sent to server.");
+                
+                } catch (IOException ex) {
+                Logger.getLogger(OnlineLoginPage.class.getName()).log(Level.SEVERE, null, ex);
+                }*/
                 OnlineUsersPage root = new OnlineUsersPage(parentStage);
                 Scene scene = new Scene(root);
                 parentStage.setScene(scene);
+
             }
         });
 
@@ -280,9 +304,17 @@ public class OnlineLoginPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                WelcomPage root = new WelcomPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                try {
+                    WelcomPage root = new WelcomPage(parentStage);
+                    Scene scene = new Scene(root);
+                    parentStage.setScene(scene);
+                    objectOutputStream.close();
+
+                    // Clean up
+                    socket.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(OnlineLoginPage.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -295,48 +327,38 @@ public class OnlineLoginPage extends BorderPane {
                 parentStage.setScene(scene);
             }
         });
-        
 
         //generate the sound file from a given path
         //creating an object from media player 
-        String soundFile = "C:\\Users\\ahmed\\Desktop\\Final Project\\sound.mp3"; 
+        String soundFile = "src\\tictactoeclient\\sounds\\sound.mp3";
         Media sound;
         try {
-                 sound = new Media(new File(soundFile).toURI().toString());
-             } 
-        catch (Exception e) 
-             {
-                System.err.println("Failed to load sound file: " + e.getMessage());
-                return;
-              }
+            sound = new Media(new File(soundFile).toURI().toString());
+        } catch (Exception e) {
+            System.err.println("Failed to load sound file: " + e.getMessage());
+            return;
+        }
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
         //this property will make the sound to run automatically when the app starts
-        mediaPlayer.setAutoPlay(true);  
-        
-        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>()
-        {
-             @Override
-            public void handle(ActionEvent event)
-            {
-            
-                 if (soundToggleBtn.isSelected()) 
-                    {
-                         mediaPlayer.pause();
-                         soundToggleBtn.setText("Off");
-                         soundToggleBtn.setStyle("-fx-background-color: red;");
-    
-                     } 
-                else 
-                 {
-                      mediaPlayer.play();
-                      soundToggleBtn.setText("On");
-                      soundToggleBtn.setStyle("-fx-background-color: green;");
-                  }
+        mediaPlayer.setAutoPlay(true);
+
+        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                if (soundToggleBtn.isSelected()) {
+                    mediaPlayer.pause();
+                    soundToggleBtn.setText("Off");
+                    soundToggleBtn.setStyle("-fx-background-color: red;");
+
+                } else {
+                    mediaPlayer.play();
+                    soundToggleBtn.setText("On");
+                    soundToggleBtn.setStyle("-fx-background-color: green;");
+                }
             }
         });
-        
 
-        
         signupHyperlink.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

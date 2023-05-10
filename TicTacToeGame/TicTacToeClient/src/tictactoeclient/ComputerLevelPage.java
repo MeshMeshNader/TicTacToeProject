@@ -26,12 +26,10 @@ import javafx.stage.Stage;
 public class ComputerLevelPage extends BorderPane {
 
     static public enum Difficulty {
-
         EASY, MEDIUM, HARD;
     }
 
     static public enum xOrO {
-
         X, O;
     }
 
@@ -356,7 +354,7 @@ public class ComputerLevelPage extends BorderPane {
 
         //generate the sound file from a given path
         //creating an object from media player 
-        String soundFile = "C:\\Users\\ahmed\\Desktop\\Final Project\\sound.mp3";
+        String soundFile = "src\\tictactoeclient\\sounds\\sound.mp3";
         Media sound;
         try {
             sound = new Media(new File(soundFile).toURI().toString());

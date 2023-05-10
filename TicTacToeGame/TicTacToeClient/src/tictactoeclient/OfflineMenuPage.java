@@ -1,11 +1,11 @@
 package tictactoeclient;
 
-
 import java.io.File;
-
+import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.DropShadow;
@@ -14,16 +14,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tictactoeclient.RelatedRecored.OfflineGameDTO;
+import tictactoeclient.RelatedRecored.RecordOperation;
 
 public class OfflineMenuPage extends BorderPane {
-    
+
     Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
@@ -213,7 +213,6 @@ public class OfflineMenuPage extends BorderPane {
 
         soundToggleBtn.setText("On");
 
-
         soundToggleBtn.setEffect(dropShadow3);
         soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
 
@@ -241,9 +240,6 @@ public class OfflineMenuPage extends BorderPane {
 
         soundToggleBtn.setStyle("-fx-background-color: green;");
 
-        
-        
-        
         vsComputerBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -252,27 +248,34 @@ public class OfflineMenuPage extends BorderPane {
                 parentStage.setScene(scene);
             }
         });
-        
+
         vsPersonBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                PlayerGameBoard root = new PlayerGameBoard(parentStage);
+                PopUpInsertTowPlayerName root = new PopUpInsertTowPlayerName(parentStage);
                 Scene scene = new Scene(root);
                 parentStage.setScene(scene);
             }
         });
-        
-        
+
         recordsBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                RecordsLoadPage root = new RecordsLoadPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                ArrayList<OfflineGameDTO> listOfRecords = RecordOperation.readRecordFromFile("fullRecorde.json");
+                if (listOfRecords != null && !listOfRecords.isEmpty()) {
+                    RecordsLoadPage root = new RecordsLoadPage(parentStage, listOfRecords);
+                    Scene scene = new Scene(root);
+                    parentStage.setScene(scene);
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Tic-Tay-Toc");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Oops!! You don't have any records.");
+                    alert.showAndWait();
+                }
             }
         });
-        
-        
+
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -281,47 +284,37 @@ public class OfflineMenuPage extends BorderPane {
                 parentStage.setScene(scene);
             }
         });
-        
 
         //generate the sound file from a given path
         //creating an object from media player 
-        String soundFile = "C:\\Users\\ahmed\\Desktop\\Final Project\\sound.mp3"; 
+        String soundFile = "src\\tictactoeclient\\sounds\\sound.mp3";
         Media sound;
         try {
-                 sound = new Media(new File(soundFile).toURI().toString());
-             } 
-        catch (Exception e) 
-             {
-                System.err.println("Failed to load sound file: " + e.getMessage());
-                return;
-              }
+            sound = new Media(new File(soundFile).toURI().toString());
+        } catch (Exception e) {
+            System.err.println("Failed to load sound file: " + e.getMessage());
+            return;
+        }
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
         //this property will make the sound to run automatically when the app starts
-        mediaPlayer.setAutoPlay(true);  
-        
-        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>()
-        {
-             @Override
-            public void handle(ActionEvent event)
-            {
-            
-                 if (soundToggleBtn.isSelected()) 
-                    {
-                         mediaPlayer.pause();
-                         soundToggleBtn.setText("Off");
-                         soundToggleBtn.setStyle("-fx-background-color: red;");
-    
-                     } 
-                else 
-                 {
-                      mediaPlayer.play();
-                      soundToggleBtn.setText("On");
-                      soundToggleBtn.setStyle("-fx-background-color: green;");
-                  }
+        mediaPlayer.setAutoPlay(true);
+
+        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                if (soundToggleBtn.isSelected()) {
+                    mediaPlayer.pause();
+                    soundToggleBtn.setText("Off");
+                    soundToggleBtn.setStyle("-fx-background-color: red;");
+
+                } else {
+                    mediaPlayer.play();
+                    soundToggleBtn.setText("On");
+                    soundToggleBtn.setStyle("-fx-background-color: green;");
+                }
             }
         });
-
-        
 
     }
 }

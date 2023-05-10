@@ -593,7 +593,7 @@ public class ComputerGameBoard extends BorderPane {
         //************************
         //generate the sound file from a given path
         //creating an object from media player 
-        String soundFile = "C:\\Users\\ahmed\\Desktop\\Final Project\\sound.mp3";
+        String soundFile = "src\\tictactoeclient\\sounds\\sound.mp3"; //"src\\tictactoeclient\\sounds\\sound.mp3";
         Media sound;
         try {
             sound = new Media(new File(soundFile).toURI().toString());
@@ -774,7 +774,7 @@ public class ComputerGameBoard extends BorderPane {
             Stage dialogStage = new Stage();
             dialogStage.initModality(Modality.APPLICATION_MODAL);
 
-            File videoFile = new File("C:\\Users\\ahmed\\Desktop\\Helper\\winnerVideo.mp4");
+            File videoFile = new File("src\\tictactoeclient\\sounds\\winnerVideo.mp4");
             Media media = new Media(videoFile.toURI().toString());
             MediaPlayer mediaPlayer = new MediaPlayer(media);
             MediaView mediaView = new MediaView(mediaPlayer);
@@ -872,6 +872,7 @@ public class ComputerGameBoard extends BorderPane {
     }
 
     int checkWinner(Button[][] board) {
+        
         //  2: X winner
         // -2: O winner
         //  0: Tie

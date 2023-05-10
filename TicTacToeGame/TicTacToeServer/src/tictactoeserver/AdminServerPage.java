@@ -1,5 +1,7 @@
 package tictactoeserver;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.Scene;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,7 +19,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 public class AdminServerPage extends BorderPane {
 
     
@@ -168,7 +169,7 @@ public class AdminServerPage extends BorderPane {
         connectionToggleBtn.setMnemonicParsing(false);
         connectionToggleBtn.setPrefHeight(42.0);
         connectionToggleBtn.setPrefWidth(130.0);
-        connectionToggleBtn.setText("On / Off");
+        connectionToggleBtn.setText("Off");
 
         connectionToggleBtn.setEffect(dropShadow2);
         connectionToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
@@ -251,12 +252,23 @@ public class AdminServerPage extends BorderPane {
         anchorPane0.getChildren().add(usersInfoTable);
         anchorPane0.getChildren().add(onlineUsersPlayingInfoTxt);
         anchorPane0.getChildren().add(usersBarChart);
-        
+       //bpj from server extend from thread
+       
+        connectionToggleBtn.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue) {
+                connectionToggleBtn.setText("On");
+                connectionToggleBtn.setStyle("-fx-background-color: green;");
+                //new obj           
+            } else {
+                connectionToggleBtn.setText("Off");
+                connectionToggleBtn.setStyle("");
+            }
+        });
         
         logOutBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+               // dont forget close connection
                 AdminLoginPage root = new AdminLoginPage(parentStage);
                 Scene scene = new Scene(root);
                 parentStage.setScene(scene);
