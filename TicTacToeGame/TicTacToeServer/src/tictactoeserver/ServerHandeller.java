@@ -24,6 +24,7 @@ public class ServerHandeller {
     Socket socket;
 
     static Vector<ServerConnection> ClinetsNum = new Vector<ServerConnection>();
+    
 
     public ServerHandeller() {
         try {

@@ -19,6 +19,7 @@ public class DataAccessLayer {
 
     static Connection con = null;
     PreparedStatement pst;
+  
 
     public DataAccessLayer() {
         
@@ -125,8 +126,7 @@ public class DataAccessLayer {
 
         ResultSet resultSet = pst.executeQuery();
         while (resultSet.next()) {
-            onlinePlayers.add(new UserDTO(
-                    resultSet.getString("username")
+            onlinePlayers.add(new UserDTO(resultSet.getString("username")
             ));
         }
         return onlinePlayers;
