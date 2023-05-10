@@ -27,12 +27,10 @@ public class PopUpInsertTowPlayerName extends AnchorPane {
     protected final DropShadow dropShadow0;
     protected final Glow glow;
 
-    Stage parentStage;
     String playerOneName;
     String playerTwoName;
 
-    public PopUpInsertTowPlayerName(Stage stage) {
-        parentStage = stage;
+    public PopUpInsertTowPlayerName() {
 
         okBtn = new Button();
         dropShadow = new DropShadow();
@@ -128,9 +126,9 @@ public class PopUpInsertTowPlayerName extends AnchorPane {
                     String playerOne = getName.substring(0, Math.min(getName.length(), 7));
                     getName = playerTwoNameValue.getText();
                     String playerTwo = getName.substring(0, Math.min(getName.length(), 7));
-                    PlayerGameBoard root = new PlayerGameBoard(parentStage, playerOne, playerTwo);
+                    PlayerGameBoard root = new PlayerGameBoard(playerOne, playerTwo);
                     Scene scene = new Scene(root);
-                    parentStage.setScene(scene);
+                    TicTacToeClient.stage.setScene(scene);
                 } else {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Tic-Tay-Toc");
@@ -143,9 +141,9 @@ public class PopUpInsertTowPlayerName extends AnchorPane {
   backBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                 OfflineMenuPage root = new OfflineMenuPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                 OfflineMenuPage root = new OfflineMenuPage();
+                 Scene scene = new Scene(root);
+                TicTacToeClient.stage.setScene(scene);
                }
         });
     }

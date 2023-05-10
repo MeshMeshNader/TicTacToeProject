@@ -1,5 +1,7 @@
 package tictactoeclient;
 
+import java.io.File;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -17,6 +19,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -24,7 +30,6 @@ import javafx.stage.Stage;
 
 public class OnlineGameBoard extends BorderPane {
 
-    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button backBtn;
@@ -85,9 +90,8 @@ public class OnlineGameBoard extends BorderPane {
     protected final Button cellPos2_0;
     protected final ColorAdjust colorAdjust7;
 
-    public OnlineGameBoard(Stage stage) {
+    public OnlineGameBoard() {
 
-        parentStage = stage;
         anchorPane = new AnchorPane();
         glow = new Glow();
         backBtn = new Button();
@@ -328,7 +332,6 @@ public class OnlineGameBoard extends BorderPane {
         soundToggleBtn.setMnemonicParsing(false);
         soundToggleBtn.setPrefHeight(42.0);
         soundToggleBtn.setPrefWidth(130.0);
-        soundToggleBtn.setText("On / Off");
 
         soundToggleBtn.setEffect(dropShadow3);
         soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
@@ -558,16 +561,16 @@ public class OnlineGameBoard extends BorderPane {
         xoGridBane.getChildren().add(cellPos0_1);
         xoGridBane.getChildren().add(cellPos2_0);
         anchorPane0.getChildren().add(xoGridBane);
-        
-        
-        
+
+        checkSoundToggleBtn();
+
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
-                MyProfilePage root = new MyProfilePage(parentStage);
+                MyProfilePage root = new MyProfilePage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
@@ -583,12 +586,41 @@ public class OnlineGameBoard extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                WelcomPage root = new WelcomPage(parentStage);
+                WelcomPage root = new WelcomPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
-        
 
+    }
+
+    void checkSoundToggleBtn() {
+        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            soundToggleBtn.setText("On");
+            soundToggleBtn.setStyle("-fx-background-color: green;");
+            soundToggleBtn.setSelected(true);
+        } else {
+            soundToggleBtn.setText("Off");
+            soundToggleBtn.setStyle("-fx-background-color: red;");
+            soundToggleBtn.setSelected(false);
+        }
+
+        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                if (soundToggleBtn.isSelected()) {
+                    WelcomPage.mediaPlayer.pause();
+                    soundToggleBtn.setText("Off");
+                    soundToggleBtn.setStyle("-fx-background-color: red;");
+                    soundToggleBtn.setSelected(true);
+                } else {
+                    WelcomPage.mediaPlayer.play();
+                    soundToggleBtn.setText("On");
+                    soundToggleBtn.setStyle("-fx-background-color: green;");
+                    soundToggleBtn.setSelected(false);
+                }
+            }
+        });
     }
 }

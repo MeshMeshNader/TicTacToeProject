@@ -16,12 +16,15 @@ import javafx.stage.Stage;
  */
 public class TicTacToeClient extends Application {
 
+    public static Stage stage;
+
     @Override
     public void start(Stage stage) throws Exception {
 
-        Parent root = new WelcomPage(stage);
+        Parent root = new WelcomPage();
 
-        //Parent root = new AdminLoginPage(stage);
+        this.stage = stage;
+
         Scene scene = new Scene(root);
 
         stage.setScene(scene);
