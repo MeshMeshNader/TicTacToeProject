@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -35,7 +37,7 @@ public class ClientConnection {
     ObjectOutputStream objectoutputstream;
     Socket socket;
 
-    public static BooleanProperty flag = new SimpleBooleanProperty(false);
+    public static StringProperty flag = new SimpleStringProperty("");
 
     public static ClientConnection getInstance() {
         if (instance == null) {
@@ -73,16 +75,16 @@ public class ClientConnection {
 
                         System.out.println("now reciving >>>");
                         String msg = (String) objectinputstream.readObject();
-                        Boolean responseBool = (Boolean) objectinputstream.readObject();
+                        Object obj = objectinputstream.readObject();
 
                         if (msg.equals(Messages.loginResponse)) {
-                            checkLogin(responseBool);
+                            checkLogin((Boolean) obj);
                         } else if (msg.equals(Messages.registrationResponse)) {
-
+                            checkRegister((Boolean) obj);
                         }
 
                         System.out.println("msg is : " + msg);
-                        System.out.println("boolean is : " + responseBool);
+                        System.out.println("boolean is : " + obj.toString());
                         
                         
                     }
@@ -97,6 +99,21 @@ public class ClientConnection {
 
         }.start();
     }
+    
+    public void writeMessage(String msg, Object object) {
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    objectoutputstream.writeObject(msg);
+                    objectoutputstream.writeObject(object);
+                } catch (IOException ex) {
+                    Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        }.start();
+    }
 
     private void checkLogin(Boolean loginCheck) {
 
@@ -105,7 +122,7 @@ public class ClientConnection {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                      flag.set(true);
+                      flag.set("loginTrue");
                 }
             });
 
@@ -113,12 +130,29 @@ public class ClientConnection {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-//                    Alert alert = new Alert(Alert.AlertType.ERROR);
-//                    alert.setContentText("you shoud enter the correct name and password !");
-//                    ButtonType okButton = new ButtonType("OK");
-//                    alert.getButtonTypes().setAll(okButton);
-//                    alert.showAndWait();
-                    //OnlineLoginPage.setReciveFlag(true);
+                    flag.set("loginFalse");
+                }
+            });
+        }
+
+    }
+    
+    private void checkRegister(Boolean registerCheck) {
+
+        if (registerCheck) {
+
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                      flag.set("registerTrue");
+                }
+            });
+
+        } else {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    flag.set("registerFalse");
                 }
             });
         }
@@ -143,7 +177,6 @@ public class ClientConnection {
                                 OnlineUsersPage root = new OnlineUsersPage();
                                 Scene scene = new Scene(root);
                                 TicTacToeClient.stage.setScene(scene);
-                                System.out.println("yeas");
                             }
                         });
 
@@ -172,19 +205,6 @@ public class ClientConnection {
 
     }
 
-    public void writeMessage(String msg, Object object) {
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    objectoutputstream.writeObject(msg);
-                    objectoutputstream.writeObject(object);
-                } catch (IOException ex) {
-                    Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-
-        }.start();
-    }
+    
 
 }

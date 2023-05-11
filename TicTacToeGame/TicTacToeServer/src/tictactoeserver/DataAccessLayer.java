@@ -34,7 +34,7 @@ public class DataAccessLayer {
         }
     }
 
-    public static boolean login(String userName, String password) {
+ public static boolean login(String userName, String password) {
 
         try {
             PreparedStatement pst = con.prepareStatement("Select PASSWORD from USERS where USERNAME = ?");
@@ -64,27 +64,32 @@ public class DataAccessLayer {
         return false;
     }
 
-    public int register(UserDTO userInfo) throws SQLException {
+    public static Boolean register(UserDTO userInfo) throws SQLException {
 
-        int result = 0;
+        Boolean result = false;
+        try {
+            PreparedStatement pst = con.prepareStatement(
+                    "INSERT INTO USERS VALUES(DEFAULT ,?,?, ? ,?,?,?,?,?,?)");
+            pst.setString(1, userInfo.getUserName());
+            pst.setString(2, userInfo.getUserNickName());
+            pst.setString(3, userInfo.getPassword());
+            pst.setInt(4, userInfo.getScore());
+            pst.setInt(5, userInfo.getNoOfWins());
+            pst.setInt(6, userInfo.getNoOfLosses());
+            pst.setBoolean(7, userInfo.isIsOnline());
+            pst.setBoolean(8, userInfo.isIsPlaying());
+            pst.setTimestamp(9, userInfo.getCreatedAt());
+            pst.executeUpdate();
+            result = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        PreparedStatement pst = con.prepareStatement(
-                "INSERT INTO USERS VALUES(DEFAULT ,?,?, ? ,?,?,?,?,?,?)");
-        pst.setString(2, userInfo.getUserName());
-        pst.setString(3, userInfo.getUserNickName());
-        pst.setString(4, userInfo.getPassword());
-        pst.setInt(5, userInfo.getScore());
-        pst.setInt(6, userInfo.getNoOfWins());
-        pst.setInt(7, userInfo.getNoOfLosses());
-        pst.setBoolean(8, userInfo.isIsOnline());
-        pst.setBoolean(9, userInfo.isIsPlaying());
-        pst.setDate(10, userInfo.getCreatedAt());
-        
-        result = pst.executeUpdate();
         return result;
     }
-
-    public boolean checkIfUserExist(String userName) throws SQLException {
+    
+    
+    public static boolean checkIfUserExist(String userName) throws SQLException {
 
         PreparedStatement pst = con.prepareStatement(" SELECT ROOT.\"USERS\".\"USERNAME\" FROM  ROOT.\"USERS\" Where ROOT.\"USERS\".\"USERNAME\"=? ");
         pst.setString(1, userName);
@@ -100,7 +105,7 @@ public class DataAccessLayer {
         return found;
     }
 
-    public ArrayList<UserDTO> getOnlinePlayers() throws SQLException {
+    public static ArrayList<UserDTO> getOnlinePlayers() throws SQLException {
 
         ArrayList<UserDTO> onlinePlayers = new ArrayList<>();
 
@@ -117,7 +122,7 @@ public class DataAccessLayer {
         return onlinePlayers;
     }
 
-    public ArrayList<UserDTO> getOfflinePlayers() throws SQLException {
+    public static ArrayList<UserDTO> getOfflinePlayers() throws SQLException {
 
         ArrayList<UserDTO> onlinePlayers = new ArrayList<>();
 
@@ -132,7 +137,7 @@ public class DataAccessLayer {
         return onlinePlayers;
     }
 
-    public UserDTO getAllInfo(String userName) throws SQLException {
+    public static UserDTO getAllInfo(String userName) throws SQLException {
 
         ArrayList<UserDTO> onlinePlayers = getOnlinePlayers();
         for (UserDTO user : onlinePlayers) {
@@ -143,7 +148,7 @@ public class DataAccessLayer {
         return null;
     }
 
-    public int getOnlinePlayersNum() throws SQLException {
+    public static int getOnlinePlayersNum() throws SQLException {
 
         String sql = "select count( ROOT.\"USERS\".\"USERID\") AS total FROM  ROOT.\"USERS\" Where ROOT.\"USERS\".\"ISONLINE\"=? ";
         PreparedStatement pst = con.prepareStatement(sql);
@@ -156,7 +161,7 @@ public class DataAccessLayer {
         return count;
     }
 
-    public int getbusyPlayersNum() throws SQLException {
+    public static int getbusyPlayersNum() throws SQLException {
         String sql = "select count( ROOT.\"USERS\".\"USERID\") AS total FROM  ROOT.\"USERS\" Where ROOT.\"USERS\".\"ISPLAYING\"=? ";
         PreparedStatement pst = con.prepareStatement(sql);
         pst.setBoolean(1, true);
@@ -168,7 +173,7 @@ public class DataAccessLayer {
         return count;
     }
 
-    public int getOfflinePlayersNum() throws SQLException {
+    public static int getOfflinePlayersNum() throws SQLException {
 
         String sql = "select count( ROOT.\"USERS\".\"USERID\") AS total FROM  ROOT.\"USERS\" Where ROOT.\"USERS\".\"ISONLINE\"=? ";
         PreparedStatement pst = con.prepareStatement(sql);

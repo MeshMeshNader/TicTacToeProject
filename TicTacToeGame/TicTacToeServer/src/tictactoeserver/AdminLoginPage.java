@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
@@ -25,7 +26,7 @@ public class AdminLoginPage extends BorderPane {
     protected final Text userNameTxt;
     protected final Text passwardTxt;
     protected final TextField userNameValueTxtField;
-    protected final TextField passwardValueTxtField;
+    protected final PasswordField passwardValueTxtField;
     protected final Button serverLoginBtn;
     protected final DropShadow dropShadow;
 
@@ -38,7 +39,7 @@ public class AdminLoginPage extends BorderPane {
         userNameTxt = new Text();
         passwardTxt = new Text();
         userNameValueTxtField = new TextField();
-        passwardValueTxtField = new TextField();
+        passwardValueTxtField = new PasswordField();
         serverLoginBtn = new Button();
         dropShadow = new DropShadow();
 
@@ -88,7 +89,6 @@ public class AdminLoginPage extends BorderPane {
         passwardValueTxtField.setPrefHeight(40.0);
         passwardValueTxtField.setPrefWidth(440.0);
 
-        serverLoginBtn.setAlignment(javafx.geometry.Pos.CENTER);
         serverLoginBtn.setContentDisplay(javafx.scene.control.ContentDisplay.CENTER);
         serverLoginBtn.setLayoutX(429.0);
         serverLoginBtn.setLayoutY(458.0);

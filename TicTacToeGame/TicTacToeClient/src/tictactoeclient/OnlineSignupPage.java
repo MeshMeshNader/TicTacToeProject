@@ -5,7 +5,9 @@ import java.io.File;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.DropShadow;
@@ -280,6 +282,20 @@ public class OnlineSignupPage extends BorderPane {
         nickNameTxtField0.getChildren().add(soundToggleBtn);
         nickNameTxtField0.getChildren().add(soundTxt);
         checkSoundToggleBtn();
+        
+        ClientConnection.flag.addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals("registerTrue")) {
+                OnlineUsersPage root = new OnlineUsersPage();
+                Scene scene = new Scene(root);
+                TicTacToeClient.stage.setScene(scene);
+            } else if (newValue.equals("registerFalse")){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Error! while trying to Register!!");
+                ButtonType okButton = new ButtonType("OK");
+                alert.getButtonTypes().setAll(okButton);
+                alert.showAndWait();
+            }
+        });
 
         registerBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -288,11 +304,10 @@ public class OnlineSignupPage extends BorderPane {
                 UserDTO user = new UserDTO();
 
                 user.setUserName(userNameTxtField.getText());
+                user.setUserNickName(nickNameTxtField.getText());
                 user.setPassword(passwordTxtField.getText());
                 clientconnection = ClientConnection.getInstance();
                 clientconnection.writeMessage(Messages.registrationRequest, user);
-                //clientconnection.readMessage(parentStage);
-
             }
         });
 
