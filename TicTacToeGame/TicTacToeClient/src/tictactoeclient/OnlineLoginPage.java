@@ -282,7 +282,17 @@ public class OnlineLoginPage extends BorderPane {
         checkSoundToggleBtn();
 
         ClientConnection.flag.addListener((observable, oldValue, newValue) -> {
-            loginBtn.setText("Helloo");
+            if (newValue.equals("loginTrue")) {
+                OnlineUsersPage root = new OnlineUsersPage();
+                Scene scene = new Scene(root);
+                TicTacToeClient.stage.setScene(scene);
+            } else if (newValue.equals("loginFalse")){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("you shoud enter the correct name and password !");
+                ButtonType okButton = new ButtonType("OK");
+                alert.getButtonTypes().setAll(okButton);
+                alert.showAndWait();
+            }
         });
 
         loginBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -331,9 +341,9 @@ public class OnlineLoginPage extends BorderPane {
         });
 
     }
-    
-    void checkSoundToggleBtn(){
-        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+
+    void checkSoundToggleBtn() {
+        if (TicTacToeClient.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             soundToggleBtn.setText("On");
             soundToggleBtn.setStyle("-fx-background-color: green;");
             soundToggleBtn.setSelected(true);
@@ -348,12 +358,12 @@ public class OnlineLoginPage extends BorderPane {
             public void handle(ActionEvent event) {
 
                 if (soundToggleBtn.isSelected()) {
-                    WelcomPage.mediaPlayer.pause();
+                    TicTacToeClient.mediaPlayer.pause();
                     soundToggleBtn.setText("Off");
                     soundToggleBtn.setStyle("-fx-background-color: red;");
                     soundToggleBtn.setSelected(true);
                 } else {
-                    WelcomPage.mediaPlayer.play();
+                    TicTacToeClient.mediaPlayer.play();
                     soundToggleBtn.setText("On");
                     soundToggleBtn.setStyle("-fx-background-color: green;");
                     soundToggleBtn.setSelected(false);

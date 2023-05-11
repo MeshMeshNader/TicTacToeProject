@@ -66,6 +66,7 @@ public class ComputerLevelPage extends BorderPane {
     protected final Button startBtn;
     protected final DropShadow dropShadow4;
     protected final Glow glow0;
+    boolean isLevelSelected = false;
 
     public ComputerLevelPage() {
         radioGroup = new ToggleGroup();
@@ -300,6 +301,9 @@ public class ComputerLevelPage extends BorderPane {
             public void handle(ActionEvent event) {
                 setSelectedButton(easyBtn);
                 mode = Difficulty.EASY;
+                isLevelSelected = true;
+                oRadioBtn.setVisible(true);
+                xRadioBtn.setVisible(true);
             }
         });
 
@@ -308,7 +312,9 @@ public class ComputerLevelPage extends BorderPane {
             public void handle(ActionEvent event) {
                 setSelectedButton(mediumBtn);
                 mode = Difficulty.MEDIUM;
-
+                isLevelSelected = true;
+                oRadioBtn.setVisible(false);
+                xRadioBtn.setVisible(false);
             }
         });
 
@@ -317,6 +323,9 @@ public class ComputerLevelPage extends BorderPane {
             public void handle(ActionEvent event) {
                 setSelectedButton(hardBtn);
                 mode = Difficulty.HARD;
+                isLevelSelected = true;
+                oRadioBtn.setVisible(false);
+                xRadioBtn.setVisible(false);
             }
         });
 
@@ -336,7 +345,7 @@ public class ComputerLevelPage extends BorderPane {
 
                 xoState = (xRadioBtn.isSelected()) ? xOrO.X : xOrO.O;
 
-                if (!enterYourNameValueTxtField.getText().isEmpty()) {
+                if ((!enterYourNameValueTxtField.getText().isEmpty()) && isLevelSelected) {
 
                     ComputerGameBoard root = new ComputerGameBoard(enterYourNameValueTxtField.getText(), mode, xoState);
                     Scene scene = new Scene(root);
@@ -347,7 +356,7 @@ public class ComputerLevelPage extends BorderPane {
             }
         });
 
-        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+        if (TicTacToeClient.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             soundToggleBtn.setText("On");
             soundToggleBtn.setStyle("-fx-background-color: green;");
         } else {
@@ -360,12 +369,12 @@ public class ComputerLevelPage extends BorderPane {
             public void handle(ActionEvent event) {
 
                 if (soundToggleBtn.isSelected()) {
-                    WelcomPage.mediaPlayer.pause();
+                    TicTacToeClient.mediaPlayer.pause();
                     soundToggleBtn.setText("Off");
                     soundToggleBtn.setStyle("-fx-background-color: red;");
 
                 } else {
-                    WelcomPage.mediaPlayer.play();
+                    TicTacToeClient.mediaPlayer.play();
                     soundToggleBtn.setText("On");
                     soundToggleBtn.setStyle("-fx-background-color: green;");
                 }
@@ -382,6 +391,9 @@ public class ComputerLevelPage extends BorderPane {
             public void handle(ActionEvent event) {
                 setSelectedButton(easyBtn);
                 mode = Difficulty.EASY;
+                isLevelSelected = true;
+                oRadioBtn.setVisible(true);
+                xRadioBtn.setVisible(true);
             }
         });
 
@@ -390,7 +402,9 @@ public class ComputerLevelPage extends BorderPane {
             public void handle(ActionEvent event) {
                 setSelectedButton(mediumBtn);
                 mode = Difficulty.MEDIUM;
-
+                isLevelSelected = true;
+                oRadioBtn.setVisible(false);
+                xRadioBtn.setVisible(false);
             }
         });
 
@@ -399,6 +413,9 @@ public class ComputerLevelPage extends BorderPane {
             public void handle(ActionEvent event) {
                 setSelectedButton(hardBtn);
                 mode = Difficulty.HARD;
+                isLevelSelected = true;
+                oRadioBtn.setVisible(false);
+                xRadioBtn.setVisible(false);
             }
         });
 
@@ -418,8 +435,10 @@ public class ComputerLevelPage extends BorderPane {
             public void handle(ActionEvent event) {
 
                 xoState = (xRadioBtn.isSelected()) ? xOrO.X : xOrO.O;
-
-                if (!enterYourNameValueTxtField.getText().isEmpty()) {
+                System.out.println("isLevelSelected: " + isLevelSelected);
+                System.out.println("isEmpty: " + enterYourNameValueTxtField.getText().isEmpty());
+                System.out.println((!enterYourNameValueTxtField.getText().isEmpty()) && isLevelSelected);
+                if ((!enterYourNameValueTxtField.getText().isEmpty()) && isLevelSelected) {
                     ComputerGameBoard root = new ComputerGameBoard(enterYourNameValueTxtField.getText(), mode, xoState);
                     Scene scene = new Scene(root);
                     TicTacToeClient.stage.setScene(scene);
@@ -442,7 +461,7 @@ public class ComputerLevelPage extends BorderPane {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Name Validation");
         alert.setHeaderText(null);
-        alert.setContentText("Please Enter Your Name!!");
+        alert.setContentText("Please Enter Your Name \nand select Level!!");
         alert.showAndWait();
     }
 

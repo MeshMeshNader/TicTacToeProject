@@ -71,8 +71,11 @@
                   <Font name="Bauhaus 93" size="36.0" />
                </font>
             </Text>
+<<<<<<< HEAD
             <Text fx:id="playerOneUserNameLValueTxt" layoutX="26.0" layoutY="412.0" strokeType="OUTSIDE" strokeWidth="0.0" text="player" wrappingWidth="136.21875">
-
+=======
+            <Text fx:id="playerOneUserNameLValueTxt" layoutX="30.0" layoutY="411.0" strokeType="OUTSIDE" strokeWidth="0.0" text="player">
+>>>>>>> nader
                <font>
                   <Font name="Bauhaus 93" size="36.0" />
                </font>
@@ -100,6 +103,7 @@
                   <Font name="Bauhaus 93" size="24.0" />
                </font>
             </Text>
+<<<<<<< HEAD
             <Text fx:id="ScoreTxt" layoutX="31.0" layoutY="149.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Score">
                <font>
                   <Font name="Bauhaus 93" size="36.0" />
@@ -115,6 +119,15 @@
                   <Font name="Bauhaus 93" size="36.0" />
                </font>
             </Text>
+=======
+            <Text fx:id="enterYourNameTxt" layoutX="31.0" layoutY="149.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter Your Names :">
+               <font>
+                  <Font name="Bauhaus 93" size="30.0" />
+               </font>
+            </Text>
+            <TextField fx:id="playerOneUserNameLLValueTxtField" layoutX="178.0" layoutY="190.0" prefHeight="27.0" prefWidth="162.0" />
+            <TextField fx:id="playerTwoUserNameLLValueTxtField" layoutX="180.0" layoutY="259.0" prefHeight="27.0" prefWidth="161.0" />
+>>>>>>> nader
          </children>
       </AnchorPane>
    </left>

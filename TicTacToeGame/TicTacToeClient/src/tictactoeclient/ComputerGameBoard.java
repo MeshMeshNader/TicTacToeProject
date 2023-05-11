@@ -1,6 +1,6 @@
 package tictactoeclient;
 
- import java.io.File;
+import java.io.File;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,8 +24,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.layout.RowConstraints;
- 
+
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -46,7 +47,7 @@ import tictactoeclient.ComputerLevelPage.xOrO;
 public class ComputerGameBoard extends BorderPane {
 
     GameManager gameManager;
-    
+
     protected final AnchorPane anchorPane;
     protected final AnchorPane anchorPane0;
     protected final Glow glow;
@@ -71,10 +72,10 @@ public class ComputerGameBoard extends BorderPane {
     protected final Text toeRTxt;
     protected final Text aRTxt;
     protected final Text ticRTxt;
- 
+
     protected final ToggleButton soundToggleBtn;
-    
-     protected final DropShadow dropShadow3;
+
+    protected final DropShadow dropShadow3;
     protected final Text soundTxt;
     protected final Text playerOneUserNameRValueTxt;
     protected final GridPane xoGridPane;
@@ -110,10 +111,11 @@ public class ComputerGameBoard extends BorderPane {
     private boolean gameIsOver = false;
     String playerOneNameValue;
     boolean hasWinner = false;
+    Button[][] buttonsBoardArray;
 
     public ComputerGameBoard(String playerName, Difficulty mode, xOrO xoState) {
-       
-         anchorPane = new AnchorPane();
+
+        anchorPane = new AnchorPane();
         anchorPane0 = new AnchorPane();
         glow = new Glow();
         backBtn = new Button();
@@ -137,11 +139,11 @@ public class ComputerGameBoard extends BorderPane {
         toeRTxt = new Text();
         aRTxt = new Text();
         ticRTxt = new Text();
- 
+
         soundToggleBtn = new ToggleButton();
         dropShadow3 = new DropShadow();
         soundTxt = new Text();
- 
+
         playerOneUserNameRValueTxt = new Text();
         xoGridPane = new GridPane();
         columnConstraints = new ColumnConstraints();
@@ -266,7 +268,7 @@ public class ComputerGameBoard extends BorderPane {
         recordToggleBtn.setMnemonicParsing(false);
         recordToggleBtn.setPrefHeight(42.0);
         recordToggleBtn.setPrefWidth(130.0);
- 
+
         recordToggleBtn.setText("On / Off");
 
         recordToggleBtn.setEffect(dropShadow2);
@@ -325,9 +327,9 @@ public class ComputerGameBoard extends BorderPane {
         soundToggleBtn.setMnemonicParsing(false);
         soundToggleBtn.setPrefHeight(42.0);
         soundToggleBtn.setPrefWidth(130.0);
- 
+
         soundToggleBtn.setText("On");
- 
+
         soundToggleBtn.setEffect(dropShadow3);
         soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
 
@@ -578,31 +580,36 @@ public class ComputerGameBoard extends BorderPane {
         anchorPane1.getChildren().add(anchorPane2);
 
         buttonsBoard = new ArrayList<>(Arrays.asList(cellPos0_0, cellPos0_1, cellPos0_2, cellPos1_0, cellPos1_1, cellPos1_2, cellPos2_0, cellPos2_1, cellPos2_2));
-
-        Button[][] buttonsBoardArray = new Button[3][3];
         int index = 0;
- 
-        for (int row = 0; row < buttonsBoardArray.length; row++) {
-             
-            for (int col = 0; col < buttonsBoardArray[row].length; col++) {
-                buttonsBoardArray[row][col] = buttonsBoard.get(index++);
-            }
-        }
+        buttonsBoardArray = new Button[][]{
+            {cellPos0_0, cellPos0_1, cellPos0_2},
+            {cellPos1_0, cellPos1_1, cellPos1_2},
+            {cellPos2_0, cellPos2_1, cellPos2_2}
+        };
 
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                
+
                 ComputerLevelPage root = new ComputerLevelPage();
                 Scene scene = new Scene(root);
                 TicTacToeClient.stage.setScene(scene);
-             }
+            }
         });
 
         rematchBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                newGame();
+                if (mode == Difficulty.EASY) {
+                    newGame();
+                } else if (mode == Difficulty.MEDIUM) {
+                    resetCell();
+                    hasWinner = false;
+                } else if (mode == Difficulty.HARD) {
+                    resetCell();
+                    hasWinner = false;
+                }
+
             }
         });
 
@@ -612,33 +619,32 @@ public class ComputerGameBoard extends BorderPane {
                 WelcomPage root = new WelcomPage();
                 Scene scene = new Scene(root);
                 TicTacToeClient.stage.setScene(scene);
-             }
+            }
         });
 
         if (mode == Difficulty.EASY) {
             buttonsBoard.forEach((button) -> {
                 setButtonsMouseListener(button, xoState);
             });
-
             gameManager = new GameManager(playerName);
             newGame();
             if (xoState == xOrO.O) {
                 generateCompStep(xoState);
             }
         } else if (mode == Difficulty.MEDIUM) {
- 
-        } else if (mode == Difficulty.HARD) {
-            if (xoState == xOrO.O) {
-                gameManager = new GameManager(playerName);
-                newGame();
-                generateCompStep(xoState);
-            }
             for (Button[] row : buttonsBoardArray) {
                 for (Button cell : row) {
-                    setupButton(cell, buttonsBoardArray);
+                    setupButton(cell, buttonsBoardArray, 5);
                     cell.setFocusTraversable(false);
                 }
+            }
 
+        } else if (mode == Difficulty.HARD) {
+            for (Button[] row : buttonsBoardArray) {
+                for (Button cell : row) {
+                    setupButton(cell, buttonsBoardArray, 100);
+                    cell.setFocusTraversable(false);
+                }
             }
         }
     }
@@ -656,13 +662,15 @@ public class ComputerGameBoard extends BorderPane {
             if (gameManager.isPlayerOWon()) {
                 setTextDisabled();
             }
-        } else {
+        } else if (state == xOrO.O) {
             gameManager.setCell(compStep, CellState.XSTATE);
             buttonsBoard.get(compStep).setText(gameManager.getCell(compStep).state.getCellState());
             buttonsBoard.get(compStep).setMouseTransparent(true);
             if (gameManager.isPlayerXWon()) {
                 setTextDisabled();
             }
+        } else {
+
         }
 
     }
@@ -720,8 +728,6 @@ public class ComputerGameBoard extends BorderPane {
 
     void newGame() {
         gameManager.newGame();
-        //for()
-        //button.setText(gameManager.getCell(index).state.getCellState());
         for (int i = 0; i < buttonsBoard.size(); i++) {
             buttonsBoard.get(i).setText("");
             setTextEnabled();
@@ -729,7 +735,18 @@ public class ComputerGameBoard extends BorderPane {
         }
     }
 
- 
+    void resetCell() {
+        for (int row = 0; row < buttonsBoardArray.length; row++) {
+            for (int col = 0; col < buttonsBoardArray[row].length; col++) {
+                buttonsBoardArray[row][col].setText("");
+                setTextEnabled();
+                buttonsBoardArray[row][col].setStyle("");
+                buttonsBoardArray[row][col].setDisable(false);
+            }
+            hasWinner = false;
+        }
+    }
+
     void showGameState(String txt) {
         //this section concern to show a winning video when the player x won 
         if (gameManager.isPlayerXWon()) {
@@ -737,7 +754,7 @@ public class ComputerGameBoard extends BorderPane {
             Stage dialogStage = new Stage();
             dialogStage.initModality(Modality.APPLICATION_MODAL);
 
-            File videoFile = new File("src\\tictactoeclient\\sounds\\winnerVideo.mp4");
+            File videoFile = new File("src\\tictactoeclient\\videos\\winnerVideo.mp4");
             Media media = new Media(videoFile.toURI().toString());
             MediaPlayer mediaPlayer = new MediaPlayer(media);
             MediaView mediaView = new MediaView(mediaPlayer);
@@ -761,7 +778,7 @@ public class ComputerGameBoard extends BorderPane {
                 mediaPlayer.stop();
             });
         }
- 
+
     }
 
     //////////////////////////////////////////// End of morad Code And Start of Nasr Code //////////////////////
@@ -835,12 +852,11 @@ public class ComputerGameBoard extends BorderPane {
     }
 
     int checkWinner(Button[][] board) {
- 
+
         //  2: X winner
         // -2: O winner
         //  0: Tie
         //  1: No winner and game not finish
-
         // For rows
         for (int i = 0; i < 3; i++) {
             if (haveTheSameValueAndNotEmpty(board[i][0].getText(), board[i][1].getText(), board[i][2].getText())) {
@@ -882,14 +898,15 @@ public class ComputerGameBoard extends BorderPane {
         return 1;
     }
 
-    private void setupButton(Button cellBtn, Button[][] cells) {
+    private void setupButton(Button cellBtn, Button[][] cells, int gameDepth) {
         cellBtn.setOnMouseClicked(mouseEvent -> {
+
             if (!hasWinner) {
                 if (cellBtn.getText().equals("")) {
                     cellBtn.setText("X");
                     cellBtn.setDisable(true);
 
-                    int result = minimax(cells, 100, false, true);
+                    int result = minimax(cells, gameDepth, false, true);
                     //System.out.println("result= " + result);
 
                     hasWinner = checkWinner(cells) != 1;
@@ -900,16 +917,16 @@ public class ComputerGameBoard extends BorderPane {
                 }
             }
             int result = checkWinner(cells);
+
             if (result == 0) {
-                // System.out.println("Tie \n");
+                System.out.println("Tie \n");
             } else {
                 if (result == 2) {
                     //  System.out.println("X is winner");
                 } else if (result == -2) {
-
-                    // System.out.println("O is winner");
-                } else {
-                    // System.out.println("No winner yet");
+                    System.out.println("O is winner");
+                } else if (result == 0) {
+                    System.out.println("No winner yet");
                 }
             }
         });

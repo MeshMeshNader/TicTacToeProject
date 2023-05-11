@@ -5,7 +5,6 @@
  */
 package tictactoeserver;
 
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -23,7 +22,7 @@ import tictactoeclient.UserDTO;
  * @author dell
  */
 public class ServerConnection {
-    
+
     InputStream inputstream;
     OutputStream outputstream;
     ObjectInputStream objectinputstream;
@@ -43,7 +42,7 @@ public class ServerConnection {
             outputstream = socket.getOutputStream();
             objectinputstream = new ObjectInputStream(inputstream);
             objectoutputstream = new ObjectOutputStream(outputstream);
-            
+
             DataAccessLayer.connect();
             readMessage();
 
@@ -55,9 +54,6 @@ public class ServerConnection {
     public String getIp() {
         return ip;
     }
-    
-    
-    
 
     public void readMessage() {
         new Thread() {
@@ -82,6 +78,8 @@ public class ServerConnection {
 
                     } catch (ClassNotFoundException | IOException e) {
                         e.printStackTrace();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
 
@@ -90,14 +88,14 @@ public class ServerConnection {
 
     }
 
-    public void sendMessage(String msg, Boolean status) {
+    public void sendMessage(String msg, Object obj) {
         new Thread() {
             @Override
             public void run() {
 
                 try {
                     objectoutputstream.writeObject(msg);
-                    objectoutputstream.writeObject(status);
+                    objectoutputstream.writeObject(obj);
                 } catch (IOException ex) {
                     Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -108,19 +106,19 @@ public class ServerConnection {
 
     public Boolean loginValidation() {
         // check database and return true if exist and true and false if failed
-        System.out.println("Login Validation Test");
-      /*  if (DataAccessLayer.login(obj.getUserName(), obj.getPassword())) {
+        UserDTO user = (UserDTO) obj;
+        if (DataAccessLayer.login(user.getUserName(), ((UserDTO)user).getPassword())) {
             return true;
         } else {
             return false;
-        }*/
-      return true;
+        }
+        //return true;
     }
 
-    public boolean registrationValidation() {
+    public Boolean registrationValidation() throws SQLException {
         // insert in database and return true if sucess and false if failed
-        System.out.println("Login Validation Test");
-        return false;
+        UserDTO user = (UserDTO) obj;
+        return DataAccessLayer.register(user);
     }
 
 }

@@ -6,9 +6,9 @@
 package tictactoeclient;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
 
-public class UserDTO implements Serializable{
+public class UserDTO implements Serializable {
 
     private int userID;
     private String userName;
@@ -19,12 +19,22 @@ public class UserDTO implements Serializable{
     private int noOfLosses;
     private boolean isOnline;
     private boolean isPlaying;
-    Date createdAt;
+    Timestamp createdAt;
 
-    public UserDTO(){
-      
+    public UserDTO() {
+        userName = "";
+        userNickName = "";
+        password = "";
+
+        score = 0;
+        noOfWins = 0;
+        noOfLosses = 0;
+        isOnline = true;
+        isPlaying = false;
+        createdAt = new Timestamp(System.currentTimeMillis());
     }
-    public UserDTO(int userID, String userName, String userNickName, String password, int score, int noOfWins, int noOfLosses, boolean isOnline, boolean isPlaying, Date createdAt) {
+
+    public UserDTO(int userID, String userName, String userNickName, String password, int score, int noOfWins, int noOfLosses, boolean isOnline, boolean isPlaying, Timestamp createdAt) {
         this.userID = userID;
         this.userName = userName;
         this.userNickName = userNickName;
@@ -46,8 +56,6 @@ public class UserDTO implements Serializable{
     public UserDTO(String userName) {
         this.userName = userName;
     }
-    
-        
 
     public int getUserID() {
         return userID;
@@ -121,11 +129,11 @@ public class UserDTO implements Serializable{
         this.isPlaying = isPlaying;
     }
 
-    public Date getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 

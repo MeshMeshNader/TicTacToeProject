@@ -28,6 +28,7 @@ public class ServerHandeller {
     public ServerHandeller() {
         try {
             serverSocket = new ServerSocket(5005);
+            System.out.println("ip= "+serverSocket.getInetAddress());
             acceptClient();
         } catch (IOException ex) {
             Logger.getLogger(ServerHandeller.class.getName()).log(Level.SEVERE, null, ex);

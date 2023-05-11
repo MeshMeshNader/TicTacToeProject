@@ -33,10 +33,6 @@ import javafx.stage.Stage;
 
 public class WelcomPage extends BorderPane {
 
-    public static String soundFile;
-    public static Media sound;
-    public static MediaPlayer mediaPlayer;
-
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final ImageView offlineImg;
@@ -251,9 +247,6 @@ public class WelcomPage extends BorderPane {
         anchorPane0.getChildren().add(soundToggleBtn);              
         anchorPane0.getChildren().add(soundTxt);
 
-        initSound();
-
-        
 
         offlineBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -298,22 +291,9 @@ public class WelcomPage extends BorderPane {
          checkSoundToggleBtn();
     }
 
-    public static void initSound() {
-        WelcomPage.soundFile = "src\\tictactoeclient\\sounds\\sound.mp3";
-        try {
-            WelcomPage.sound = new Media(new File(soundFile).toURI().toString());
-        } catch (Exception e) {
-            System.err.println("Failed to load sound file: " + e.getMessage());
-            return;
-        }
-        WelcomPage.mediaPlayer = new MediaPlayer(WelcomPage.sound);
-        //this property will make the sound to run automatically when the app starts
-        WelcomPage.mediaPlayer.setAutoPlay(true);
-
-    }
     
     void checkSoundToggleBtn(){
-        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+        if (TicTacToeClient.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             soundToggleBtn.setText("On");
             soundToggleBtn.setStyle("-fx-background-color: green;");
             soundToggleBtn.setSelected(true);
@@ -328,12 +308,12 @@ public class WelcomPage extends BorderPane {
             public void handle(ActionEvent event) {
 
                 if (soundToggleBtn.isSelected()) {
-                    WelcomPage.mediaPlayer.pause();
+                    TicTacToeClient.mediaPlayer.pause();
                     soundToggleBtn.setText("Off");
                     soundToggleBtn.setStyle("-fx-background-color: red;");
                     soundToggleBtn.setSelected(true);
                 } else {
-                    WelcomPage.mediaPlayer.play();
+                    TicTacToeClient.mediaPlayer.play();
                     soundToggleBtn.setText("On");
                     soundToggleBtn.setStyle("-fx-background-color: green;");
                     soundToggleBtn.setSelected(false);
