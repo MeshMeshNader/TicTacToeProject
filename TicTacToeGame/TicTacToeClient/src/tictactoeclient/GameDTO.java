@@ -6,7 +6,7 @@
 package tictactoeclient;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *
@@ -34,6 +34,11 @@ public class GameDTO implements Serializable{
         this.createdAt = createdAt;
     }
 
+    public GameDTO() {
+    }
+
+    
+    
     public int getGameID() {
         return gameID;
     }

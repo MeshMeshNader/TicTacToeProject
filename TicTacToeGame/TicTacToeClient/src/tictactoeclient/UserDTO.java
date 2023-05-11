@@ -6,7 +6,7 @@
 package tictactoeclient;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 
 public class UserDTO implements Serializable{
 
@@ -23,6 +23,15 @@ public class UserDTO implements Serializable{
 
     public UserDTO(){
       
+    }
+    public UserDTO(String userName){
+        this.userName = userName;
+      
+    }
+    public UserDTO(String userName , Boolean isOnline , Boolean isPlaying){
+        this.userName = userName;
+        this.isOnline = isOnline;
+        this.isPlaying = this.isPlaying;
     }
     public UserDTO(int userID, String userName, String userNickName, String password, int score, int noOfWins, int noOfLosses, boolean isOnline, boolean isPlaying, Date createdAt) {
         this.userID = userID;

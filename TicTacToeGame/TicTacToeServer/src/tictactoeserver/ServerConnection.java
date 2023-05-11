@@ -5,7 +5,6 @@
  */
 package tictactoeserver;
 
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -18,6 +17,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import tictactoeclient.GameDTO;
 import tictactoeclient.Messages;
+import tictactoeclient.MoveDTO;
 import tictactoeclient.UserDTO;
 
 /**
@@ -25,7 +25,7 @@ import tictactoeclient.UserDTO;
  * @author dell
  */
 public class ServerConnection {
-    
+
     InputStream inputstream;
     OutputStream outputstream;
     ObjectInputStream objectinputstream;
@@ -33,8 +33,7 @@ public class ServerConnection {
     Socket socket;
     String ip;
     int portNum;
-    UserDTO objUser;
-    GameDTO objGame;
+    Object obj;
     String msg;
 
     public ServerConnection(Socket socket) {
@@ -46,7 +45,7 @@ public class ServerConnection {
             outputstream = socket.getOutputStream();
             objectinputstream = new ObjectInputStream(inputstream);
             objectoutputstream = new ObjectOutputStream(outputstream);
-            
+
             DataAccessLayer.connect();
             readMessage();
 
@@ -58,9 +57,6 @@ public class ServerConnection {
     public String getIp() {
         return ip;
     }
-    
-    
-    
 
     public void readMessage() {
         new Thread() {
@@ -73,35 +69,71 @@ public class ServerConnection {
 
                         if (msg.equals(Messages.loginRequest)) {
 
-                            objUser = (UserDTO) objectinputstream.readObject();
+                            obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.loginResponse, loginValidation());
 
                         } else if (msg.equals(Messages.registrationRequest)) {
 
-                            objUser = (UserDTO) objectinputstream.readObject();
+                            obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.registrationResponse, registrationValidation());
 
                         } else if (msg.equals(Messages.getOnlineUsersRequest)) {
+                            obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.getOnlineUsersResponse, retriveOnlineUsers());
-                            
 
-                        } else if (msg.equals(Messages.incNumOfWinsRequest)){
-                            sendMessage(Messages.getOnlineUsersResponse, incNumOfWins());
-                            
-                        
-                        } else if (msg.equals(Messages.setGameRequest)){
-                             objGame = (GameDTO) objectinputstream.readObject();
-                              sendMessage(Messages.setGameResponse, setGameResponse());
-                              
-                        } else if (msg.equals(Messages.getGameRequest)){
+                        } else if (msg.equals(Messages.incNumOfWinsRequest)) {
+                             obj = (UserDTO) objectinputstream.readObject();
+                            sendMessage(Messages.incNumOfWinsResponse, incNumOfWins());
+
+                        } else if (msg.equals(Messages.incNumOflossesRequest)) {
+                             obj = (UserDTO) objectinputstream.readObject();
+                            sendMessage(Messages.incNumOflossesResponse, incNumOfLossess());
+
+                        } else if (msg.equals(Messages.setGameRequest)) {
+                            obj = (GameDTO) objectinputstream.readObject();
+                            sendMessage(Messages.setGameResponse, setGameResponse());
+
+                        } else if (msg.equals(Messages.getGameRequest)) {
+                            obj = (GameDTO) objectinputstream.readObject();
                             sendMessage(Messages.getGameResponse, retriveGame());
-                            
-                        } else if (msg.equals(Messages.deleteGameRequest)){
+
+                        } else if (msg.equals(Messages.deleteGameRequest)) {
+                            obj = (GameDTO) objectinputstream.readObject();
                             sendMessage(Messages.deleteGameResponse, gameDeleted());
-                            
-                        }else if (msg.equals(Messages.deleteMoveRequest)){
+
+                        } else if (msg.equals(Messages.deleteMoveRequest)) {
+                            obj = (MoveDTO) objectinputstream.readObject();
                             sendMessage(Messages.deleteMoveResponse, moveDeleted());
+
+                        } else if (msg.equals(Messages.makeUserOnlineRequest)) {
+                             obj = (UserDTO) objectinputstream.readObject();
+                            sendMessage(Messages.makeUserOnlineResponse, makeUserOnline());
+
+                        } else if (msg.equals(Messages.makeUserOfflineRequest)) {
+                             obj = (UserDTO) objectinputstream.readObject();
+                            sendMessage(Messages.makeUserOfflineResponse, makeuserOffline());
+
+                        } else if (msg.equals(Messages.getNumberOfWinsRequest)) {
+                             obj = (UserDTO) objectinputstream.readObject();
+                            sendMessage(Messages.getNumberOfWinsResponse, getNumberOfWins());
+
+                        } else if (msg.equals(Messages.getNumberOfLossessRequest)) {
+                             obj = (UserDTO) objectinputstream.readObject();
+                            sendMessage(Messages.getNumberOfLossesResponse, getNumberOfLossess());
+                        } else if (msg.equals(Messages.updatedResultRequest)){
+                            obj = (GameDTO) objectinputstream.readObject();
+                            sendMessage(Messages.updatedResultResponse, updatedResult());
+                        
+                        } else if (msg.equals(Messages.setMovesRequest)){
+                            obj = (MoveDTO) objectinputstream.readObject();
+                            sendMessage(Messages.setMovesResponse, setMove());
+                        
+                        }else if (msg.equals(Messages.getMovesRequest)){
+                            obj = (MoveDTO) objectinputstream.readObject();
+                            sendMessage(Messages.getMovesResponse, getMoves());
+                        
                         }
+                        
 
                     } catch (IOException ex) {
                         Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
@@ -116,8 +148,6 @@ public class ServerConnection {
 
         }.start();
     }
-
-
 
     public void sendMessage(String msg, Object obj) {
         new Thread() {
@@ -134,55 +164,100 @@ public class ServerConnection {
             }
         }.start();
     }
-    public ArrayList <UserDTO> retriveOnlineUsers () throws SQLException{
-        ArrayList <UserDTO> usersOnline ;
+
+    public ArrayList<UserDTO> retriveOnlineUsers() throws SQLException {
+        ArrayList<UserDTO> usersOnline;
         usersOnline = DataAccessLayer.getOnlinePlayers();
-        if (usersOnline != null)
+        if (usersOnline != null) {
             return usersOnline;
-        else 
+        } else {
             return (new ArrayList<UserDTO>());
+        }
 
     }
-    public ArrayList <GameDTO> retriveGame () throws SQLException{
-        ArrayList <GameDTO> Game ;
-        Game = DataAccessLayer.getGame(objGame.getGameID());
-        if (Game != null)
+
+    public GameDTO retriveGame() throws SQLException {
+        GameDTO Game;
+        Game = DataAccessLayer.getGame(((GameDTO) obj).getGameID());
+        if (Game != null) {
             return Game;
-        else 
-            return (new ArrayList<GameDTO>());
+        } else {
+            return (new GameDTO());
+        }
 
     }
-    
-    public Boolean incNumOfWins(){
-    return true;
+
+    public Boolean incNumOfWins() {
+        Boolean result = DataAccessLayer.incrementNumberOfWins(((UserDTO) obj).getUserName());
+
+        return result;
+
     }
-    public Boolean  setGameResponse(){
-       
-      return true;  
+
+    public Boolean incNumOfLossess() {
+        Boolean result = DataAccessLayer.incrementNumberOfLosses(((UserDTO) obj).getUserName());
+        return result;
     }
-    public Boolean gameDeleted(){
-    return true;
+
+    public Boolean setGameResponse() {
+        Boolean result = DataAccessLayer.setGame((GameDTO) obj);
+        return result;
     }
-    public Boolean moveDeleted(){
-    return true;
+
+    public Boolean gameDeleted() throws SQLException {
+        Boolean result = DataAccessLayer.deleteGame(((GameDTO) obj).getGameID());
+        return result;
     }
-    
-    
-    public Boolean loginValidation() {
-        // check database and return true if exist and true and false if failed
-        System.out.println("Login Validation Test");
-      /*  if (DataAccessLayer.login(obj.getUserName(), obj.getPassword())) {
+
+    public Boolean moveDeleted() throws SQLException {
+        int result = DataAccessLayer.deleteMove(((MoveDTO) obj).getMoveID());
+        if (result == 1) {
             return true;
         } else {
             return false;
-        }*/
-      return true;
+        }
     }
 
-    public boolean registrationValidation() {
-        // insert in database and return true if sucess and false if failed
-        System.out.println("Login Validation Test");
-        return false;
+    public Boolean makeUserOnline() {
+        Boolean result = DataAccessLayer.makeuserOnline(((UserDTO) obj).getUserName());
+        return result;
+
     }
 
+    public Boolean makeuserOffline() {
+        Boolean result = DataAccessLayer.makeuserOffline(((UserDTO) obj).getUserName());
+        return result;
+
+    }
+
+    public Integer getNumberOfWins() {
+        Integer wins;
+        wins = DataAccessLayer.getNumberOfWins(((UserDTO) obj).getUserName());
+        return wins;
+    }
+
+    public Integer getNumberOfLossess() {
+        Integer losses;
+        losses = DataAccessLayer.getNumberOfLosses(((UserDTO) obj).getUserName());
+        return losses;
+    }
+    public Boolean updatedResult() {
+        GameDTO objGame = (GameDTO)obj;
+        Boolean result = DataAccessLayer.updateResults(objGame.getResults(), objGame);
+        return result;
+
+    }
+    public Boolean setMove(){
+    Boolean result = DataAccessLayer.setMove((MoveDTO) obj);
+    return result;
+    }
+    public ArrayList<MoveDTO> getMoves () throws SQLException
+    {
+        ArrayList<MoveDTO> moves ;
+        moves = DataAccessLayer.getMoves(((MoveDTO) obj).getMoveID());
+        if(moves != null)
+            return moves;
+        else 
+            return (new ArrayList<MoveDTO>());
+    }
 }

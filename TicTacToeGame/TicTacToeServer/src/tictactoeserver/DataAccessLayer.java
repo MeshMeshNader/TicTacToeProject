@@ -229,37 +229,42 @@ public class DataAccessLayer {
         }
     }
 
-    public void makeuserOnline(String userName) {
+    public static Boolean makeuserOnline(String userName) {
         try {
             String sqlUpdate = "Update ROOT.\"users\" set ROOT.\"USERS\".\"ISONLINE\" = ? where ROOT.\"USERS\".\"USERNAME\" = ?";
             PreparedStatement pst = con.prepareStatement(sqlUpdate);
             pst.setBoolean(1, true);
             pst.setString(2, userName);
             pst.executeUpdate();
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(DataAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
 
     }
 
-    public void makeuserOffline(String userName) {
+    public  static Boolean makeuserOffline(String userName) {
+        
         try {
             String sqlUpdate = "Update ROOT.\"users\" set ROOT.\"USERS\".\"ISONLINE\" = ? where ROOT.\"USERS\".\"USERNAME\" = ?";
             PreparedStatement pst = con.prepareStatement(sqlUpdate);
             pst.setBoolean(1, false);
             pst.setString(2, userName);
             pst.executeUpdate();
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(DataAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
-
+      
     }
 
     public Connection getConnection() {
         return con;
     }
 
-    public int getNumberOfWins(String userName) {
+    public static int getNumberOfWins(String userName) {
         int numberOfWins = 0;
         try {
             PreparedStatement pst = con.prepareStatement("SELECT ROOT.\"USERS\".\"NOOFWINS\" FROM  ROOT.\"USERS\" WHERE ROOT.\"USERS\".\"USERNAME\" = ?");
@@ -275,7 +280,7 @@ public class DataAccessLayer {
         return numberOfWins;
     }
 
-    public int getNumberOfLosses(String userName) {
+    public static int getNumberOfLosses(String userName) {
         int numberOfLoses = 0;
         try {
             PreparedStatement pst = con.prepareStatement("SELECT ROOT.\"USERS\".\"NOOFLOSSES\" FROM  ROOT.\"USERS\" WHERE ROOT.\"USERS\".\"USERNAME\" = ?");
@@ -291,34 +296,36 @@ public class DataAccessLayer {
         return numberOfLoses;
     }
 
-    public void incrementNumberOfLosses(String userName) {
+    public static  Boolean incrementNumberOfLosses(String userName) {
 
         try {
             PreparedStatement pst = con.prepareStatement("UPDATE ROOT.\"USERS\" SET ROOT.\"USERS\".\"NOOFLOSSES\" = ROOT.\"USERS\".\"NOOFLOSSES\" + 1 WHERE ROOT.\"USERS\".\"USERNAME\" = ?");
             pst.setString(1, userName);
             ResultSet rs = pst.executeQuery();
-
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(DataAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
 
     }
 
-    public Boolean incrementNumberOfWins(String userName) {
+    public static Boolean incrementNumberOfWins(String userName) {
 
         try {
 
             PreparedStatement pst = con.prepareStatement("UPDATE ROOT.\"USERS\" SET ROOT.\"USERS\".\"NOOFWINS\" = ROOT.\"USERS\".\"NOOFWINS\" + 1 WHERE ROOT.\"USERS\".\"USERNAME\" = ?");
             pst.setString(1, userName);
             ResultSet rs = pst.executeQuery();
-
+        return true;
         } catch (SQLException ex) {
             Logger.getLogger(DataAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
-        return true;
+        
     }
 
-    public Boolean setGame(GameDTO game) {
+    public static Boolean setGame(GameDTO game) {
 
         try {
             PreparedStatement pst = con.prepareStatement(
@@ -333,13 +340,15 @@ public class DataAccessLayer {
             pst.setDate(8, game.getCreatedAt());
 
             pst.executeUpdate();
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(DataAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
-return true;
+
     }
 
-    public void setMove(MoveDTO move) {
+    public static Boolean setMove(MoveDTO move) {
 
         try {
             PreparedStatement pst = con.prepareStatement(
@@ -351,13 +360,15 @@ return true;
             pst.setDate(6, move.getCreatedAt());
 
             pst.executeUpdate();
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(DataAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
 
     }
 
-    public ArrayList<MoveDTO> getMoves(int moveId) throws SQLException {
+    public static ArrayList<MoveDTO> getMoves(int moveId) throws SQLException {
 
         ArrayList<MoveDTO> moves = new ArrayList<>();
 
@@ -376,15 +387,15 @@ return true;
         return moves;
     }
 
-    public static ArrayList<GameDTO> getGame(int gameId) throws SQLException {
+    public static  GameDTO  getGame(int gameId) throws SQLException {
 
-        ArrayList<GameDTO> games = new ArrayList<>();
+         GameDTO game;
 
         PreparedStatement pst = con.prepareStatement(" SELECT * FROM GAME WHERE GAMEID = ?");
         pst.setInt(1, gameId);
         ResultSet resultSet = pst.executeQuery();
-        while (resultSet.next()) {
-            games.add(new GameDTO(gameId,
+        if  (resultSet.next()) {
+            game = new GameDTO(gameId,
                     resultSet.getString("MODE"),
                     resultSet.getString("RESULTS"),
                     resultSet.getInt("PLAYE1"),
@@ -392,35 +403,45 @@ return true;
                     resultSet.getInt("WINNERID"),
                     resultSet.getInt("LOSERID"),
                     resultSet.getDate("CREATEDAT")
-            ));
+            );
+        }else
+            game = new GameDTO();
+        return game;
+    }
+
+    public static  Boolean deleteGame(int gameId)  {
+
+        try {
+            PreparedStatement pst = con.prepareStatement(" DELETE FROM GAME WHERE GAMEID = ?");
+            pst.setInt(1, gameId);
+            pst.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(DataAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
-        return games;
     }
 
-    public Boolean deleteGame(int gameId) throws SQLException {
-
-        PreparedStatement pst = con.prepareStatement(" DELETE FROM GAME WHERE GAMEID = ?");
-        pst.setInt(1, gameId);
-        pst.executeUpdate();
-        return true;
-    }
-
-    public Boolean deleteMove(int moveId) throws SQLException {
-
+    public static int deleteMove(int moveId) throws SQLException {
+        int result ;
         PreparedStatement pst = con.prepareStatement(" DELETE FROM MOVE WHERE MOVEID = ?");
         pst.setInt(1, moveId);
-        pst.executeUpdate();
-        return true;
+        result = pst.executeUpdate();
+        return result;
     }
 
-    public void updateResults(String result) {
+    public static Boolean updateResults(String result , GameDTO game) {
         try {
             PreparedStatement pst = con.prepareStatement("UPDATE GAME SET RESULTS = ? WHERE GAMEID = ?");
             pst.setString(1, result);
+            pst.setString(2, game.getGameID() + "");
 
             pst.executeUpdate();
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(DataAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
     }
+    
 }
