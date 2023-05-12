@@ -1,6 +1,17 @@
 package tictactoeclient;
 
 import java.io.File;
+
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -14,6 +25,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -21,7 +33,10 @@ import javafx.stage.Stage;
 
 public class WelcomPage extends BorderPane {
 
-    Stage parentStage;
+    public static String soundFile;
+    public static Media sound;
+    public static MediaPlayer mediaPlayer;
+
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final ImageView offlineImg;
@@ -41,13 +56,20 @@ public class WelcomPage extends BorderPane {
     protected final Text aTxt;
     protected final Text ticTxt;
     protected final ImageView xoImg;
-    protected final ToggleButton soundToggleBtn;               //************1111************
+
+    protected final ToggleButton soundToggleBtn;
+
     protected final DropShadow dropShadow2;
-    protected final Text soundTxt;
+    protected final Text soundTxt; 
 
-    public WelcomPage(Stage stage) {
+    InputStream inputstream;
+    OutputStream outpuststream;
+    ObjectInputStream objectinputstream;
+    ObjectOutputStream objectoutputstream;
+    Socket socket;
 
-        parentStage = stage;
+    public WelcomPage() {
+
         anchorPane = new AnchorPane();
         glow = new Glow();
         offlineImg = new ImageView();
@@ -67,7 +89,8 @@ public class WelcomPage extends BorderPane {
         aTxt = new Text();
         ticTxt = new Text();
         xoImg = new ImageView();
-        soundToggleBtn = new ToggleButton();               //************************
+
+        soundToggleBtn = new ToggleButton();
         dropShadow2 = new DropShadow();
         soundTxt = new Text();
 
@@ -200,7 +223,6 @@ public class WelcomPage extends BorderPane {
         soundToggleBtn.setMnemonicParsing(false);
         soundToggleBtn.setPrefHeight(42.0);
         soundToggleBtn.setPrefWidth(130.0);
-        soundToggleBtn.setText("On");                           //************************
 
         soundToggleBtn.setEffect(dropShadow2);
         soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
@@ -225,91 +247,99 @@ public class WelcomPage extends BorderPane {
         anchorPane0.getChildren().add(aTxt);
         anchorPane0.getChildren().add(ticTxt);
         anchorPane0.getChildren().add(xoImg);
-        anchorPane0.getChildren().add(soundToggleBtn);              //************************
-        anchorPane0.getChildren().add(soundTxt);
-        soundToggleBtn.setStyle("-fx-background-color: green;");   //************************
 
+        anchorPane0.getChildren().add(soundToggleBtn);              
+        anchorPane0.getChildren().add(soundTxt);
+
+        initSound();
 
         
+
         offlineBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                OfflineMenuPage root = new OfflineMenuPage(parentStage);
+                OfflineMenuPage root = new OfflineMenuPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
+
             }
         });
-        
-        
+
         onlineBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                OnlineLoginPage root = new OnlineLoginPage(parentStage);
-                Scene scene = new Scene(root);
-                parentStage.setScene(scene);
-            }
-        });
-        
-        
-        aboutBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                
-                //OPen PopUp
+
                 Stage popUpStage = new Stage();
-                Scene popUpPage = new Scene(new PopUpAbout(popUpStage));
-                
+                Scene popUpPage = new Scene(new PopUpIP(popUpStage));
+
                 popUpStage.setScene(popUpPage);
                 popUpStage.initModality(Modality.APPLICATION_MODAL);
                 popUpStage.showAndWait();
-                
+
             }
         });
-        
-        
-                                                                                                      //************************
-        //generate the sound file from a given path
-        //creating an object from media player 
-        String soundFile = "C:\\Users\\ahmed\\Desktop\\Final Project\\sound.mp3"; 
-        Media sound;
-        try {
-                 sound = new Media(new File(soundFile).toURI().toString());
-             } 
-        catch (Exception e) 
-             {
-                System.err.println("Failed to load sound file: " + e.getMessage());
-                return;
-              }
-        MediaPlayer mediaPlayer = new MediaPlayer(sound);
-        //this property will make the sound to run automatically when the app starts
-        mediaPlayer.setAutoPlay(true);  
-        
-        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>()
-        {
-             @Override
-            public void handle(ActionEvent event)
-            {
-            
-                 if (soundToggleBtn.isSelected()) 
-                    {
-                         mediaPlayer.pause();
-                         soundToggleBtn.setText("Off");
-                         soundToggleBtn.setStyle("-fx-background-color: red;");
-    
-                     } 
-                else 
-                 {
-                      mediaPlayer.play();
-                      soundToggleBtn.setText("On");
-                      soundToggleBtn.setStyle("-fx-background-color: green;");
-                  }
+
+        aboutBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                //OPen PopUp
+                Stage popUpStage = new Stage();
+                Scene popUpPage = new Scene(new PopUpAbout(popUpStage));
+
+                popUpStage.setScene(popUpPage);
+                popUpStage.initModality(Modality.APPLICATION_MODAL);
+                popUpStage.showAndWait();
+
             }
         });
+
         
-        
-                                                                            //************************
-        
-        
-        
+         checkSoundToggleBtn();
     }
+
+    public static void initSound() {
+        WelcomPage.soundFile = "src\\tictactoeclient\\sounds\\sound.mp3";
+        try {
+            WelcomPage.sound = new Media(new File(soundFile).toURI().toString());
+        } catch (Exception e) {
+            System.err.println("Failed to load sound file: " + e.getMessage());
+            return;
+        }
+        WelcomPage.mediaPlayer = new MediaPlayer(WelcomPage.sound);
+        //this property will make the sound to run automatically when the app starts
+        WelcomPage.mediaPlayer.setAutoPlay(true);
+
+    }
+    
+    void checkSoundToggleBtn(){
+        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            soundToggleBtn.setText("On");
+            soundToggleBtn.setStyle("-fx-background-color: green;");
+            soundToggleBtn.setSelected(true);
+        } else {
+            soundToggleBtn.setText("Off");
+            soundToggleBtn.setStyle("-fx-background-color: red;");
+            soundToggleBtn.setSelected(false);
+        }
+
+        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                if (soundToggleBtn.isSelected()) {
+                    WelcomPage.mediaPlayer.pause();
+                    soundToggleBtn.setText("Off");
+                    soundToggleBtn.setStyle("-fx-background-color: red;");
+                    soundToggleBtn.setSelected(true);
+                } else {
+                    WelcomPage.mediaPlayer.play();
+                    soundToggleBtn.setText("On");
+                    soundToggleBtn.setStyle("-fx-background-color: green;");
+                    soundToggleBtn.setSelected(false);
+                }
+            }
+        });
+    }
+
 }

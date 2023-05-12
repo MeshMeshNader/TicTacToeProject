@@ -1,6 +1,17 @@
 package tictactoeclient;
 
 import java.io.File;
+
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Orientation;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -19,6 +30,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -29,8 +41,6 @@ import javafx.stage.Stage;
 
 public class RecordsLoadPage extends BorderPane {
 
-    
-    Stage parentStage;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button backBtn;
@@ -40,6 +50,7 @@ public class RecordsLoadPage extends BorderPane {
     protected final Button homeBtn;
     protected final DropShadow dropShadow1;
     protected final Text gameListTxt;
+    protected ListView RecordListView = new ListView<>();
     protected final TableView recordsTable;
     protected final TableColumn opponentTableCol;
     protected final TableColumn dateTableCol;
@@ -82,10 +93,17 @@ public class RecordsLoadPage extends BorderPane {
     protected final ToggleButton soundToggleBtn;
     protected final DropShadow dropShadow2;
 
-    public RecordsLoadPage(Stage stage) {
+    int indexToFullREcord = 0;
+    int indextocell = 0;
+    int indexGame = -1;
+    ArrayList<OfflineGameDTO> listOfrecord = new ArrayList<>();
+    Button[][] cellsBtn;
 
-        
-        parentStage = stage;
+    Thread th = new Thread();
+
+    public RecordsLoadPage(ArrayList<OfflineGameDTO> listOfrecord) {
+        this.listOfrecord = listOfrecord;
+
         anchorPane = new AnchorPane();
         glow = new Glow();
         backBtn = new Button();
@@ -95,6 +113,7 @@ public class RecordsLoadPage extends BorderPane {
         homeBtn = new Button();
         dropShadow1 = new DropShadow();
         gameListTxt = new Text();
+        RecordListView = new ListView();
         recordsTable = new TableView();
         opponentTableCol = new TableColumn();
         dateTableCol = new TableColumn();
@@ -191,17 +210,11 @@ public class RecordsLoadPage extends BorderPane {
         gameListTxt.setText("Games-List");
         gameListTxt.setFont(new Font("Bauhaus 93", 36.0));
 
-        recordsTable.setLayoutX(35.0);
-        recordsTable.setLayoutY(82.0);
-        recordsTable.setPrefHeight(273.0);
-        recordsTable.setPrefWidth(289.0);
+        RecordListView.setLayoutX(30.0);
+        RecordListView.setLayoutY(90.0);
+        RecordListView.setPrefHeight(258.0);
+        RecordListView.setPrefWidth(280.0);
 
-        opponentTableCol.setPrefWidth(75.0);
-        opponentTableCol.setText("Oppenent");
-
-        dateTableCol.setPrefWidth(75.0);
-        dateTableCol.setText("Date");
-        recordsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         setLeft(anchorPane);
 
         BorderPane.setAlignment(anchorPane0, javafx.geometry.Pos.CENTER);
@@ -291,6 +304,7 @@ public class RecordsLoadPage extends BorderPane {
         cellPos1_1.setPrefHeight(121.0);
         cellPos1_1.setPrefWidth(118.0);
         cellPos1_1.setFont(new Font("Bauhaus 93", 64.0));
+        cellPos1_1.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
 
         colorAdjust0.setBrightness(-0.02);
         colorAdjust0.setContrast(0.19);
@@ -301,8 +315,9 @@ public class RecordsLoadPage extends BorderPane {
         cellPos0_0.setMnemonicParsing(false);
         cellPos0_0.setPrefHeight(121.0);
         cellPos0_0.setPrefWidth(118.0);
-        cellPos0_0.setText("x");
+        cellPos0_0.setText("");
         cellPos0_0.setFont(new Font("Bauhaus 93", 64.0));
+        cellPos0_0.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
 
         colorAdjust1.setBrightness(-0.02);
         colorAdjust1.setContrast(0.19);
@@ -316,6 +331,7 @@ public class RecordsLoadPage extends BorderPane {
         cellPos1_2.setPrefHeight(121.0);
         cellPos1_2.setPrefWidth(118.0);
         cellPos1_2.setFont(new Font("Bauhaus 93", 64.0));
+        cellPos1_2.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
 
         colorAdjust2.setBrightness(-0.02);
         colorAdjust2.setContrast(0.19);
@@ -329,6 +345,7 @@ public class RecordsLoadPage extends BorderPane {
         cellPos0_2.setPrefHeight(121.0);
         cellPos0_2.setPrefWidth(118.0);
         cellPos0_2.setFont(new Font("Bauhaus 93", 64.0));
+        cellPos0_2.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
 
         colorAdjust3.setBrightness(-0.02);
         colorAdjust3.setContrast(0.19);
@@ -348,6 +365,7 @@ public class RecordsLoadPage extends BorderPane {
         colorAdjust4.setHue(-0.04);
         colorAdjust4.setSaturation(0.25);
         cellPos1_0.setEffect(colorAdjust4);
+        cellPos1_0.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
 
         GridPane.setColumnIndex(cellPos2_2, 2);
         GridPane.setRowIndex(cellPos2_2, 2);
@@ -368,6 +386,7 @@ public class RecordsLoadPage extends BorderPane {
         cellPos0_1.setPrefHeight(121.0);
         cellPos0_1.setPrefWidth(118.0);
         cellPos0_1.setFont(new Font("Bauhaus 93", 64.0));
+        cellPos0_1.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
 
         colorAdjust6.setBrightness(-0.02);
         colorAdjust6.setContrast(0.19);
@@ -432,7 +451,6 @@ public class RecordsLoadPage extends BorderPane {
         soundToggleBtn.setMnemonicParsing(false);
         soundToggleBtn.setPrefHeight(42.0);
         soundToggleBtn.setPrefWidth(130.0);
-        soundToggleBtn.setText("On");
 
         soundToggleBtn.setEffect(dropShadow2);
         soundToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
@@ -442,9 +460,8 @@ public class RecordsLoadPage extends BorderPane {
         anchorPane.getChildren().add(loadBtn);
         anchorPane.getChildren().add(homeBtn);
         anchorPane.getChildren().add(gameListTxt);
-        recordsTable.getColumns().add(opponentTableCol);
-        recordsTable.getColumns().add(dateTableCol);
-        anchorPane.getChildren().add(recordsTable);
+        anchorPane.getChildren().add(RecordListView);
+
         anchorPane0.getChildren().add(soundTxt);
         xoGridBane.getColumnConstraints().add(columnConstraints);
         xoGridBane.getColumnConstraints().add(columnConstraints0);
@@ -469,22 +486,37 @@ public class RecordsLoadPage extends BorderPane {
         anchorPane0.getChildren().add(ticRightTxt);
         anchorPane0.getChildren().add(playerTwoUserNameRValueTxt);
         anchorPane0.getChildren().add(soundToggleBtn);
-        soundToggleBtn.setStyle("-fx-background-color: green;");
-        
-        
+
+        cellsBtn = new Button[][]{
+            {cellPos0_0, cellPos0_1, cellPos0_2},
+            {cellPos1_0, cellPos1_1, cellPos1_2},
+            {cellPos2_0, cellPos2_1, cellPos2_2}
+
+        };
+
+        tableViewElements(listOfrecord);
+
+        RecordListView.setOnMousePressed(event -> {
+            indexGame = RecordListView.getSelectionModel().getSelectedIndex();
+            System.out.println("index= " + indexGame);
+        });
+
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
-                OfflineMenuPage root = new OfflineMenuPage(parentStage);
+                OfflineMenuPage root = new OfflineMenuPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
 
         loadBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                unhighlightCell(cellsBtn);
+                th.stop();
+                getMovement(listOfrecord, indexGame);
 
                 // Load The Record From File Chooser
             }
@@ -494,50 +526,133 @@ public class RecordsLoadPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                WelcomPage root = new WelcomPage(parentStage);
+                WelcomPage root = new WelcomPage();
                 Scene scene = new Scene(root);
-                parentStage.setScene(scene);
+                TicTacToeClient.stage.setScene(scene);
             }
         });
-        
-        //generate the sound file from a given path
-        //creating an object from media player 
-        String soundFile = "C:\\Users\\ahmed\\Desktop\\Final Project\\sound.mp3"; 
-        Media sound;
-        try {
-                 sound = new Media(new File(soundFile).toURI().toString());
-             } 
-        catch (Exception e) 
-             {
-                System.err.println("Failed to load sound file: " + e.getMessage());
-                return;
-              }
-        MediaPlayer mediaPlayer = new MediaPlayer(sound);
-        //this property will make the sound to run automatically when the app starts
-        mediaPlayer.setAutoPlay(true);  
-        
-        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>()
-        {
-             @Override
-            public void handle(ActionEvent event)
-            {
-            
-                 if (soundToggleBtn.isSelected()) 
-                    {
-                         mediaPlayer.pause();
-                         soundToggleBtn.setText("Off");
-                         soundToggleBtn.setStyle("-fx-background-color: red;");
-    
-                     } 
-                else 
-                 {
-                      mediaPlayer.play();
-                      soundToggleBtn.setText("On");
-                      soundToggleBtn.setStyle("-fx-background-color: green;");
-                  }
-            }
-        });
-        
+
+        checkSoundToggleBtn();
 
     }
+
+    private void unhighlightCell(Button[][] cells) {
+
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                Button cell = cells[i][j];
+                cell.setStyle("");
+                cell.setText("");
+                cell.setDisable(false);
+            }
+        }
+    }
+
+    void getMovement(ArrayList<OfflineGameDTO> gameRecord, int indexOfRecord) {
+
+        th = new Thread(new Runnable() {
+            int order = 0;
+            String shape = "X";
+            ArrayList<OfflineMoveDTO> point = gameRecord.get(indexOfRecord).getRecord();
+
+            @Override
+            public void run() {
+                for (int i = 0; i < point.size(); i++) {
+                    if (order % 2 == 0) {
+                        shape = "X";
+                        order = 1;
+                    } else if (order % 2 == 1) {
+                        shape = "O";
+                        order = 0;
+                    }
+                    int row = point.get(i).getRow();
+                    int col = point.get(i).getCol();
+                    Platform.runLater(() -> cellsBtn[row][col].setText(shape));
+                    try {
+                        Thread.sleep(750);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(RecordsLoadPage.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
+        th.start();
+    }
+
+    void tableViewElements(ArrayList<OfflineGameDTO> gameRecord) {
+
+        ObservableList<String> items = FXCollections.observableArrayList();
+        RecordListView.setItems(items);
+        RecordListView.setCellFactory(param -> new ListCell<String>() {
+            private final HBox hbox = new HBox();
+            private final Label opponentTableCol = new Label();
+            private final Label dateTable = new Label();
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    String[] parts = item.split("\\|");
+                    opponentTableCol.setText(parts[0]);
+                    dateTable.setText(parts[1]);
+                    hbox.getChildren().addAll(opponentTableCol, dateTable);
+                    setGraphic(hbox);
+                }
+            }
+        });
+
+        for (int i = 0; i < gameRecord.size(); i++) {
+            String players = gameRecord.get(i).getUserOne() + " Vs " + gameRecord.get(i).getUserTwo();
+            String date = gameRecord.get(i).getDate();
+            items.add(players + " / " + " " + date);
+        }
+        RecordListView.refresh();
+        RecordListView.setPrefHeight(200);
+        RecordListView.setPrefWidth(300);
+        RecordListView.setFixedCellSize(50);
+        RecordListView.setStyle("-fx-control-inner-background: #f5f5f5;");
+        RecordListView.setCellFactory(lv -> new ListCell<String>() {
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(item);
+            }
+        });
+        RecordListView.setOrientation(Orientation.VERTICAL);
+
+    }
+
+    void checkSoundToggleBtn() {
+        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            soundToggleBtn.setText("On");
+            soundToggleBtn.setStyle("-fx-background-color: green;");
+            soundToggleBtn.setSelected(true);
+        } else {
+            soundToggleBtn.setText("Off");
+            soundToggleBtn.setStyle("-fx-background-color: red;");
+            soundToggleBtn.setSelected(false);
+        }
+
+        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                if (soundToggleBtn.isSelected()) {
+                    WelcomPage.mediaPlayer.pause();
+                    soundToggleBtn.setText("Off");
+                    soundToggleBtn.setStyle("-fx-background-color: red;");
+                    soundToggleBtn.setSelected(true);
+                } else {
+                    WelcomPage.mediaPlayer.play();
+                    soundToggleBtn.setText("On");
+                    soundToggleBtn.setStyle("-fx-background-color: green;");
+                    soundToggleBtn.setSelected(false);
+                }
+            }
+        });
+    }
+
 }

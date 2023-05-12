@@ -1,5 +1,11 @@
 package tictactoeserver;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -10,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.AnchorPane;
@@ -17,11 +24,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tictactoeclient.GameDTO;
+import tictactoeclient.UserDTO;
 
 public class AdminServerPage extends BorderPane {
 
-    
     Stage parentStage;
+    ServerHandeller server;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button logOutBtn;
@@ -50,10 +59,12 @@ public class AdminServerPage extends BorderPane {
     protected final CategoryAxis usersCategoryAxis;
     protected final NumberAxis usersNumbersAxis;
     protected final BarChart usersBarChart;
+    public ArrayList<String> topList;
 
     public AdminServerPage(Stage stage) {
 
-        
+        topList = new ArrayList<String>();
+
         parentStage = stage;
         anchorPane = new AnchorPane();
         glow = new Glow();
@@ -123,7 +134,7 @@ public class AdminServerPage extends BorderPane {
         statusOnlineTableCol.setEditable(false);
         statusOnlineTableCol.setPrefWidth(75.0);
         statusOnlineTableCol.setStyle("-fx-font-size: 18; -fx-font-family: Bauhaus 93;");
-        statusOnlineTableCol.setText("Status");
+        statusOnlineTableCol.setText("Playing ");
 
         onlineUsersTable.setEffect(dropShadow0);
         onlineUsersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -140,6 +151,14 @@ public class AdminServerPage extends BorderPane {
         offlineUsersTable.setPrefHeight(230.0);
         offlineUsersTable.setPrefWidth(272.0);
         offlineUsersTable.setStyle("-fx-background-color: #ffffff;");
+        offlineUsersTable.edit(0, userNameOfflineTableCol);
+
+        ObservableList<String> userList = offlineUsersTable.getItems();
+
+        topList.add("ahmed");
+        topList.add("morad");
+
+        offlineUsersTable.setItems(userList);
 
         userNameOfflineTableCol.setEditable(false);
         userNameOfflineTableCol.setPrefWidth(75.0);
@@ -206,7 +225,7 @@ public class AdminServerPage extends BorderPane {
         gameStatusInfoTableCol.setEditable(false);
         gameStatusInfoTableCol.setPrefWidth(75.0);
         gameStatusInfoTableCol.setStyle("-fx-font-size: 18; -fx-font-family: Bauhaus 93;");
-        gameStatusInfoTableCol.setText("Game Status");
+        gameStatusInfoTableCol.setText("Results");
 
         usersInfoTable.setEffect(dropShadow3);
         usersInfoTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -251,8 +270,22 @@ public class AdminServerPage extends BorderPane {
         anchorPane0.getChildren().add(usersInfoTable);
         anchorPane0.getChildren().add(onlineUsersPlayingInfoTxt);
         anchorPane0.getChildren().add(usersBarChart);
-        
-        
+
+        connectionToggleBtn.selectedProperty().addListener((observable, oldValue, newValue)
+                -> {
+            if (newValue) 
+            {
+                connectionToggleBtn.setText("On");
+                connectionToggleBtn.setStyle("-fx-background-color: green;");
+                server = new ServerHandeller();
+
+             } else {
+                server.closeConnection();
+                connectionToggleBtn.setText("Off");
+                connectionToggleBtn.setStyle("");
+            }
+        });
+
         logOutBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -262,7 +295,60 @@ public class AdminServerPage extends BorderPane {
                 parentStage.setScene(scene);
             }
         });
-        
+
+        // Create the ObservableLists for the online and offline user tables
+        ObservableList<UserDTO> onlineUsers = FXCollections.observableArrayList();
+        ObservableList<UserDTO> offlineUsers = FXCollections.observableArrayList();
+        ObservableList<GameDTO> dashBoard = FXCollections.observableArrayList();
+
+        // Set the CellValueFactory for the username columns
+        userNameOnlineTableCol.setCellValueFactory(new PropertyValueFactory<>("userName"));
+        statusOnlineTableCol.setCellValueFactory(new PropertyValueFactory<>("isPlaying"));
+        userNameOfflineTableCol.setCellValueFactory(new PropertyValueFactory<>("userName"));
+        playeOneInfoTableCol.setCellValueFactory(new PropertyValueFactory<>("playe1"));
+        playeTwoInfoTableCol.setCellValueFactory(new PropertyValueFactory<>("playe2"));
+        gameStatusInfoTableCol.setCellValueFactory(new PropertyValueFactory<>("results"));
+
+        // Start a new thread to update the user tables periodically
+        new Thread() {
+            @Override
+            public void run() {
+                DataAccessLayer.connect();
+                try {
+                    while (true) {
+                        // Get the online and offline user counts
+                        int onlinePlayersNum = DataAccessLayer.getOnlinePlayersNum();
+                        int offlinePlayersNum = DataAccessLayer.getOfflinePlayersNum();
+
+                        // Update the user count labels
+                        onlineUsersValueTxt.setText("Online Users (" + onlinePlayersNum + ")");
+                        offlineUsersValueTxt.setText("Offline Users (" + offlinePlayersNum + ")");
+
+                        // Clear the online and offline user lists
+                        onlineUsers.clear();
+                        offlineUsers.clear();
+                        dashBoard.clear();
+                        // Add the online and offline users to the user lists
+                        for (UserDTO user : DataAccessLayer.getOnlinePlayers()) {
+                            onlineUsers.add(user);
+                        }
+                        for (UserDTO user : DataAccessLayer.getOfflinePlayers()) {
+                            offlineUsers.add(user);
+                        }
+                        for (GameDTO game : DataAccessLayer.getAllGames()) {
+                            dashBoard.add(game);
+                        }
+                        // Set the items property of the TableView to the user lists
+                        onlineUsersTable.setItems(onlineUsers);
+                        offlineUsersTable.setItems(offlineUsers);
+                        usersInfoTable.setItems(dashBoard);
+                        Thread.sleep(5000); // Wait for 5 seconds before updating again
+                    }
+                } catch (SQLException | InterruptedException ex) {
+                    Logger.getLogger(AdminServerPage.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }.start();
 
     }
 }
