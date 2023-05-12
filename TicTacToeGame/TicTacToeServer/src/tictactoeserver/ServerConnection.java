@@ -119,6 +119,7 @@ public class ServerConnection {
                         } else if (msg.equals(Messages.getNumberOfLossessRequest)) {
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.getNumberOfLossesResponse, getNumberOfLossess());
+                            
                         } else if (msg.equals(Messages.updatedResultRequest)) {
                             obj = (GameDTO) objectinputstream.readObject();
                             sendMessage(Messages.updatedResultResponse, updatedResult());
@@ -134,56 +135,59 @@ public class ServerConnection {
                         } else if (msg.equals(Messages.userExistRequest)) {
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.userExistRespons, checkUserExist());
+                            
                         } else if (msg.equals(Messages.offlineUsersRequest)) {
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.offlineUsersResponse, getOfflineUsers());
+                            
                         } else if (msg.equals(Messages.getAllInfoRequest)) {
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.getAllInfoResponse, getUserInfo());
+                            
                         } else if (msg.equals(Messages.getOnlinePlayerNumRequest)) {
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.getOnlinePlayerNumResponse, getOnlinePlayersNum());
+                            
                         } else if (msg.equals(Messages.getbusyPlayersNumRequest)) {
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.getbusyPlayersNumResponse, getbusyPlayersNum());
+                            
                         } else if (msg.equals(Messages.getOfflinePlayersNumRequest)) {
-
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.getOfflinePlayersNumResponse, getOfflinePlayersNumValidation());
 
                         } else if (msg.equals(Messages.logoutRequest)) {
-
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.logoutResponse, logoutValidation());
 
                         } else if (msg.equals(Messages.makePlayerOneBusyRequest)) {
-
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.makePlayerOneBusyResponse, makePlayerOneBusyValidation());
 
                         } else if (msg.equals(Messages.makePlayerTwoBusyRequest)) {
-
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.makePlayerTwoBusyResponse, makePlayerTwoBusyValidation());
 
                         } else if (msg.equals(Messages.getPlayerScoreRequest)) {
-
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.getPlayerScoreResponse, getPlayerScoreValidation());
 
                         } else if (msg.equals(Messages.getPlayerScoreRequest)) {
-
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.getPlayerScoreResponse, getPlayerScoreValidation());
 
                         } else if (msg.equals(Messages.updateScoreRequest)) {
-
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.updateScoreResponse, updateScoreValidation());
 
                         } else if (msg.equals(Messages.getAllPlayersRequest)) {
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.getAllPLayersResponse, retriveAllPlayersData());
+                        
+                        } else if (msg.equals(Messages.viewUserProfileRequest)){
+                            obj = (UserDTO) objectinputstream.readObject();
+                            sendMessage(Messages.viewUserProfileResponse, getUserInfo());
+                            
                         }
 
                     } catch (IOException ex) {
@@ -264,9 +268,9 @@ public class ServerConnection {
         return UserList;
     }
 
-    public Object getUserInfo() throws SQLException {
+    public UserDTO getUserInfo() throws SQLException {
 
-        Object user = DataAccessLayer.getAllInfo(((UserDTO) obj).getUserName());
+        UserDTO user = DataAccessLayer.getAllInfo(((UserDTO) obj).getUserName());
 
         return user;
     }

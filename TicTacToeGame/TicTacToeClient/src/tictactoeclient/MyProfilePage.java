@@ -1,6 +1,7 @@
 package tictactoeclient;
 
 import java.io.File;
+import javafx.application.Platform;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,6 +24,7 @@ import javafx.stage.Stage;
 
 public class MyProfilePage extends BorderPane {
 
+    boolean myTurn;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final ImageView userImg;
@@ -59,6 +61,7 @@ public class MyProfilePage extends BorderPane {
     public MyProfilePage() {
 
         ClientConnection clientconnection;
+        myTurn = false;
         anchorPane = new AnchorPane();
         glow = new Glow();
         userImg = new ImageView();
@@ -240,7 +243,7 @@ public class MyProfilePage extends BorderPane {
         nickNameValueTxt.setLayoutY(335.0);
         nickNameValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         nickNameValueTxt.setStrokeWidth(0.0);
-        nickNameValueTxt.setText("Mohamed Nader");
+        nickNameValueTxt.setText("");
         nickNameValueTxt.setFont(new Font("Bauhaus 93", 35.0));
 
         userNameTxt.setLayoutX(100.0);
@@ -254,7 +257,7 @@ public class MyProfilePage extends BorderPane {
         userNameValueTxt.setLayoutY(400.0);
         userNameValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         userNameValueTxt.setStrokeWidth(0.0);
-        userNameValueTxt.setText("mohamed_nader");
+        userNameValueTxt.setText("");
         userNameValueTxt.setFont(new Font("Bauhaus 93", 35.0));
 
         noOfWinsTxt.setLayoutX(100.0);
@@ -268,7 +271,7 @@ public class MyProfilePage extends BorderPane {
         noOfWinsValueTxt.setLayoutY(465.0);
         noOfWinsValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         noOfWinsValueTxt.setStrokeWidth(0.0);
-        noOfWinsValueTxt.setText("15");
+        noOfWinsValueTxt.setText("");
         noOfWinsValueTxt.setFont(new Font("Bauhaus 93", 35.0));
 
         noOfLossesTxt.setLayoutX(100.0);
@@ -282,7 +285,7 @@ public class MyProfilePage extends BorderPane {
         noOfLossesValueTxt.setLayoutY(530.0);
         noOfLossesValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         noOfLossesValueTxt.setStrokeWidth(0.0);
-        noOfLossesValueTxt.setText("5");
+        noOfLossesValueTxt.setText("");
         noOfLossesValueTxt.setFont(new Font("Bauhaus 93", 35.0));
 
         scoreTxt.setLayoutX(100.0);
@@ -296,7 +299,7 @@ public class MyProfilePage extends BorderPane {
         scoreValueTxt.setLayoutY(590.0);
         scoreValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         scoreValueTxt.setStrokeWidth(0.0);
-        scoreValueTxt.setText("145");
+        scoreValueTxt.setText("");
         scoreValueTxt.setFont(new Font("Bauhaus 93", 35.0));
         setCenter(anchorPane0);
 
@@ -323,6 +326,10 @@ public class MyProfilePage extends BorderPane {
         anchorPane0.getChildren().add(noOfLossesValueTxt);
         anchorPane0.getChildren().add(scoreTxt);
         anchorPane0.getChildren().add(scoreValueTxt);
+        
+        clientconnection = ClientConnection.getInstance();
+        clientconnection.writeMessage(Messages.getAllInfoRequest, OnlineLoginPage.loggedOnUser);
+        
 
         myProfileBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -439,7 +446,39 @@ public class MyProfilePage extends BorderPane {
             }
         });
 
+        
+
+        
+
+        ClientConnection.flag.addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals("myProfileUserObject")) {
+                myTurn = true;
+            }else{
+                myTurn = false;
+            }
+        });
+
+        ClientConnection.flagObjct.addListener((observable, oldValue, newValue) -> {
+            UserDTO user;
+            if (myTurn) {
+                user = (UserDTO) newValue;
+                displayUserData(user);
+            }
+        });
+
     }
-    
-    
+
+    private void displayUserData(UserDTO user) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                nickNameValueTxt.setText(user.getUserNickName());
+                userNameValueTxt.setText(user.getUserName());
+                noOfWinsValueTxt.setText(String.valueOf(user.getNoOfWins()));
+                noOfLossesValueTxt.setText(String.valueOf(user.getNoOfLosses()));
+                scoreValueTxt.setText(String.valueOf(user.getScore()));
+            }
+        });
+    }
+
 }

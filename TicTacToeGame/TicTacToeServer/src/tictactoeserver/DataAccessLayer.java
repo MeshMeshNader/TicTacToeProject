@@ -109,13 +109,20 @@ public class DataAccessLayer {
         ArrayList<UserDTO> onlinePlayers = new ArrayList<>();
 
         PreparedStatement pst = con.prepareStatement(" SELECT * FROM  ROOT.\"USERS\" Where ROOT.\"USERS\".\"ISONLINE\"=true ");
-
+//int userID, String userName, String userNickName, String password, int score, int noOfWins, int noOfLosses, boolean isOnline, boolean isPlaying, Timestamp createdAt
         ResultSet resultSet = pst.executeQuery();
         while (resultSet.next()) {
             onlinePlayers.add(new UserDTO(
+                    resultSet.getInt("userID"),
                     resultSet.getString("username"),
-                    resultSet.getBoolean("isonline"),
-                    resultSet.getBoolean("isplaying")
+                    resultSet.getString("userNickname"),
+                    resultSet.getString("password"),
+                    resultSet.getInt("score"),
+                    resultSet.getInt("noOfWins"),
+                    resultSet.getInt("noOfLosses"),
+                    resultSet.getBoolean("isOnline"),
+                    resultSet.getBoolean("isPlaying"),
+                    resultSet.getTimestamp("createdAt")
             ));
         }
         return onlinePlayers;
@@ -129,7 +136,17 @@ public class DataAccessLayer {
 
         ResultSet resultSet = pst.executeQuery();
         while (resultSet.next()) {
-            offlinePlayers.add(new UserDTO(resultSet.getString("username")
+            offlinePlayers.add(new UserDTO(
+                    resultSet.getInt("userID"),
+                    resultSet.getString("username"),
+                    resultSet.getString("userNickname"),
+                    resultSet.getString("password"),
+                    resultSet.getInt("score"),
+                    resultSet.getInt("noOfWins"),
+                    resultSet.getInt("noOfLosses"),
+                    resultSet.getBoolean("isOnline"),
+                    resultSet.getBoolean("isPlaying"),
+                    resultSet.getTimestamp("createdAt")
             ));
         }
         return offlinePlayers;
@@ -142,6 +159,7 @@ public class DataAccessLayer {
         PreparedStatement pst = con.prepareStatement(" SELECT * FROM  USERS ");
 
         ResultSet resultSet = pst.executeQuery();
+
         while (resultSet.next()) {
             allPlayers.add(new UserDTO(resultSet.getString("username")
             ));
@@ -149,16 +167,29 @@ public class DataAccessLayer {
         return allPlayers;
     }
 
-    
     public static UserDTO getAllInfo(String userName) throws SQLException {
 
-        ArrayList<UserDTO> onlinePlayers = getOnlinePlayers();
-        for (UserDTO user : onlinePlayers) {
-            if (user.getUserName().equals(userName)) {
-                return user;
-            }
+        UserDTO user = null;
+        PreparedStatement pst = con.prepareStatement(" SELECT * FROM  USERS WHERE USERNAME = ?");
+        pst.setString(1, userName);
+        ResultSet resultSet = pst.executeQuery();
+
+        if (resultSet.next()) {
+            user = new UserDTO(
+                    resultSet.getInt("userID"),
+                    resultSet.getString("username"),
+                    resultSet.getString("userNickname"),
+                    resultSet.getString("password"),
+                    resultSet.getInt("score"),
+                    resultSet.getInt("noOfWins"),
+                    resultSet.getInt("noOfLosses"),
+                    resultSet.getBoolean("isOnline"),
+                    resultSet.getBoolean("isPlaying"),
+                    resultSet.getTimestamp("createdAt")
+            );
         }
-        return null;
+
+        return user;
     }
 
     public static int getOnlinePlayersNum() throws SQLException {

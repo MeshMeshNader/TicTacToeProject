@@ -16,6 +16,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
@@ -39,6 +40,8 @@ import static tictactoeclient.OnlineLoginPage.loggedOnUser;
 public class OnlineUsersPage extends BorderPane {
 
     ClientConnection clientconnection;
+    boolean myTurn;
+    UserDTO selectedUser;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final ImageView userImg;
@@ -66,9 +69,12 @@ public class OnlineUsersPage extends BorderPane {
     protected final DropShadow dropShadow5;
     protected final Button inviteBtn;
     protected final DropShadow dropShadow6;
+    protected final TableView.TableViewSelectionModel selectionModel;
 
     public OnlineUsersPage() {
 
+        myTurn = false;
+        selectedUser = null;
         anchorPane = new AnchorPane();
         glow = new Glow();
         userImg = new ImageView();
@@ -206,6 +212,9 @@ public class OnlineUsersPage extends BorderPane {
         usersTable.setPrefHeight(400.0);
         usersTable.setPrefWidth(550.0);
         usersTable.setStyle("-fx-background-color: #ffffff;");
+        selectionModel = usersTable.getSelectionModel();
+        selectionModel.setSelectionMode(SelectionMode.SINGLE);
+        usersTable.setSelectionModel(selectionModel);
 
         userNameTableCol.setEditable(false);
         userNameTableCol.setPrefWidth(75.0);
@@ -292,7 +301,7 @@ public class OnlineUsersPage extends BorderPane {
                 //Show PopUpViewProfile
                 //OPen PopUp
                 Stage popUpStage = new Stage();
-                Scene popUpPage = new Scene(new PopUpViewProfile(popUpStage));
+                Scene popUpPage = new Scene(new PopUpViewProfile(popUpStage , selectedUser));
 
                 popUpStage.setScene(popUpPage);
                 popUpStage.initModality(Modality.APPLICATION_MODAL);
@@ -342,10 +351,19 @@ public class OnlineUsersPage extends BorderPane {
         clientconnection = ClientConnection.getInstance();
         clientconnection.writeMessage(Messages.getAllPlayersRequest, OnlineLoginPage.loggedOnUser);
 
-        ClientConnection.flagObjct.addListener((observable, oldValue, newValue) -> {
+        ClientConnection.flag.addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals("onlineUsersPageTableList")) {
+                myTurn = true;
+            } else {
+                myTurn = false;
+            }
+        });
 
-            ArrayList<UserDTO> allPlayers = (ArrayList<UserDTO>) newValue;
-            getAll(allPlayers);
+        ClientConnection.flagObjct.addListener((observable, oldValue, newValue) -> {
+            if (myTurn) {
+                ArrayList<UserDTO> allPlayers = (ArrayList<UserDTO>) newValue;
+                getAll(allPlayers);
+            }
         });
 
     }
@@ -408,20 +426,27 @@ public class OnlineUsersPage extends BorderPane {
                         // Set the items property of the TableView to the user lists
                         usersTable.setItems(allPlayersList);
 
+                        UserDTO selectedItem = (UserDTO) usersTable.getSelectionModel().getSelectedItem();
+
+                        if (selectedItem != null) {
+                            // get the index of the selected item in the ObservableList
+                            int selectedIndex = allPlayersList.indexOf(selectedItem);
+
+                            // select the row in the table
+                            usersTable.getSelectionModel().select(selectedIndex);
+                            usersTable.requestFocus();
+                            selectedUser = selectedItem;
+                            System.out.println(selectedItem.toString());
+
+                        }
+
                     }
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
             }
         }.start();
+
     }
-    
-    
-    
-    
-    
-    
-    
-    
 
 }

@@ -1,5 +1,6 @@
 package tictactoeclient;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -15,6 +16,7 @@ import javafx.stage.Stage;
 public class PopUpViewProfile extends BorderPane {
 
     Stage parentStage;
+    boolean myTurn;
     protected final AnchorPane anchorPane;
     protected final Text userNameTxt;
     protected final TextField nameTxtField;
@@ -29,8 +31,9 @@ public class PopUpViewProfile extends BorderPane {
     protected final DropShadow dropShadow;
     protected final Glow glow;
 
-    public PopUpViewProfile(Stage stage) {
-
+    public PopUpViewProfile(Stage stage, UserDTO selectedUser) {
+        ClientConnection clientconnection;
+        myTurn = false;
         parentStage = stage;
         anchorPane = new AnchorPane();
         userNameTxt = new Text();
@@ -151,12 +154,48 @@ public class PopUpViewProfile extends BorderPane {
         anchorPane.getChildren().add(nameValueTxtField);
         anchorPane.getChildren().add(okBtn);
 
+        clientconnection = ClientConnection.getInstance();
+        clientconnection.writeMessage(Messages.viewUserProfileRequest, selectedUser);
+
+        
+        System.out.println("Hello From PopUp : " +myTurn + "");
+        
+        ClientConnection.flag.addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals("viewUserFromTable")) {
+                myTurn = true;
+                System.out.println("Hello From PopUp : " +myTurn + " - >> TURE");
+            } else {
+                myTurn = false;
+                System.out.println("Hello From PopUp : " +myTurn + " - >> False");
+            }
+        });
+
+        ClientConnection.flagObjct.addListener((observable, oldValue, newValue) -> {
+            
+            if (myTurn) {
+            
+                        System.out.println("Hello From PopUp : " +myTurn + " - >> PlatForm");
+                        UserDTO user = (UserDTO) newValue;
+                        displayUserData(user);
+ 
+
+            }
+        });
+
         okBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 parentStage.close();
             }
         });
-
     }
+
+    private void displayUserData(UserDTO user) {
+        nameValueTxtField.setText(user.getUserNickName());
+        noOfWinsValueTxtField.setText(String.valueOf(user.getNoOfWins()));
+        noOfLosesValueTxtField.setText(String.valueOf(user.getNoOfLosses()));
+        scoreValueTxtField.setText(String.valueOf(user.getScore()));
+        System.out.println("Hello From PopUp : " +myTurn + " - >> DISPLAY");
+    }
+
 }

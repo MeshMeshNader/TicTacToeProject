@@ -69,6 +69,9 @@ public class Messages implements Serializable {
     public static String updateScoreResponse = "updateScoreResponse";
     public static String getAllPLayersResponse = "GetAllPlayersResopnse";
     public static String getAllPlayersRequest = "GetAllPlayersRequest";
+    public static String viewUserProfileResponse = "ViewUserProfileResponse";
+    public static String viewUserProfileRequest = "ViewUserProfileRequest";
+    
     
     
     

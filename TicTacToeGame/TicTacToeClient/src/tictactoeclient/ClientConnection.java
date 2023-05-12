@@ -82,10 +82,18 @@ public class ClientConnection {
 
                         if (msg.equals(Messages.loginResponse)) {
                             checkLogin((Boolean) obj);
+
                         } else if (msg.equals(Messages.registrationResponse)) {
                             checkRegister((Boolean) obj);
+
                         } else if (msg.equals(Messages.getAllPLayersResponse)) {
                             retriveAllPLayersData(obj);
+
+                        } else if (msg.equals(Messages.getAllInfoResponse)) {
+                            displayUserInfo(msg, obj);
+
+                        } else if (msg.equals(Messages.viewUserProfileResponse)) {
+                            displayUserInfo(msg, obj);
                         }
 
                         System.out.println("msg is : " + msg);
@@ -166,18 +174,36 @@ public class ClientConnection {
     private void retriveAllPLayersData(Object allPlayersData) {
 
         if (allPlayersData != null) {
-
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    
-                    flag.set("arrayListOfUserDTO");
+                    flag.set("onlineUsersPageTableList");
                     flagObjct.set(allPlayersData);
-                    
                 }
             });
-
         }
+    }
+
+    private void displayUserInfo(String msg, Object user) {
+
+        if (msg.equals(Messages.getAllInfoResponse)) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    flag.set("myProfileUserObject");
+                    flagObjct.set(user);
+                }
+            });
+        }else if (msg.equals(Messages.viewUserProfileResponse)){
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    flag.set("viewUserFromTable");
+                    flagObjct.set(user);
+                }
+            });
+        }
+
     }
 
 }
