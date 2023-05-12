@@ -23,7 +23,6 @@ import javafx.stage.Stage;
 
 public class MyProfilePage extends BorderPane {
 
-     
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final ImageView userImg;
@@ -57,9 +56,9 @@ public class MyProfilePage extends BorderPane {
     protected final Text scoreTxt;
     protected final Text scoreValueTxt;
 
-    public MyProfilePage( ) {
+    public MyProfilePage() {
 
-         
+        ClientConnection clientconnection;
         anchorPane = new AnchorPane();
         glow = new Glow();
         userImg = new ImageView();
@@ -403,7 +402,7 @@ public class MyProfilePage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                MyProfilePage root = new MyProfilePage( );
+                MyProfilePage root = new MyProfilePage();
                 Scene scene = new Scene(root);
                 TicTacToeClient.stage.setScene(scene);
             }
@@ -413,7 +412,7 @@ public class MyProfilePage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                OnlineUsersPage root = new OnlineUsersPage( );
+                OnlineUsersPage root = new OnlineUsersPage();
                 Scene scene = new Scene(root);
                 TicTacToeClient.stage.setScene(scene);
             }
@@ -423,7 +422,7 @@ public class MyProfilePage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                WelcomPage root = new WelcomPage( );
+                WelcomPage root = new WelcomPage();
                 Scene scene = new Scene(root);
                 TicTacToeClient.stage.setScene(scene);
             }
@@ -433,7 +432,7 @@ public class MyProfilePage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                OnlineLoginPage root = new OnlineLoginPage( );
+                OnlineLoginPage root = new OnlineLoginPage();
                 Scene scene = new Scene(root);
                 TicTacToeClient.stage.setScene(scene);
 
@@ -441,4 +440,6 @@ public class MyProfilePage extends BorderPane {
         });
 
     }
+    
+    
 }

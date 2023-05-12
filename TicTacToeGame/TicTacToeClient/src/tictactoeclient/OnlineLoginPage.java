@@ -48,6 +48,8 @@ import javafx.stage.Stage;
 public class OnlineLoginPage extends BorderPane {
 
     ClientConnection clientconnection;
+    public static UserDTO loggedOnUser;
+    protected UserDTO user;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final Button loginBtn;
@@ -79,6 +81,7 @@ public class OnlineLoginPage extends BorderPane {
     public OnlineLoginPage() {
 
         anchorPane = new AnchorPane();
+        loggedOnUser = null;
         glow = new Glow();
         loginBtn = new Button();
         dropShadow = new DropShadow();
@@ -281,31 +284,32 @@ public class OnlineLoginPage extends BorderPane {
 
         checkSoundToggleBtn();
 
-        ClientConnection.flag.addListener((observable, oldValue, newValue) -> {
-            if (newValue.equals("loginTrue")) {
-                OnlineUsersPage root = new OnlineUsersPage();
-                Scene scene = new Scene(root);
-                TicTacToeClient.stage.setScene(scene);
-            } else if (newValue.equals("loginFalse")){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText("you shoud enter the correct name and password !");
-                ButtonType okButton = new ButtonType("OK");
-                alert.getButtonTypes().setAll(okButton);
-                alert.showAndWait();
-            }
-        });
-
         loginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
-                UserDTO user = new UserDTO();
+                user = new UserDTO();
 
                 user.setUserName(usernameTxtField.getText());
                 user.setPassword(passwordTxtField.getText());
                 clientconnection = ClientConnection.getInstance();
                 clientconnection.writeMessage(Messages.loginRequest, user);
 
+            }
+        });
+
+        ClientConnection.flag.addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals("loginTrue")) {
+                OnlineUsersPage root = new OnlineUsersPage();
+                Scene scene = new Scene(root);
+                loggedOnUser = user;
+                TicTacToeClient.stage.setScene(scene);
+            } else if (newValue.equals("loginFalse")) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("you shoud enter the correct name and password !");
+                ButtonType okButton = new ButtonType("OK");
+                alert.getButtonTypes().setAll(okButton);
+                alert.showAndWait();
             }
         });
 

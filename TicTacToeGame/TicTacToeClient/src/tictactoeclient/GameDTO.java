@@ -34,6 +34,11 @@ public class GameDTO implements Serializable{
         this.createdAt = createdAt;
     }
 
+    public GameDTO() {
+    }
+
+    
+    
     public int getGameID() {
         return gameID;
     }

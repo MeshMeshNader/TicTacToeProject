@@ -1,14 +1,25 @@
 package tictactoeclient;
 
 import java.io.File;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
@@ -23,9 +34,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import static tictactoeclient.OnlineLoginPage.loggedOnUser;
 
 public class OnlineUsersPage extends BorderPane {
 
+    ClientConnection clientconnection;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
     protected final ImageView userImg;
@@ -326,9 +339,18 @@ public class OnlineUsersPage extends BorderPane {
             }
         });
 
+        clientconnection = ClientConnection.getInstance();
+        clientconnection.writeMessage(Messages.getAllPlayersRequest, OnlineLoginPage.loggedOnUser);
+
+        ClientConnection.flagObjct.addListener((observable, oldValue, newValue) -> {
+
+            ArrayList<UserDTO> allPlayers = (ArrayList<UserDTO>) newValue;
+            getAll(allPlayers);
+        });
+
     }
-    
-    void checkSoundToggleBtn(){
+
+    void checkSoundToggleBtn() {
         if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             soundToggleBtn.setText("On");
             soundToggleBtn.setStyle("-fx-background-color: green;");
@@ -357,4 +379,49 @@ public class OnlineUsersPage extends BorderPane {
             }
         });
     }
+
+    private void getAll(ArrayList<UserDTO> allPlayers) {
+
+        ObservableList<UserDTO> allPlayersList = FXCollections.observableArrayList();
+
+        userNameTableCol.setCellValueFactory(new PropertyValueFactory<>("userName"));
+        availabilityTableCol.setCellValueFactory(new PropertyValueFactory<>("isPlaying"));
+        statusTableCol.setCellValueFactory(new PropertyValueFactory<>("isOnline"));
+
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (true) {
+
+                        Platform.runLater(() -> {
+
+                            allPlayersList.clear();
+
+                            for (UserDTO user : allPlayers) {
+                                allPlayersList.add(user);
+                            }
+
+                        });
+
+                        Thread.sleep(100); // Wait for 5 seconds before updating again
+                        // Set the items property of the TableView to the user lists
+                        usersTable.setItems(allPlayersList);
+
+                    }
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }.start();
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+
 }

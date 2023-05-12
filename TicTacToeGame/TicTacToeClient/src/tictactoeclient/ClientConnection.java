@@ -12,11 +12,14 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.StreamCorruptedException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Scene;
@@ -38,6 +41,7 @@ public class ClientConnection {
     Socket socket;
 
     public static StringProperty flag = new SimpleStringProperty("");
+    public static ObjectProperty flagObjct = new SimpleObjectProperty<>(null);
 
     public static ClientConnection getInstance() {
         if (instance == null) {
@@ -73,7 +77,6 @@ public class ClientConnection {
                 try {
                     while (socket.isConnected() && !socket.isClosed()) {
 
-                        System.out.println("now reciving >>>");
                         String msg = (String) objectinputstream.readObject();
                         Object obj = objectinputstream.readObject();
 
@@ -81,12 +84,13 @@ public class ClientConnection {
                             checkLogin((Boolean) obj);
                         } else if (msg.equals(Messages.registrationResponse)) {
                             checkRegister((Boolean) obj);
+                        } else if (msg.equals(Messages.getAllPLayersResponse)) {
+                            retriveAllPLayersData(obj);
                         }
 
                         System.out.println("msg is : " + msg);
                         System.out.println("boolean is : " + obj.toString());
-                        
-                        
+
                     }
 
                 } catch (IOException e) {
@@ -99,7 +103,7 @@ public class ClientConnection {
 
         }.start();
     }
-    
+
     public void writeMessage(String msg, Object object) {
         new Thread() {
             @Override
@@ -122,7 +126,7 @@ public class ClientConnection {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                      flag.set("loginTrue");
+                    flag.set("loginTrue");
                 }
             });
 
@@ -136,7 +140,7 @@ public class ClientConnection {
         }
 
     }
-    
+
     private void checkRegister(Boolean registerCheck) {
 
         if (registerCheck) {
@@ -144,7 +148,7 @@ public class ClientConnection {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                      flag.set("registerTrue");
+                    flag.set("registerTrue");
                 }
             });
 
@@ -159,52 +163,21 @@ public class ClientConnection {
 
     }
 
-    private void checkRegistration(Boolean registrationCheck) {
+    private void retriveAllPLayersData(Object allPlayersData) {
 
-        new Thread() {
+        if (allPlayersData != null) {
 
-            @Override
-            public void run() {
-                try {
-
-                    System.out.println("now reciving from Registration  >>>");
-                    Boolean loginCheck = (Boolean) objectinputstream.readObject();
-                    if (loginCheck) {
-
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                OnlineUsersPage root = new OnlineUsersPage();
-                                Scene scene = new Scene(root);
-                                TicTacToeClient.stage.setScene(scene);
-                            }
-                        });
-
-                    } else {
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                Alert alert = new Alert(Alert.AlertType.ERROR);
-                                alert.setContentText("Error! while trying to Register!");
-                                ButtonType okButton = new ButtonType("OK");
-                                alert.getButtonTypes().setAll(okButton);
-                                alert.showAndWait();
-                            }
-                        });
-                    }
-
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    
+                    flag.set("arrayListOfUserDTO");
+                    flagObjct.set(allPlayersData);
+                    
                 }
+            });
 
-            }
-
-        }.start();
-
+        }
     }
-
-    
 
 }
