@@ -157,27 +157,20 @@ public class PopUpViewProfile extends BorderPane {
         clientconnection = ClientConnection.getInstance();
         clientconnection.writeMessage(Messages.viewUserProfileRequest, selectedUser);
 
-        
-        System.out.println("Hello From PopUp : " +myTurn + "");
-        
         ClientConnection.flag.addListener((observable, oldValue, newValue) -> {
             if (newValue.equals("viewUserFromTable")) {
                 myTurn = true;
-                System.out.println("Hello From PopUp : " +myTurn + " - >> TURE");
             } else {
                 myTurn = false;
-                System.out.println("Hello From PopUp : " +myTurn + " - >> False");
             }
         });
 
         ClientConnection.flagObjct.addListener((observable, oldValue, newValue) -> {
-            
+
             if (myTurn) {
-            
-                        System.out.println("Hello From PopUp : " +myTurn + " - >> PlatForm");
-                        UserDTO user = (UserDTO) newValue;
-                        displayUserData(user);
- 
+
+                UserDTO user = (UserDTO) newValue;
+                displayUserData(user);
 
             }
         });
@@ -195,7 +188,6 @@ public class PopUpViewProfile extends BorderPane {
         noOfWinsValueTxtField.setText(String.valueOf(user.getNoOfWins()));
         noOfLosesValueTxtField.setText(String.valueOf(user.getNoOfLosses()));
         scoreValueTxtField.setText(String.valueOf(user.getScore()));
-        System.out.println("Hello From PopUp : " +myTurn + " - >> DISPLAY");
-    }
+     }
 
 }

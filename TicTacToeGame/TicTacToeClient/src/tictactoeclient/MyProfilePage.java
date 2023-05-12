@@ -326,9 +326,8 @@ public class MyProfilePage extends BorderPane {
         anchorPane0.getChildren().add(noOfLossesValueTxt);
         anchorPane0.getChildren().add(scoreTxt);
         anchorPane0.getChildren().add(scoreValueTxt);
-        
         clientconnection = ClientConnection.getInstance();
-        clientconnection.writeMessage(Messages.getAllInfoRequest, OnlineLoginPage.loggedOnUser);
+        
         
 
         myProfileBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -452,19 +451,24 @@ public class MyProfilePage extends BorderPane {
 
         ClientConnection.flag.addListener((observable, oldValue, newValue) -> {
             if (newValue.equals("myProfileUserObject")) {
-                myTurn = true;
+                 myTurn = true;
             }else{
                 myTurn = false;
-            }
+             }
         });
 
         ClientConnection.flagObjct.addListener((observable, oldValue, newValue) -> {
             UserDTO user;
             if (myTurn) {
-                user = (UserDTO) newValue;
-                displayUserData(user);
+                 user = (UserDTO) newValue;
+                 displayUserData(user);
             }
         });
+        
+        
+        
+        clientconnection.writeMessage(Messages.getAllInfoRequest, OnlineLoginPage.loggedOnUser);
+        
 
     }
 

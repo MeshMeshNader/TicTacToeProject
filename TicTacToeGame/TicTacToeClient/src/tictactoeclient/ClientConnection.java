@@ -97,7 +97,7 @@ public class ClientConnection {
                         }
 
                         System.out.println("msg is : " + msg);
-                        System.out.println("boolean is : " + obj.toString());
+                        System.out.println("Object is : " + obj.toString());
 
                     }
 
@@ -113,6 +113,10 @@ public class ClientConnection {
     }
 
     public void writeMessage(String msg, Object object) {
+        
+        ClientConnection.flag.set("");
+        ClientConnection.flagObjct.set(null);
+        
         new Thread() {
             @Override
             public void run() {
@@ -134,7 +138,7 @@ public class ClientConnection {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    flag.set("loginTrue");
+                    ClientConnection.flag.set("loginTrue");
                 }
             });
 
@@ -142,7 +146,7 @@ public class ClientConnection {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    flag.set("loginFalse");
+                    ClientConnection.flag.set("loginFalse");
                 }
             });
         }
@@ -156,7 +160,7 @@ public class ClientConnection {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    flag.set("registerTrue");
+                    ClientConnection.flag.set("registerTrue");
                 }
             });
 
@@ -164,7 +168,7 @@ public class ClientConnection {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    flag.set("registerFalse");
+                    ClientConnection.flag.set("registerFalse");
                 }
             });
         }
@@ -177,8 +181,8 @@ public class ClientConnection {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    flag.set("onlineUsersPageTableList");
-                    flagObjct.set(allPlayersData);
+                    ClientConnection.flag.set("onlineUsersPageTableList");
+                    ClientConnection.flagObjct.set(allPlayersData);
                 }
             });
         }
@@ -190,16 +194,16 @@ public class ClientConnection {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    flag.set("myProfileUserObject");
-                    flagObjct.set(user);
+                    ClientConnection.flag.set("myProfileUserObject");
+                    ClientConnection.flagObjct.set(user);
                 }
             });
-        }else if (msg.equals(Messages.viewUserProfileResponse)){
+        } else if (msg.equals(Messages.viewUserProfileResponse)) {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    flag.set("viewUserFromTable");
-                    flagObjct.set(user);
+                    ClientConnection.flag.set("viewUserFromTable");
+                    ClientConnection.flagObjct.set(user);
                 }
             });
         }
