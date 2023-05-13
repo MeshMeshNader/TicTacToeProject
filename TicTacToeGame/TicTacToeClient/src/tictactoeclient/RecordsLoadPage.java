@@ -31,6 +31,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -625,8 +626,8 @@ public class RecordsLoadPage extends BorderPane {
 
     }
 
-    void checkSoundToggleBtn() {
-        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+   void checkSoundToggleBtn(){
+        if (TicTacToeClient.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             soundToggleBtn.setText("On");
             soundToggleBtn.setStyle("-fx-background-color: green;");
             soundToggleBtn.setSelected(true);
@@ -641,12 +642,12 @@ public class RecordsLoadPage extends BorderPane {
             public void handle(ActionEvent event) {
 
                 if (soundToggleBtn.isSelected()) {
-                    WelcomPage.mediaPlayer.pause();
+                    TicTacToeClient.mediaPlayer.pause();
                     soundToggleBtn.setText("Off");
                     soundToggleBtn.setStyle("-fx-background-color: red;");
                     soundToggleBtn.setSelected(true);
                 } else {
-                    WelcomPage.mediaPlayer.play();
+                    TicTacToeClient.mediaPlayer.play();
                     soundToggleBtn.setText("On");
                     soundToggleBtn.setStyle("-fx-background-color: green;");
                     soundToggleBtn.setSelected(false);
@@ -654,5 +655,6 @@ public class RecordsLoadPage extends BorderPane {
             }
         });
     }
+
 
 }

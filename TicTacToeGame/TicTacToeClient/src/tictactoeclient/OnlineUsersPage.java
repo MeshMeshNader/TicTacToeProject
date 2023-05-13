@@ -28,6 +28,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -323,8 +324,15 @@ public class OnlineUsersPage extends BorderPane {
                 players.put(Messages.keyReceiver, selectedUser);
                 players.put(Messages.keyBoolean, new Boolean(false));
                 players.put(Messages.keyGame, new GameDTO());
-                players.put(Messages.keyMove, new MoveDTO());
-              
+                players.put(Messages.keyMove1, new MoveDTO());
+                players.put(Messages.keyMove2, new MoveDTO());
+                players.put(Messages.keyMove3, new MoveDTO());
+                players.put(Messages.keyMove4, new MoveDTO());
+                players.put(Messages.keyMove5, new MoveDTO());
+                players.put(Messages.keyMove6, new MoveDTO());
+                players.put(Messages.keyMove7, new MoveDTO());
+                players.put(Messages.keyMove8, new MoveDTO());
+                players.put(Messages.keyMove9, new MoveDTO());
                 
                 clientconnection.writeMessage(Messages.sendInvitationRequest, players);
 
@@ -399,8 +407,8 @@ public class OnlineUsersPage extends BorderPane {
 
     }
 
-    void checkSoundToggleBtn() {
-        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+   void checkSoundToggleBtn(){
+        if (TicTacToeClient.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             soundToggleBtn.setText("On");
             soundToggleBtn.setStyle("-fx-background-color: green;");
             soundToggleBtn.setSelected(true);
@@ -415,12 +423,12 @@ public class OnlineUsersPage extends BorderPane {
             public void handle(ActionEvent event) {
 
                 if (soundToggleBtn.isSelected()) {
-                    WelcomPage.mediaPlayer.pause();
+                    TicTacToeClient.mediaPlayer.pause();
                     soundToggleBtn.setText("Off");
                     soundToggleBtn.setStyle("-fx-background-color: red;");
                     soundToggleBtn.setSelected(true);
                 } else {
-                    WelcomPage.mediaPlayer.play();
+                    TicTacToeClient.mediaPlayer.play();
                     soundToggleBtn.setText("On");
                     soundToggleBtn.setStyle("-fx-background-color: green;");
                     soundToggleBtn.setSelected(false);
@@ -428,6 +436,7 @@ public class OnlineUsersPage extends BorderPane {
             }
         });
     }
+
 
     private void getAll(ArrayList<UserDTO> allPlayers) {
 

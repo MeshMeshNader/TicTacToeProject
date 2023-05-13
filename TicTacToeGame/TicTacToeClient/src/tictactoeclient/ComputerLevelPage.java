@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -347,7 +348,7 @@ public class ComputerLevelPage extends BorderPane {
             }
         });
 
-        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+        if (TicTacToeClient.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             soundToggleBtn.setText("On");
             soundToggleBtn.setStyle("-fx-background-color: green;");
         } else {
@@ -360,12 +361,12 @@ public class ComputerLevelPage extends BorderPane {
             public void handle(ActionEvent event) {
 
                 if (soundToggleBtn.isSelected()) {
-                    WelcomPage.mediaPlayer.pause();
+                    TicTacToeClient.mediaPlayer.pause();
                     soundToggleBtn.setText("Off");
                     soundToggleBtn.setStyle("-fx-background-color: red;");
 
                 } else {
-                    WelcomPage.mediaPlayer.play();
+                    TicTacToeClient.mediaPlayer.play();
                     soundToggleBtn.setText("On");
                     soundToggleBtn.setStyle("-fx-background-color: green;");
                 }
@@ -419,12 +420,14 @@ public class ComputerLevelPage extends BorderPane {
 
                 xoState = (xRadioBtn.isSelected()) ? xOrO.X : xOrO.O;
 
-                if (!enterYourNameValueTxtField.getText().isEmpty()) {
-                    ComputerGameBoard root = new ComputerGameBoard(enterYourNameValueTxtField.getText(), mode, xoState);
+                if ((!enterYourNameValueTxtField.getText().isEmpty()) && (easyBtn.isDisabled() || mediumBtn.isDisabled() || hardBtn.isDisabled())) {
+                    ComputerGameBoard root = new ComputerGameBoard( enterYourNameValueTxtField.getText(), mode, xoState);
                     Scene scene = new Scene(root);
                     TicTacToeClient.stage.setScene(scene);
-                } else {
+                } else if ((enterYourNameValueTxtField.getText().isEmpty())) {
                     showValidationAlert();
+                } else {
+                    showLevelValidationAlert();
                 }
             }
         });
@@ -445,5 +448,13 @@ public class ComputerLevelPage extends BorderPane {
         alert.setContentText("Please Enter Your Name!!");
         alert.showAndWait();
     }
+        void showLevelValidationAlert() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Level Validation");
+        alert.setHeaderText(null);
+        alert.setContentText("Please Select a level!!");
+        alert.showAndWait();
+    }
 
 }
+

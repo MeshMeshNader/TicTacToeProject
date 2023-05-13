@@ -21,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -382,8 +383,8 @@ public class OnlineSignupPage extends BorderPane {
 
     }
 
-    void checkSoundToggleBtn() {
-        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+   void checkSoundToggleBtn(){
+        if (TicTacToeClient.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             soundToggleBtn.setText("On");
             soundToggleBtn.setStyle("-fx-background-color: green;");
             soundToggleBtn.setSelected(true);
@@ -398,12 +399,12 @@ public class OnlineSignupPage extends BorderPane {
             public void handle(ActionEvent event) {
 
                 if (soundToggleBtn.isSelected()) {
-                    WelcomPage.mediaPlayer.pause();
+                    TicTacToeClient.mediaPlayer.pause();
                     soundToggleBtn.setText("Off");
                     soundToggleBtn.setStyle("-fx-background-color: red;");
                     soundToggleBtn.setSelected(true);
                 } else {
-                    WelcomPage.mediaPlayer.play();
+                    TicTacToeClient.mediaPlayer.play();
                     soundToggleBtn.setText("On");
                     soundToggleBtn.setStyle("-fx-background-color: green;");
                     soundToggleBtn.setSelected(false);
@@ -411,6 +412,7 @@ public class OnlineSignupPage extends BorderPane {
             }
         });
     }
+
 
     public boolean isValidPassword(String password) {
         if (password.matches(regexPassword)) {

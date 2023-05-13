@@ -31,6 +31,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.util.Date;
 
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
+
 public class PlayerGameBoard extends BorderPane {
 
     protected final AnchorPane anchorPane;
@@ -54,9 +56,7 @@ public class PlayerGameBoard extends BorderPane {
     protected final Text ScoreTxt;
     protected final Text playerOneScore;
     protected final Text playerTwoScore;
-    protected final Text enterYourNameTxt;
-    protected final TextField playerOneUserNameLLValueTxtField;
-    protected final TextField playerTwoUserNameLLValueTxtField;
+
     protected final AnchorPane anchorPane0;
     protected final Glow glow0;
     protected final Text playerTwoUserNameRValueTxt;
@@ -136,9 +136,6 @@ public class PlayerGameBoard extends BorderPane {
         ScoreTxt = new Text();
         playerOneScore = new Text();
         playerTwoScore = new Text();
-        enterYourNameTxt = new Text();
-        playerOneUserNameLLValueTxtField = new TextField();
-        playerTwoUserNameLLValueTxtField = new TextField();
         anchorPane0 = new AnchorPane();
         glow0 = new Glow();
         playerTwoUserNameRValueTxt = new Text();
@@ -271,6 +268,7 @@ public class PlayerGameBoard extends BorderPane {
         recordToggleBtn.setMnemonicParsing(false);
         recordToggleBtn.setPrefHeight(42.0);
         recordToggleBtn.setPrefWidth(130.0);
+        recordToggleBtn.setText("off");
 
         recordToggleBtn.setEffect(dropShadow2);
         recordToggleBtn.setFont(new Font("Bauhaus 93", 19.0));
@@ -448,7 +446,6 @@ public class PlayerGameBoard extends BorderPane {
         colorAdjust.setHue(-0.04);
         colorAdjust.setSaturation(0.25);
         cellPos2_1.setEffect(colorAdjust);
-        cellPos2_1.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
 
         GridPane.setColumnIndex(cellPos1_1, 1);
         GridPane.setRowIndex(cellPos1_1, 1);
@@ -525,7 +522,6 @@ public class PlayerGameBoard extends BorderPane {
         colorAdjust5.setHue(-0.04);
         colorAdjust5.setSaturation(0.25);
         cellPos2_2.setEffect(colorAdjust5);
-        cellPos2_2.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
 
         GridPane.setColumnIndex(cellPos0_1, 1);
         cellPos0_1.setMnemonicParsing(false);
@@ -551,7 +547,15 @@ public class PlayerGameBoard extends BorderPane {
         colorAdjust7.setSaturation(0.25);
         cellPos2_0.setEffect(colorAdjust7);
         GridPane.setMargin(cellPos2_0, new Insets(0.0));
-        cellPos2_0.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
+        cellPos0_0.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
+        cellPos0_1.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
+        cellPos0_2.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
+        cellPos1_0.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
+        cellPos1_1.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
+        cellPos1_2.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
+        cellPos2_1.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
+        cellPos2_2.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
+
         setCenter(anchorPane0);
 
         anchorPane.getChildren().add(backBtn);
@@ -566,10 +570,9 @@ public class PlayerGameBoard extends BorderPane {
         anchorPane.getChildren().add(recordTxt);
         anchorPane.getChildren().add(playerOneUserNameLLValueTxt);
         anchorPane.getChildren().add(playerTwoUserNameLLValueTxt);
-
-        anchorPane.getChildren().add(enterYourNameTxt);
-        anchorPane.getChildren().add(playerOneUserNameLLValueTxtField);
-        anchorPane.getChildren().add(playerTwoUserNameLLValueTxtField);
+        anchorPane.getChildren().add(ScoreTxt);
+        anchorPane.getChildren().add(playerOneScore);
+        anchorPane.getChildren().add(playerTwoScore);
 
         anchorPane0.getChildren().add(playerTwoUserNameRValueTxt);
         anchorPane0.getChildren().add(toeRTxt);
@@ -656,6 +659,7 @@ public class PlayerGameBoard extends BorderPane {
     }
 
     private void setupButton(Button cellBtn, int row, int col) {
+
         cellBtn.setOnMouseClicked(mouseEvent -> {
             if (gameIsOver) {
                 return;
@@ -663,10 +667,13 @@ public class PlayerGameBoard extends BorderPane {
 
             setPlayerSymbol(cellBtn);
             cellBtn.setDisable(true);
-            record.add(new OfflineMoveDTO(moveId++, playerTurn, row, col));
-            int winningLineIndex = checkIfGameIsOver();
 
-            if (winningLineIndex != -1) {
+            record.add(new OfflineMoveDTO(moveId++, playerTurn, row, col));
+            Date date = new Date();
+            fullRecord = RecordOperation.readRecordFromFile("fullRecorde.json");
+            int winningLineIndex = checkIfGameIsOver();
+            if (winningLineIndex > -1) {
+                gameIsOver = true;
                 highlightWinningLine(winningLineIndex);
                 if (playerTurn % 2 == 0) {
                     playerTwoScore.setText(String.valueOf(++playerTwoScoreValue));
@@ -674,28 +681,24 @@ public class PlayerGameBoard extends BorderPane {
                     playerOneScore.setText(String.valueOf(++playerOneScoreValue));
                 }
 
-                gameIsOver = true;
-
-                fullRecord = RecordOperation.readRecordFromFile("fullRecorde.json");
-                Date date = new Date();
-
                 if (fullRecord == null || fullRecord.isEmpty()) {
                     fullRecord.add(new OfflineGameDTO(playerTurn % 2, playerOneNameValue, playerTwoNameValue, date, new ArrayList<>(record)));
                 } else {
+                    fullRecord = RecordOperation.readRecordFromFile("fullRecorde.json");
                     fullRecord.add(new OfflineGameDTO(playerTurn % 2, playerOneNameValue, playerTwoNameValue, date, new ArrayList<>(record)));
                 }
-                //fullRecord.add(new OfflineGameDTO(playerTurn % 2, playerOneNameValue, playerTwoNameValue, date, new ArrayList<>(record)));
 
                 if (isRecorded) {
                     RecordOperation.writeRecordToFile(fullRecord, "fullRecorde.json");
-                    System.out.println("Game record saved.");
+                    System.out.println("Game record saved.win");
                 }
-            } else if (record.size() == 9) { // game is a tie
+            } else if (winningLineIndex == -2) { // game is a tie
                 gameIsOver = true;
 
                 if (isRecorded) {
+                    fullRecord.add(new OfflineGameDTO(playerTurn % 2, playerOneNameValue, playerTwoNameValue, date, new ArrayList<>(record)));
                     RecordOperation.writeRecordToFile(fullRecord, "fullRecorde.json");
-                    System.out.println("Game record saved.");
+                    System.out.println("Game record saved. tie");
                 }
             }
         });
@@ -769,42 +772,41 @@ public class PlayerGameBoard extends BorderPane {
 
     public int checkIfGameIsOver() {
         int indexValue = -1;
-        indexValue = (record.size() == 9 ? -2 : -1);
-        for (int index = 0; index < 8; index++) {
-
+        indexValue = (record.size() == 9 ? -2 : -1);//-2
+        for (int i = 0; i < 8; i++) {
             String line = "";
-            if (index == 0) {
+            if (i == 0) {
                 line = cellsBtn[0][0].getText() + cellsBtn[0][1].getText() + cellsBtn[0][2].getText();
-            } else if (index == 1) {
+            } else if (i == 1) {
                 line = cellsBtn[1][0].getText() + cellsBtn[1][1].getText() + cellsBtn[1][2].getText();
-            } else if (index == 2) {
+            } else if (i == 2) {
                 line = cellsBtn[2][0].getText() + cellsBtn[2][1].getText() + cellsBtn[2][2].getText();
-            } else if (index == 3) {
+            } else if (i == 3) {
                 line = cellsBtn[0][0].getText() + cellsBtn[1][0].getText() + cellsBtn[2][0].getText();
-            } else if (index == 4) {
+            } else if (i == 4) {
                 line = cellsBtn[0][1].getText() + cellsBtn[1][1].getText() + cellsBtn[2][1].getText();
-            } else if (index == 5) {
+            } else if (i == 5) {
                 line = cellsBtn[0][2].getText() + cellsBtn[1][2].getText() + cellsBtn[2][2].getText();
-            } else if (index == 6) {
+            } else if (i == 6) {
                 line = cellsBtn[0][0].getText() + cellsBtn[1][1].getText() + cellsBtn[2][2].getText();
-            } else if (index == 7) {
+            } else if (i == 7) {
                 line = cellsBtn[2][0].getText() + cellsBtn[1][1].getText() + cellsBtn[0][2].getText();
             }
 
             if (line.equals("XXX")) {
                 // X wins
-                indexValue = index;
+                indexValue = i;
             } else if (line.equals("OOO")) {
                 // O wins
-                indexValue = index;
+                indexValue = i;
             }
         }
-
+        System.out.println("indexValue= " + indexValue);
         return indexValue;
     }
 
     void checkSoundToggleBtn() {
-        if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+        if (TicTacToeClient.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             soundToggleBtn.setText("On");
             soundToggleBtn.setStyle("-fx-background-color: green;");
             soundToggleBtn.setSelected(true);
@@ -819,12 +821,12 @@ public class PlayerGameBoard extends BorderPane {
             public void handle(ActionEvent event) {
 
                 if (soundToggleBtn.isSelected()) {
-                    WelcomPage.mediaPlayer.pause();
+                    TicTacToeClient.mediaPlayer.pause();
                     soundToggleBtn.setText("Off");
                     soundToggleBtn.setStyle("-fx-background-color: red;");
                     soundToggleBtn.setSelected(true);
                 } else {
-                    WelcomPage.mediaPlayer.play();
+                    TicTacToeClient.mediaPlayer.play();
                     soundToggleBtn.setText("On");
                     soundToggleBtn.setStyle("-fx-background-color: green;");
                     soundToggleBtn.setSelected(false);

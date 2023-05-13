@@ -1,5 +1,6 @@
 package tictactoeclient;
 
+import java.io.File;
 import javafx.scene.effect.Glow;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,10 +24,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import tictactoeclient.ComputerLevelPage.Difficulty;
 import tictactoeclient.ComputerLevelPage.xOrO;
@@ -99,7 +106,7 @@ public class ComputerGameBoard extends BorderPane {
     Button[][] buttonsBoardArray;
     int result = 0;
 
-    public ComputerGameBoard( String playerName, Difficulty mode, xOrO xoState) {
+    public ComputerGameBoard(String playerName, Difficulty mode, xOrO xoState) {
 
         //parentStage = stage;
         anchorPane = new AnchorPane();
@@ -587,139 +594,125 @@ public class ComputerGameBoard extends BorderPane {
             public void handle(ActionEvent event) {
 
                 newGame();
-            gameIsOver = false;
-            result=0;
-            hasWinner = false;
-            if (mode == Difficulty.MEDIUM
-
-            
-                ) {
+                gameIsOver = false;
+                result = 0;
+                hasWinner = false;
+                if (mode == Difficulty.MEDIUM) {
 
                     if (xoState == xOrO.O) {
-                    generateCompStep(xOrO.O);
-                }
-                for (Button[] row : buttonsBoardArray) {
-                    for (Button cell : row) {
-                        if (xoState == xOrO.X) {
-                            setupButton(cell, buttonsBoardArray, xoState.toString(), xOrO.O.toString(), 2);
-                        } else if (xoState == xOrO.O) {
-                            setupButton(cell, buttonsBoardArray, xoState.toString(), xOrO.X.toString(), 2);
+                        generateCompStep(xOrO.O);
+                    }
+                    for (Button[] row : buttonsBoardArray) {
+                        for (Button cell : row) {
+                            if (xoState == xOrO.X) {
+                                setupButton(cell, buttonsBoardArray, xoState.toString(), xOrO.O.toString(), 2);
+                            } else if (xoState == xOrO.O) {
+                                setupButton(cell, buttonsBoardArray, xoState.toString(), xOrO.X.toString(), 2);
+                            }
+                            cell.setFocusTraversable(false);
                         }
-                        cell.setFocusTraversable(false);
+
                     }
 
-                }
-
-            }
-            else if (mode == Difficulty.HARD
-
-            
-                ) {
+                } else if (mode == Difficulty.HARD) {
 
                     gameManager = new GameManager(playerName);
-                newGame();
-                if (xoState == xOrO.O) {
-                    //   generateCompStep(xoState);
-                    result = minimax(buttonsBoardArray, 100, xOrO.O.toString(), xOrO.X.toString(), true, true);
-                }
-                for (Button[] row : buttonsBoardArray) {
-                    for (Button cell : row) {
-                        if (xoState == xOrO.X) {
-                            setupButton(cell, buttonsBoardArray, xoState.toString(), xOrO.O.toString(), 100);
-                        } else if (xoState == xOrO.O) {
-                            setupButton(cell, buttonsBoardArray, xoState.toString(), xOrO.X.toString(), 100);
-                        }
-                        cell.setFocusTraversable(false);
+                    newGame();
+                    if (xoState == xOrO.O) {
+                        //   generateCompStep(xoState);
+                        result = minimax(buttonsBoardArray, 100, xOrO.O.toString(), xOrO.X.toString(), true, true);
                     }
+                    for (Button[] row : buttonsBoardArray) {
+                        for (Button cell : row) {
+                            if (xoState == xOrO.X) {
+                                setupButton(cell, buttonsBoardArray, xoState.toString(), xOrO.O.toString(), 100);
+                            } else if (xoState == xOrO.O) {
+                                setupButton(cell, buttonsBoardArray, xoState.toString(), xOrO.X.toString(), 100);
+                            }
+                            cell.setFocusTraversable(false);
+                        }
 
+                    }
                 }
+
             }
-
         }
-    }
+        );
 
-    );
-
-    homeBtn.setOnAction ( 
-        new EventHandler<ActionEvent>() {
+        homeBtn.setOnAction(
+                new EventHandler<ActionEvent>() {
             @Override
-        public void handle
-        (ActionEvent event
-        
+            public void handle(ActionEvent event
             ) {
 
                 WelcomPage root = new WelcomPage();
                 Scene scene = new Scene(root);
                 TicTacToeClient.stage.setScene(scene);
+            }
         }
-    }
-    );
+        );
 
-    if (mode == Difficulty.EASY
-
-    
-        ) {
+        if (mode == Difficulty.EASY) {
 
             buttonsBoard.forEach((button) -> {
-            setButtonsMouseListener(button, xoState);
-        });
-
-        gameManager = new GameManager(playerName);
-        newGame();
-        if (xoState == xOrO.O) {
-            generateCompStep(xoState);
-        }
-    }
-    else if (mode == Difficulty.MEDIUM
-
-    
-        ) {
-            gameManager = new GameManager(playerName);
-        newGame();
-        if (xoState == xOrO.O) {
-            generateCompStep(xOrO.O);
-        }
-        for (Button[] row : buttonsBoardArray) {
-            for (Button cell : row) {
-                if (xoState == xOrO.X) {
-                    setupButton(cell, buttonsBoardArray, xoState.toString(), xOrO.O.toString(), 2);
-                } else if (xoState == xOrO.O) {
-                    setupButton(cell, buttonsBoardArray, xoState.toString(), xOrO.X.toString(), 2);
-                }
-                cell.setFocusTraversable(false);
-            }
-
-        }
-
-    }
-    else if (mode == Difficulty.HARD
-
-    
-        ) {
+                setButtonsMouseListener(button, xoState);
+            });
 
             gameManager = new GameManager(playerName);
-        newGame();
-        if (xoState == xOrO.O) {
-            //   generateCompStep(xoState);
-            result = minimax(buttonsBoardArray, 100, xOrO.O.toString(), xOrO.X.toString(), true, true);
-        }
-        for (Button[] row : buttonsBoardArray) {
-            for (Button cell : row) {
-                if (xoState == xOrO.X) {
-                    setupButton(cell, buttonsBoardArray, xoState.toString(), xOrO.O.toString(), 100);
-                } else if (xoState == xOrO.O) {
-                    setupButton(cell, buttonsBoardArray, xoState.toString(), xOrO.X.toString(), 100);
+            newGame();
+            if (xoState == xOrO.O) {
+                generateCompStep(xoState);
+            }
+        } else if (mode == Difficulty.MEDIUM) {
+            gameManager = new GameManager(playerName);
+            newGame();
+            if (xoState == xOrO.O) {
+                generateCompStep(xOrO.O);
+            }
+            
+            for (Button[] row : buttonsBoardArray) {
+                for (Button cell : row) {
+                    if (xoState == xOrO.X) {
+                        setupButton(cell, buttonsBoardArray, xoState.toString(), xOrO.O.toString(), 2);
+                    } else if (xoState == xOrO.O) {
+                        setupButton(cell, buttonsBoardArray, xoState.toString(), xOrO.X.toString(), 2);
+                    }
+                    cell.setFocusTraversable(false);
                 }
-                cell.setFocusTraversable(false);
+
             }
 
+        } else if (mode == Difficulty.HARD) {
+
+            gameManager = new GameManager(playerName);
+            newGame();
+            if (xoState == xOrO.O) {
+                //   generateCompStep(xoState);
+                result = minimax(buttonsBoardArray, 100, xOrO.O.toString(), xOrO.X.toString(), true, true);
+            }
+            for (Button[] row : buttonsBoardArray) {
+                for (Button cell : row) {
+                    if (xoState == xOrO.X) {
+                        setupButton(cell, buttonsBoardArray, xoState.toString(), xOrO.O.toString(), 100);
+                    } else if (xoState == xOrO.O) {
+                        setupButton(cell, buttonsBoardArray, xoState.toString(), xOrO.X.toString(), 100);
+                    }
+                    cell.setFocusTraversable(false);
+                }
+
+            }
+            //setWinMovesHardAndMediumDisabled();
+
         }
-        //setWinMovesHardAndMediumDisabled();
-
+        
+        
+        checkSoundToggleBtn();
+        
+        
+        
     }
-}
 
-public void generateCompStep(xOrO state) {
+    public void generateCompStep(xOrO state) {
         int compStep = new Random().nextInt(9);
 
         while (gameManager.getCell(compStep).state != CellState.EMPTY) {
@@ -749,7 +742,7 @@ public void generateCompStep(xOrO state) {
 
         button.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-        public void handle(MouseEvent event) {
+            public void handle(MouseEvent event) {
 
                 int index = Integer.parseInt(button.getId());
                 if (state == xOrO.O) {
@@ -757,9 +750,9 @@ public void generateCompStep(xOrO state) {
                     button.setText(gameManager.getCell(index).state.getCellState());
                     button.setMouseTransparent(true);
                     if (gameManager.isDraw()) {
-                        //showGameState("The Ended With Draw!!");
+                        showGameState("The Ended With Draw!!");
                     } else if (gameManager.isPlayerOWon()) {
-                        //showGameState("You Won!!");
+                        showGameState("You Won!!");
                         setWinMovesDisabled();
                         setTextDisabled();
                     } else {
@@ -772,12 +765,13 @@ public void generateCompStep(xOrO state) {
                     button.setText(gameManager.getCell(index).state.getCellState());
                     button.setMouseTransparent(true);
                     if (gameManager.isPlayerXWon()) {
-                        //showGameState("You Won!!");
+                        showGameState("You Won!!");
                         setWinMovesDisabled();
                         setTextDisabled();
                     } else if (gameManager.isDraw()) {
                         showGameState("The Ended With Draw!!");
                     } else {
+                        showGameState("You Lose!!");
                         generateCompStep(xOrO.X);
                     }
                 }
@@ -890,12 +884,63 @@ public void generateCompStep(xOrO state) {
     }
 
     void showGameState(String txt) {
+        //this section concern to show a winning video when the player x won 
+        if (txt.equals("You Won!!")) {
+            // show the game over video
+            Stage dialogStage = new Stage();
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Game Status");
-        alert.setHeaderText(null);
-        alert.setContentText(txt);
-        alert.showAndWait();
+            File videoFile = new File("src\\tictactoeclient\\videos\\winnerVideo.mp4");
+            Media media = new Media(videoFile.toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            MediaView mediaView = new MediaView(mediaPlayer);
+            StackPane root = new StackPane();
+            root.getChildren().add(mediaView);
+
+            Scene scene = new Scene(root, 640, 360);
+
+            dialogStage.setTitle("Winner");
+            dialogStage.setScene(scene);
+            dialogStage.show();
+
+            mediaPlayer.play();
+            mediaPlayer.setOnEndOfMedia(()
+                    -> {
+                mediaPlayer.stop();
+                dialogStage.close();
+            });
+            dialogStage.setOnCloseRequest(event
+                    -> {
+                mediaPlayer.stop();
+            });
+        } else if (txt.equals("You Lose!!")) {
+            Stage dialogStage = new Stage();
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+
+            File videoFile = new File("src\\tictactoeclient\\videos\\losserVideo.mp4");
+            Media media = new Media(videoFile.toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            MediaView mediaView = new MediaView(mediaPlayer);
+            StackPane root = new StackPane();
+            root.getChildren().add(mediaView);
+
+            Scene scene = new Scene(root, 640, 360);
+
+            dialogStage.setTitle("losser");
+            dialogStage.setScene(scene);
+            dialogStage.show();
+
+            mediaPlayer.play();
+            mediaPlayer.setOnEndOfMedia(()
+                    -> {
+                mediaPlayer.stop();
+                dialogStage.close();
+            });
+            dialogStage.setOnCloseRequest(event
+                    -> {
+                mediaPlayer.stop();
+            });
+        }
 
     }
 
@@ -961,68 +1006,6 @@ public void generateCompStep(xOrO state) {
         }
     }
 
-    /*
-    public int minimaxO(Button board[][], int depth, boolean isMaximizing, boolean fristTime) {
-        int result = checkWinner(board);
-        if (depth == 0 || result != 1) {//depth ==0 out
-            return result;
-        }
-        if (isMaximizing) {
-            //in maxmizing
-            int finalScore = -10;
-            int finalI = 0, finalJ = 0;
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if (board[i][j].getText().equals("")) {
-                        board[i][j].setText("O");
-                        int score = minimax(board, depth - 1, false, false);
-                        board[i][j].setText("");
-                        if (score > finalScore) {
-                            finalScore = score;
-                            finalI = i;
-                            finalJ = j;
-                        }
-                        if (fristTime) {
-                            //System.out.println("score= " + score + ":: i= " + i + " :: j= " + j);
-                        }
-                    }
-                }
-            }
-            if (fristTime) {
-                board[finalI][finalJ].setText("X");
-                board[finalI][finalJ].setDisable(true);
-            }
-            return finalScore;
-        } else {
-            //in minimizing
-            int finalScore = 10;
-            int finalI = 0, finalJ = 0;
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if (board[i][j].getText().equals("")) {
-                        board[i][j].setText("X");
-                        int score = minimax(board, depth - 1, true, false);
-                        board[i][j].setText("");
-                        if (score < finalScore) {
-                            finalScore = score;
-                            finalI = i;
-                            finalJ = j;
-                        }
-                        if (fristTime) {
-                            //System.out.println("score= " + score + ":: i= " + i + " :: j= " + j);
-                        }
-                    }
-                }
-
-            }
-            if (fristTime) {
-                board[finalI][finalJ].setText("X");
-                board[finalI][finalJ].setDisable(true);
-            }
-            return finalScore;
-        }
-    }
-     */
     boolean haveTheSameValueAndNotEmpty(String x, String y, String z) {
         boolean checker = false;
         if ((x.equals(y)) && (x.equals(z)) && (y.equals(z)) && !x.equals("")) {
@@ -1149,15 +1132,17 @@ public void generateCompStep(xOrO state) {
             int result = checkWinner(cells);
             if (result == 0) {
                 // System.out.println("Tie \n");
+                showGameState("The Ended With Draw!!");
                 //setWinMovesHardAndMediumDisabled();
             } else {
                 if (result == 2) {
                     //  System.out.println("X is winner");
+                    showGameState("You Won!!");
                     setWinMovesHardAndMediumDisabled();
 
                 } else if (result == -2) {
                     setWinMovesHardAndMediumDisabled();
-
+                    showGameState("You Lose!!");
                     // System.out.println("O is winner");
                 } else {
                     // System.out.println("No winner yet");
@@ -1165,5 +1150,36 @@ public void generateCompStep(xOrO state) {
             }
         });
     }
+    
+     void checkSoundToggleBtn(){
+        if (TicTacToeClient.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            soundToggleBtn.setText("On");
+            soundToggleBtn.setStyle("-fx-background-color: green;");
+            soundToggleBtn.setSelected(true);
+        } else {
+            soundToggleBtn.setText("Off");
+            soundToggleBtn.setStyle("-fx-background-color: red;");
+            soundToggleBtn.setSelected(false);
+        }
+
+        soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                if (soundToggleBtn.isSelected()) {
+                    TicTacToeClient.mediaPlayer.pause();
+                    soundToggleBtn.setText("Off");
+                    soundToggleBtn.setStyle("-fx-background-color: red;");
+                    soundToggleBtn.setSelected(true);
+                } else {
+                    TicTacToeClient.mediaPlayer.play();
+                    soundToggleBtn.setText("On");
+                    soundToggleBtn.setStyle("-fx-background-color: green;");
+                    soundToggleBtn.setSelected(false);
+                }
+            }
+        });
+    }
+    
 
 }
