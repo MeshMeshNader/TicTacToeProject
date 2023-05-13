@@ -1,6 +1,7 @@
 package tictactoeclient;
 
 import java.io.File;
+import java.util.HashMap;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -90,7 +91,7 @@ public class OnlineGameBoard extends BorderPane {
     protected final Button cellPos2_0;
     protected final ColorAdjust colorAdjust7;
 
-    public OnlineGameBoard() {
+    public OnlineGameBoard(HashMap<String, Object> players) {
 
         anchorPane = new AnchorPane();
         glow = new Glow();
@@ -592,6 +593,11 @@ public class OnlineGameBoard extends BorderPane {
             }
         });
 
+        
+        
+        
+        
+        
     }
 
     void checkSoundToggleBtn() {

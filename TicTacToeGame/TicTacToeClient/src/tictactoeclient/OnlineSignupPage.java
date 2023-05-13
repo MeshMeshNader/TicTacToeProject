@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.DropShadow;
@@ -27,6 +28,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import static tictactoeclient.OnlineLoginPage.loggedOnUser;
 
 public class OnlineSignupPage extends BorderPane {
 
@@ -40,8 +42,8 @@ public class OnlineSignupPage extends BorderPane {
     protected final DropShadow dropShadow1;
     protected final TextField nickNameTxtField;
     protected final TextField userNameTxtField;
-    protected final TextField passwordTxtField;
-    protected final TextField rePasswordTxtField;
+    protected final PasswordField passwordTxtField;
+    protected final PasswordField rePasswordTxtField;
     protected final Text nickNameTxt;
     protected final Text rePassworrdTxt;
     protected final Lighting lighting;
@@ -62,8 +64,13 @@ public class OnlineSignupPage extends BorderPane {
     protected final Text soundTxt;
     ClientConnection clientconnection;
 
-    public OnlineSignupPage() {
+    boolean checkRegExPassward;
+    boolean checkRegExName;
+    String regexPassword = "(?=.*[0-9])([A-Za-z]\\w)(?=.*[@#$%^&+=])(?=\\S+$).{5,10}";
+    String regexUserName = "^[A-Za-z]\\w.{5,15}$";
+    UserDTO userRegister;
 
+    public OnlineSignupPage() {
         anchorPane = new AnchorPane();
         glow = new Glow();
         registerBtn = new Button();
@@ -74,8 +81,8 @@ public class OnlineSignupPage extends BorderPane {
         dropShadow1 = new DropShadow();
         nickNameTxtField = new TextField();
         userNameTxtField = new TextField();
-        passwordTxtField = new TextField();
-        rePasswordTxtField = new TextField();
+        passwordTxtField = new PasswordField();
+        rePasswordTxtField = new PasswordField();
         nickNameTxt = new Text();
         rePassworrdTxt = new Text();
         lighting = new Lighting();
@@ -282,13 +289,14 @@ public class OnlineSignupPage extends BorderPane {
         nickNameTxtField0.getChildren().add(soundToggleBtn);
         nickNameTxtField0.getChildren().add(soundTxt);
         checkSoundToggleBtn();
-        
+
         ClientConnection.flag.addListener((observable, oldValue, newValue) -> {
             if (newValue.equals("registerTrue")) {
                 OnlineUsersPage root = new OnlineUsersPage();
                 Scene scene = new Scene(root);
+                OnlineLoginPage.loggedOnUser = userRegister;
                 TicTacToeClient.stage.setScene(scene);
-            } else if (newValue.equals("registerFalse")){
+            } else if (newValue.equals("registerFalse")) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setContentText("Error! while trying to Register!!");
                 ButtonType okButton = new ButtonType("OK");
@@ -300,14 +308,55 @@ public class OnlineSignupPage extends BorderPane {
         registerBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                boolean check;
+                checkRegExName = isValidUsername(userNameTxtField.getText());
+                if ((!userNameTxtField.getText().equals("")) && (!passwordTxtField.getText().equals("")) && (!rePasswordTxtField.getText().equals(""))) {
+                    if (checkRegExName) {
+                        check = checkPassword(passwordTxtField.getText(), rePasswordTxtField.getText());
+                        checkRegExPassward = isValidPassword(passwordTxtField.getText());
+                        if (checkRegExPassward) {
+                            if (check) {
 
-                UserDTO user = new UserDTO();
+                                userRegister = new UserDTO();
 
-                user.setUserName(userNameTxtField.getText());
-                user.setUserNickName(nickNameTxtField.getText());
-                user.setPassword(passwordTxtField.getText());
-                clientconnection = ClientConnection.getInstance();
-                clientconnection.writeMessage(Messages.registrationRequest, user);
+                                userRegister.setUserName(userNameTxtField.getText());
+                                userRegister.setUserNickName(nickNameTxtField.getText());
+                                userRegister.setPassword(passwordTxtField.getText());
+                                clientconnection = ClientConnection.getInstance();
+                                clientconnection.writeMessage(Messages.registrationRequest, userRegister);
+
+                                System.out.println("data sending");
+
+                            } else {
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setTitle("Alert");
+                                alert.setHeaderText(null);
+                                alert.setContentText("no Matches  password");
+                                alert.showAndWait();
+                            }
+                        } else {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Alert");
+                            alert.setHeaderText(null);
+                            alert.setContentText("enter passward from 5 to 10 contain letters");
+                            alert.showAndWait();
+
+                        }
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Alert");
+                        alert.setHeaderText(null);
+                        alert.setContentText("enter valid name starts with any letters from 5 to 15 letters");
+                        alert.showAndWait();
+                    }
+
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Alert");
+                    alert.setHeaderText(null);
+                    alert.setContentText("please enter all data ");
+                    alert.showAndWait();
+                }
             }
         });
 
@@ -332,8 +381,8 @@ public class OnlineSignupPage extends BorderPane {
         });
 
     }
-    
-    void checkSoundToggleBtn(){
+
+    void checkSoundToggleBtn() {
         if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             soundToggleBtn.setText("On");
             soundToggleBtn.setStyle("-fx-background-color: green;");
@@ -361,5 +410,29 @@ public class OnlineSignupPage extends BorderPane {
                 }
             }
         });
+    }
+
+    public boolean isValidPassword(String password) {
+        if (password.matches(regexPassword)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isValidUsername(String name) {
+        if (name.matches(regexUserName)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean checkPassword(String password, String confirmpassword) {
+        if (password.equals(confirmpassword) && password.matches(regexPassword)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -1,6 +1,7 @@
 package tictactoeserver;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -25,6 +26,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tictactoeclient.GameDTO;
 import tictactoeclient.UserDTO;
 
 public class AdminServerPage extends BorderPane {
@@ -59,8 +61,11 @@ public class AdminServerPage extends BorderPane {
     protected final CategoryAxis usersCategoryAxis;
     protected final NumberAxis usersNumbersAxis;
     protected final BarChart usersBarChart;
+    public ArrayList<String> topList;
 
     public AdminServerPage(Stage stage) {
+
+        topList = new ArrayList<String>();
 
         parentStage = stage;
         anchorPane = new AnchorPane();
@@ -126,12 +131,12 @@ public class AdminServerPage extends BorderPane {
         userNameOnlineTableCol.setEditable(false);
         userNameOnlineTableCol.setPrefWidth(75.0);
         userNameOnlineTableCol.setStyle("-fx-font-size: 18; -fx-font-family: Bauhaus 93;");
-        userNameOnlineTableCol.setText("Player Name");
+        userNameOnlineTableCol.setText("User Name");
 
         statusOnlineTableCol.setEditable(false);
         statusOnlineTableCol.setPrefWidth(75.0);
         statusOnlineTableCol.setStyle("-fx-font-size: 18; -fx-font-family: Bauhaus 93;");
-        statusOnlineTableCol.setText("Status");
+        statusOnlineTableCol.setText("Playing ");
 
         onlineUsersTable.setEffect(dropShadow0);
         onlineUsersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -140,7 +145,7 @@ public class AdminServerPage extends BorderPane {
         onlineUsersValueTxt.setLayoutY(57.0);
         onlineUsersValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         onlineUsersValueTxt.setStrokeWidth(0.0);
-        onlineUsersValueTxt.setText("Online Players (10)");
+        onlineUsersValueTxt.setText("Online USreS (10)");
         onlineUsersValueTxt.setFont(new Font("Bauhaus 93", 30.0));
 
         offlineUsersTable.setLayoutX(41.0);
@@ -148,11 +153,16 @@ public class AdminServerPage extends BorderPane {
         offlineUsersTable.setPrefHeight(230.0);
         offlineUsersTable.setPrefWidth(272.0);
         offlineUsersTable.setStyle("-fx-background-color: #ffffff;");
+        offlineUsersTable.edit(0, userNameOfflineTableCol);
+
+        ObservableList<String> userList = offlineUsersTable.getItems();
+
+        offlineUsersTable.setItems(userList);
 
         userNameOfflineTableCol.setEditable(false);
         userNameOfflineTableCol.setPrefWidth(75.0);
         userNameOfflineTableCol.setStyle("-fx-font-size: 18; -fx-font-family: Bauhaus 93;");
-        userNameOfflineTableCol.setText("Player Name");
+        userNameOfflineTableCol.setText("User Name");
 
         offlineUsersTable.setEffect(dropShadow1);
         offlineUsersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -161,7 +171,7 @@ public class AdminServerPage extends BorderPane {
         offlineUsersValueTxt.setLayoutY(359.0);
         offlineUsersValueTxt.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         offlineUsersValueTxt.setStrokeWidth(0.0);
-        offlineUsersValueTxt.setText("Offline Players (11)");
+        offlineUsersValueTxt.setText("Offline USreS (11)");
         offlineUsersValueTxt.setFont(new Font("Bauhaus 93", 30.0));
         setLeft(anchorPane);
 
@@ -214,7 +224,7 @@ public class AdminServerPage extends BorderPane {
         gameStatusInfoTableCol.setEditable(false);
         gameStatusInfoTableCol.setPrefWidth(75.0);
         gameStatusInfoTableCol.setStyle("-fx-font-size: 18; -fx-font-family: Bauhaus 93;");
-        gameStatusInfoTableCol.setText("Game Status");
+        gameStatusInfoTableCol.setText("Results");
 
         usersInfoTable.setEffect(dropShadow3);
         usersInfoTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -230,7 +240,7 @@ public class AdminServerPage extends BorderPane {
         usersCategoryAxis.setTickLength(10.0);
 
         usersNumbersAxis.setAutoRanging(false);
-        usersNumbersAxis.setLabel("No. of Players");
+        usersNumbersAxis.setLabel("No. of Users");
         usersNumbersAxis.setSide(javafx.geometry.Side.LEFT);
         usersNumbersAxis.setTickLength(10.0);
         usersNumbersAxis.setUpperBound(50.0);
@@ -260,19 +270,8 @@ public class AdminServerPage extends BorderPane {
         anchorPane0.getChildren().add(onlineUsersPlayingInfoTxt);
         anchorPane0.getChildren().add(usersBarChart);
 
-        //For The Left Tables
-        // Create the ObservableLists for the online and offline user tables
-        ObservableList<UserDTO> onlineUsers = FXCollections.observableArrayList();
-        ObservableList<UserDTO> offlineUsers = FXCollections.observableArrayList();
-
-        // Set the CellValueFactory for the username columns
-        userNameOnlineTableCol.setCellValueFactory(new PropertyValueFactory<>("userName"));
-        statusOnlineTableCol.setCellValueFactory(new PropertyValueFactory<>("isPlaying"));
-        userNameOfflineTableCol.setCellValueFactory(new PropertyValueFactory<>("userName"));
-
-        //For The Bar
-        usersNumbersAxis.setUpperBound(30);
-
+        ObservableList<UserDTO> onlineUsersChart = FXCollections.observableArrayList();
+        ObservableList<UserDTO> offlineUsersChart = FXCollections.observableArrayList();
         XYChart.Series<String, Number> dataSeries = new XYChart.Series<>();
         dataSeries.setName("Live Board");
         dataSeries.getData().add(new XYChart.Data<>("All Players", 0));
@@ -282,86 +281,133 @@ public class AdminServerPage extends BorderPane {
 
         usersBarChart.getData().add(dataSeries);
 
-        // Start a new thread to update the user tables periodically
-        Thread getInformation = new Thread() {
-            @Override
-            public void run() {
-                DataAccessLayer.connect();
-                try {
-                    while (true) {
-
-                        // Get the online and offline user counts
-                        int onlinePlayersNum = DataAccessLayer.getOnlinePlayersNum();
-                        int offlinePlayersNum = DataAccessLayer.getOfflinePlayersNum();
-                        int busyPlayersNum = DataAccessLayer.getbusyPlayersNum();
-
-                        Platform.runLater(() -> {
-                            for (XYChart.Data<String, Number> data : dataSeries.getData()) {
-                                if (data.getXValue().equals("All Players")) {
-                                    data.setYValue(onlinePlayersNum + offlinePlayersNum);
-                                }
-                                if (data.getXValue().equals("Online Players")) {
-                                    data.setYValue(onlinePlayersNum);
-                                }
-                                if (data.getXValue().equals("Offline Players")) {
-                                    data.setYValue(offlinePlayersNum);
-                                }
-                                if (data.getXValue().equals("In Game")) {
-                                    data.setYValue(busyPlayersNum);
-                                }
-
-                                // Update the user count labels
-                                onlineUsersValueTxt.setText("Online Players (" + onlinePlayersNum + ")");
-                                offlineUsersValueTxt.setText("Offline Players (" + offlinePlayersNum + ")");
-
-                                // Clear the online and offline user lists
-                                onlineUsers.clear();
-                                offlineUsers.clear();
-
-                                try {
-                                    // Add the online and offline users to the user lists
-                                    for (UserDTO user : DataAccessLayer.getOnlinePlayers()) {
-                                        onlineUsers.add(user);
-                                    }
-
-                                    for (UserDTO user : DataAccessLayer.getOfflinePlayers()) {
-                                        offlineUsers.add(user);
-                                    }
-
-                                } catch (SQLException ex) {
-                                    Logger.getLogger(AdminServerPage.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-
-                            }
-
-                        });
-
-                        Thread.sleep(100); // Wait for 5 seconds before updating again
-                        // Set the items property of the TableView to the user lists
-                        onlineUsersTable.setItems(onlineUsers);
-                        offlineUsersTable.setItems(offlineUsers);
-
-                    }
-                } catch (SQLException | InterruptedException ex) {
-                    Logger.getLogger(AdminServerPage.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        };
-
         connectionToggleBtn.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
+
                 connectionToggleBtn.setText("On");
                 connectionToggleBtn.setStyle("-fx-background-color: green;");
                 server = new ServerHandeller();
-                DataAccessLayer.connect();
-                getInformation.start();
+
+                ObservableList<UserDTO> onlineUsers = FXCollections.observableArrayList();
+                ObservableList<UserDTO> offlineUsers = FXCollections.observableArrayList();
+                ObservableList<GameDTO> dashBoard = FXCollections.observableArrayList();
+
+                userNameOnlineTableCol.setCellValueFactory(new PropertyValueFactory<>("userName"));
+                statusOnlineTableCol.setCellValueFactory(new PropertyValueFactory<>("isOnline"));
+                userNameOfflineTableCol.setCellValueFactory(new PropertyValueFactory<>("userName"));
+                playeOneInfoTableCol.setCellValueFactory(new PropertyValueFactory<>("playe1"));
+                playeTwoInfoTableCol.setCellValueFactory(new PropertyValueFactory<>("playe2"));
+                gameStatusInfoTableCol.setCellValueFactory(new PropertyValueFactory<>("results"));
+
+                new Thread() {
+                    @Override
+
+                    public void run() {
+                        DataAccessLayer.connect();
+                        try {
+                            while (true) {
+                                int onlinePlayersNum = DataAccessLayer.getOnlinePlayersNum();
+                                int offlinePlayersNum = DataAccessLayer.getOfflinePlayersNum();
+
+                                onlineUsersValueTxt.setText("Online Users (" + onlinePlayersNum + ")");
+                                offlineUsersValueTxt.setText("Offline Users (" + offlinePlayersNum + ")");
+
+                                onlineUsers.clear();
+                                offlineUsers.clear();
+                                dashBoard.clear();
+
+                                for (UserDTO user : DataAccessLayer.getOnlinePlayers()) {
+                                    onlineUsers.add(user);
+                                }
+                                for (UserDTO user : DataAccessLayer.getOfflinePlayers()) {
+                                    offlineUsers.add(user);
+                                }
+                                for (GameDTO game : DataAccessLayer.getAllGames()) {
+                                    dashBoard.add(game);
+                                }
+
+                                onlineUsersTable.setItems(onlineUsers);
+                                offlineUsersTable.setItems(offlineUsers);
+                                usersInfoTable.setItems(dashBoard);
+                                Thread.sleep(5000);
+                            }
+                        } catch (SQLException | InterruptedException ex) {
+                            Logger.getLogger(AdminServerPage.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }.start();
+                
 
             } else {
                 server.closeConnection();
                 connectionToggleBtn.setText("Off");
                 connectionToggleBtn.setStyle("");
             }
+            new Thread() {
+                @Override
+                public void run() {
+                    DataAccessLayer.connect();
+                    try {
+                        while (true) {
+
+                            // Get the online and offline user counts
+                            int onlinePlayersNum = DataAccessLayer.getOnlinePlayersNum();
+                            int offlinePlayersNum = DataAccessLayer.getOfflinePlayersNum();
+                            int busyPlayersNum = DataAccessLayer.getbusyPlayersNum();
+
+                            Platform.runLater(() -> {
+                                for (XYChart.Data<String, Number> data : dataSeries.getData()) {
+                                    if (data.getXValue().equals("All Players")) {
+                                        data.setYValue(onlinePlayersNum + offlinePlayersNum);
+                                    }
+                                    if (data.getXValue().equals("Online Players")) {
+                                        data.setYValue(onlinePlayersNum);
+                                    }
+                                    if (data.getXValue().equals("Offline Players")) {
+                                        data.setYValue(offlinePlayersNum);
+                                    }
+                                    if (data.getXValue().equals("In Game")) {
+                                        data.setYValue(busyPlayersNum);
+                                    }
+
+                                    // Update the user count labels
+                                    onlineUsersValueTxt.setText("Online Players (" + onlinePlayersNum + ")");
+                                    offlineUsersValueTxt.setText("Offline Players (" + offlinePlayersNum + ")");
+
+                                    // Clear the online and offline user lists
+                                    onlineUsersChart.clear();
+                                    offlineUsersChart.clear();
+
+                                    try {
+                                        // Add the online and offline users to the user lists
+                                        for (UserDTO user : DataAccessLayer.getOnlinePlayers()) {
+                                            onlineUsersChart.add(user);
+                                        }
+
+                                        for (UserDTO user : DataAccessLayer.getOfflinePlayers()) {
+                                            offlineUsersChart.add(user);
+                                        }
+
+                                    } catch (SQLException ex) {
+                                        Logger.getLogger(AdminServerPage.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+
+                                }
+
+                            });
+
+                            Thread.sleep(5000);
+                            onlineUsersTable.setItems(onlineUsersChart);
+                            offlineUsersTable.setItems(offlineUsersChart);
+
+                        }
+                    } catch (SQLException | InterruptedException ex) {
+                        Logger.getLogger(AdminServerPage.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }.start();
         });
+
         logOutBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

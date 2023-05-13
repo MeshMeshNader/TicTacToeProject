@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +25,7 @@ public class ServerHandeller {
     Socket socket;
 
     static Vector<ServerConnection> ClinetsNum = new Vector<ServerConnection>();
+    static HashMap<String, ServerConnection> clientSockets = new HashMap<String, ServerConnection>();
 
     public ServerHandeller() {
         try {
@@ -46,6 +48,7 @@ public class ServerHandeller {
                         socket = serverSocket.accept();
                         System.out.println("Client connected from " + socket.getInetAddress());
                         ClinetsNum.add(new ServerConnection(socket));
+                        
                         System.out.println("server number of clients " + ClinetsNum.size());
 
                         //System.out.println("Accept new Client is running.......");
@@ -65,19 +68,26 @@ public class ServerHandeller {
             for (int i = 0; i < ClinetsNum.size(); i++) {
 
                 try {
-                    socket = ClinetsNum.get(i).socket;
-                    socket.close();
 
-                    System.err.println(" socket isclosed " + socket.isClosed());
-                    System.err.println(" socket isConnected " + socket.isConnected());
+                    socket = ClinetsNum.get(i).socket;
+                    if (socket != null && !socket.isClosed()) {
+                        socket.close();
+                        System.out.println("closed socket server");
+                        System.err.println(" socket isclosed " + socket.isClosed());
+                        System.err.println(" socket isConnected " + socket.isConnected());
+                    }
                 } catch (IOException ex) {
                     Logger.getLogger(ServerHandeller.class.getName()).log(Level.SEVERE, null, ex);
                 }
+
             }
+
             serverSocket.close();
+
         } catch (IOException ex) {
             Logger.getLogger(ServerHandeller.class.getName()).log(Level.SEVERE, null, ex);
         }
+        ClinetsNum.clear();
     }
 
 }

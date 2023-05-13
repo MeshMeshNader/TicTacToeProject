@@ -17,13 +17,13 @@ public class GameDTO implements Serializable{
     private int gameID;
     private String mode;
     private String results;
-    private int playe1;
-    private int playe2;
+    private String playe1;
+    private String playe2;
     private int winnerID;
     private int loserID;
     Date createdAt;
 
-    public GameDTO(int gameID, String mode, String results, int playe1, int playe2, int winnerID, int loserID, Date createdAt) {
+    public GameDTO(int gameID, String mode, String results, String playe1, String playe2, int winnerID, int loserID, Date createdAt) {
         this.gameID = gameID;
         this.mode = mode;
         this.results = results;
@@ -63,19 +63,19 @@ public class GameDTO implements Serializable{
         this.results = results;
     }
 
-    public int getPlaye1() {
+    public String getPlaye1() {
         return playe1;
     }
 
-    public void setPlaye1(int playe1) {
+    public void setPlaye1(String playe1) {
         this.playe1 = playe1;
     }
 
-    public int getPlaye2() {
+    public String getPlaye2() {
         return playe2;
     }
 
-    public void setPlaye2(int playe2) {
+    public void setPlaye2(String playe2) {
         this.playe2 = playe2;
     }
 

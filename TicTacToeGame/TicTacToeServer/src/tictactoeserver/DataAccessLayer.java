@@ -88,6 +88,30 @@ public class DataAccessLayer {
     }
 
     /////////////////////////////////////////////////////
+    
+    
+   
+    public static ArrayList<GameDTO> getAllGames() throws SQLException {
+
+        ArrayList<GameDTO> games = new ArrayList<>();
+
+        PreparedStatement pst = con.prepareStatement(" SELECT * FROM GAME ");
+        ResultSet resultSet = pst.executeQuery();
+        while (resultSet.next()) {
+            games.add(new GameDTO(
+                    resultSet.getInt("GAMEID"),
+                    resultSet.getString("MODE"),
+                    resultSet.getString("RESULTS"),
+                    resultSet.getString("PLAYE1"),
+                    resultSet.getString("PLAYE2"),
+                    resultSet.getInt("WINNERID"),
+                    resultSet.getInt("LOSERID"),
+                    resultSet.getDate("CREATEDAT")
+            ));
+        }
+       return games;
+    }
+    
     public static boolean checkIfUserExist(String userName) throws SQLException {
 
         PreparedStatement pst = con.prepareStatement(" SELECT ROOT.\"USERS\".\"USERNAME\" FROM  ROOT.\"USERS\" Where ROOT.\"USERS\".\"USERNAME\"=? ");
@@ -161,7 +185,17 @@ public class DataAccessLayer {
         ResultSet resultSet = pst.executeQuery();
 
         while (resultSet.next()) {
-            allPlayers.add(new UserDTO(resultSet.getString("username")
+            allPlayers.add(new UserDTO(
+                    resultSet.getInt("userID"),
+                    resultSet.getString("username"),
+                    resultSet.getString("userNickname"),
+                    resultSet.getString("password"),
+                    resultSet.getInt("score"),
+                    resultSet.getInt("noOfWins"),
+                    resultSet.getInt("noOfLosses"),
+                    resultSet.getBoolean("isOnline"),
+                    resultSet.getBoolean("isPlaying"),
+                    resultSet.getTimestamp("createdAt")
             ));
         }
         return allPlayers;
@@ -399,8 +433,8 @@ public class DataAccessLayer {
                     "INSERT INTO GAME VALUES(DEFAULT ,?,?, ? ,?,?,?,?)");
             pst.setString(2, game.getMode());
             pst.setString(3, game.getResults());
-            pst.setInt(4, game.getPlaye1());
-            pst.setInt(5, game.getPlaye2());
+            pst.setString(4, game.getPlaye1());
+            pst.setString(5, game.getPlaye2());
             pst.setInt(6, game.getWinnerID());
             pst.setInt(7, game.getLoserID());
 
@@ -465,8 +499,8 @@ public class DataAccessLayer {
             game = new GameDTO(gameId,
                     resultSet.getString("MODE"),
                     resultSet.getString("RESULTS"),
-                    resultSet.getInt("PLAYE1"),
-                    resultSet.getInt("PLAYE2"),
+                    resultSet.getString("PLAYE1"),
+                    resultSet.getString("PLAYE2"),
                     resultSet.getInt("WINNERID"),
                     resultSet.getInt("LOSERID"),
                     resultSet.getDate("CREATEDAT")
@@ -511,4 +545,5 @@ public class DataAccessLayer {
             return false;
         }
     }
+
 }

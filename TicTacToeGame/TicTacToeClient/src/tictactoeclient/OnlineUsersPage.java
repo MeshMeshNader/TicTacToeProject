@@ -3,6 +3,7 @@ package tictactoeclient;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -41,6 +42,7 @@ public class OnlineUsersPage extends BorderPane {
 
     ClientConnection clientconnection;
     boolean myTurn;
+    boolean accepting;
     UserDTO selectedUser;
     protected final AnchorPane anchorPane;
     protected final Glow glow;
@@ -74,6 +76,7 @@ public class OnlineUsersPage extends BorderPane {
     public OnlineUsersPage() {
 
         myTurn = false;
+        accepting = false;
         selectedUser = null;
         anchorPane = new AnchorPane();
         glow = new Glow();
@@ -272,6 +275,7 @@ public class OnlineUsersPage extends BorderPane {
         anchorPane0.getChildren().add(inviteBtn);
 
         checkSoundToggleBtn();
+        clientconnection = ClientConnection.getInstance();
 
         myProfileBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -301,7 +305,7 @@ public class OnlineUsersPage extends BorderPane {
                 //Show PopUpViewProfile
                 //OPen PopUp
                 Stage popUpStage = new Stage();
-                Scene popUpPage = new Scene(new PopUpViewProfile(popUpStage , selectedUser));
+                Scene popUpPage = new Scene(new PopUpViewProfile(popUpStage, selectedUser));
 
                 popUpStage.setScene(popUpPage);
                 popUpStage.initModality(Modality.APPLICATION_MODAL);
@@ -314,11 +318,27 @@ public class OnlineUsersPage extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                //Don't Forget To Handel Ex (cannot press withour select user)
-                //Show PopUpInviteUser
-                //OPen PopUp
+                HashMap<String, Object> players = new HashMap<String, Object>();
+                players.put(Messages.keySender, loggedOnUser);
+                players.put(Messages.keyReceiver, selectedUser);
+                players.put(Messages.keyBoolean, new Boolean(false));
+                players.put(Messages.keyGame, new GameDTO());
+                players.put(Messages.keyMove1, new MoveDTO());
+                players.put(Messages.keyMove2, new MoveDTO());
+                players.put(Messages.keyMove3, new MoveDTO());
+                players.put(Messages.keyMove4, new MoveDTO());
+                players.put(Messages.keyMove5, new MoveDTO());
+                players.put(Messages.keyMove6, new MoveDTO());
+                players.put(Messages.keyMove7, new MoveDTO());
+                players.put(Messages.keyMove8, new MoveDTO());
+                players.put(Messages.keyMove9, new MoveDTO());
+                
+                clientconnection.writeMessage(Messages.sendInvitationRequest, players);
+
+                System.out.println("Sending Invetation Request From Client ");
+
                 Stage popUpStage = new Stage();
-                Scene popUpPage = new Scene(new PopUpInviteWaiting(popUpStage));
+                Scene popUpPage = new Scene(new PopUpInviteWaiting(popUpStage, selectedUser));
 
                 popUpStage.setScene(popUpPage);
                 popUpStage.initModality(Modality.APPLICATION_MODAL);
@@ -348,7 +368,6 @@ public class OnlineUsersPage extends BorderPane {
             }
         });
 
-        clientconnection = ClientConnection.getInstance();
         clientconnection.writeMessage(Messages.getAllPlayersRequest, OnlineLoginPage.loggedOnUser);
 
         ClientConnection.flag.addListener((observable, oldValue, newValue) -> {
@@ -357,12 +376,31 @@ public class OnlineUsersPage extends BorderPane {
             } else {
                 myTurn = false;
             }
+
+            if (newValue.equals("playingRequest")) {
+                accepting = true;
+            } else {
+                accepting = false;
+            }
+
         });
 
         ClientConnection.flagObjct.addListener((observable, oldValue, newValue) -> {
             if (myTurn) {
                 ArrayList<UserDTO> allPlayers = (ArrayList<UserDTO>) newValue;
                 getAll(allPlayers);
+            }
+            if (accepting) {
+
+                System.out.println("Show accepting PopUp from Client  ");
+                HashMap<String, Object> players = (HashMap<String, Object>) newValue;
+                Stage popUpStage = new Stage();
+                Scene popUpPage = new Scene(new PopUpInviteAccepting(popUpStage, players));
+
+                popUpStage.setScene(popUpPage);
+                popUpStage.initModality(Modality.APPLICATION_MODAL);
+                popUpStage.showAndWait();
+
             }
         });
 

@@ -15,6 +15,8 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Vector;
 import tictactoeclient.GameDTO;
 import tictactoeclient.Messages;
 import tictactoeclient.MoveDTO;
@@ -35,6 +37,8 @@ public class ServerConnection {
     int portNum;
     Object obj;
     String msg;
+
+    static Vector<ServerConnection> ClientsIP = new Vector<ServerConnection>();
 
     public ServerConnection(Socket socket) {
         try {
@@ -64,6 +68,8 @@ public class ServerConnection {
 
                 while (!socket.isClosed() && socket.isConnected()) {
                     try {
+
+                        System.out.println(socket.toString());
                         msg = (String) objectinputstream.readObject();
 
                         if (msg.equals(Messages.loginRequest)) {
@@ -119,7 +125,7 @@ public class ServerConnection {
                         } else if (msg.equals(Messages.getNumberOfLossessRequest)) {
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.getNumberOfLossesResponse, getNumberOfLossess());
-                            
+
                         } else if (msg.equals(Messages.updatedResultRequest)) {
                             obj = (GameDTO) objectinputstream.readObject();
                             sendMessage(Messages.updatedResultResponse, updatedResult());
@@ -135,23 +141,23 @@ public class ServerConnection {
                         } else if (msg.equals(Messages.userExistRequest)) {
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.userExistRespons, checkUserExist());
-                            
+
                         } else if (msg.equals(Messages.offlineUsersRequest)) {
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.offlineUsersResponse, getOfflineUsers());
-                            
+
                         } else if (msg.equals(Messages.getAllInfoRequest)) {
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.getAllInfoResponse, getUserInfo());
-                            
+
                         } else if (msg.equals(Messages.getOnlinePlayerNumRequest)) {
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.getOnlinePlayerNumResponse, getOnlinePlayersNum());
-                            
+
                         } else if (msg.equals(Messages.getbusyPlayersNumRequest)) {
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.getbusyPlayersNumResponse, getbusyPlayersNum());
-                            
+
                         } else if (msg.equals(Messages.getOfflinePlayersNumRequest)) {
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.getOfflinePlayersNumResponse, getOfflinePlayersNumValidation());
@@ -183,11 +189,23 @@ public class ServerConnection {
                         } else if (msg.equals(Messages.getAllPlayersRequest)) {
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.getAllPLayersResponse, retriveAllPlayersData());
-                        
-                        } else if (msg.equals(Messages.viewUserProfileRequest)){
+
+                        } else if (msg.equals(Messages.viewUserProfileRequest)) {
                             obj = (UserDTO) objectinputstream.readObject();
                             sendMessage(Messages.viewUserProfileResponse, getUserInfo());
-                            
+
+                        } else if (msg.equals(Messages.sendInvitationRequest)) {
+                            obj = (HashMap<String, Object>) objectinputstream.readObject();
+                            invitProcess();
+
+                        } else if (msg.equals(Messages.playingResponseTrue)) {
+                            obj = (HashMap<String, Object>) objectinputstream.readObject();
+                            checkPlayingResponseTrue();
+
+                        } else if (msg.equals(Messages.playingResponseFalse)) {
+                            obj = (HashMap<String, Object>) objectinputstream.readObject();
+                            checkPlayingResponseFalse();
+
                         }
 
                     } catch (IOException ex) {
@@ -221,10 +239,69 @@ public class ServerConnection {
         }.start();
     }
 
+    public void invitProcess() {
+        try {
+
+            HashMap<String, Object> players = (HashMap<String, Object>) obj;
+
+            System.out.println("Invite Proxess From Server ");
+
+            ObjectOutputStream objOutS = ServerHandeller.clientSockets.get(
+                    ((UserDTO) players.get(Messages.keyReceiver)).getUserName()).objectoutputstream;
+
+            objOutS.writeObject(Messages.playingRequest);
+            objOutS.writeObject(players);
+
+            System.out.println("Sending Playing Request From Server");
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    public void checkPlayingResponseTrue() {
+        HashMap<String, Object> players = (HashMap<String, Object>) obj;
+
+        System.out.println("Reciveing Playing Response From Server ");
+
+        ObjectOutputStream objOutS = ServerHandeller.clientSockets.get(
+                ((UserDTO) players.get(Messages.keySender)).getUserName()).objectoutputstream;
+        try {
+
+            System.out.println("Sending   Invitation Response From Server with True  ");
+            objOutS.writeObject(Messages.sendInvitationResponse);
+            objOutS.writeObject(new Boolean(true));
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void checkPlayingResponseFalse() {
+        HashMap<String, Object> players = (HashMap<String, Object>) obj;
+
+        System.out.println("Reciveing Playing Response From Server ");
+
+        ObjectOutputStream objOutS = ServerHandeller.clientSockets.get(
+                ((UserDTO) players.get(Messages.keySender)).getUserName()).objectoutputstream;
+        try {
+
+            System.out.println("Sending   Invitation Response From Server with False  ");
+            objOutS.writeObject(Messages.sendInvitationResponse);
+            objOutS.writeObject(new Boolean(false));
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public Boolean loginValidation() {
         // check database and return true if exist and true and false if failed
         UserDTO user = (UserDTO) obj;
         if (DataAccessLayer.login(user.getUserName(), ((UserDTO) user).getPassword())) {
+            ServerHandeller.clientSockets.put(user.getUserName(), this);
+
             return true;
         } else {
             return false;

@@ -71,9 +71,32 @@ public class Messages implements Serializable {
     public static String getAllPlayersRequest = "GetAllPlayersRequest";
     public static String viewUserProfileResponse = "ViewUserProfileResponse";
     public static String viewUserProfileRequest = "ViewUserProfileRequest";
-    
-    
-    
-    
-}
 
+    public static String sendInvitationRequest = "SendInvitationRequest";
+    public static String sendInvitationResponse = "SendInvitationResponse";
+
+    public static String playingRequest = "PlayingRequest";
+    public static String playingResponseTrue = "PlayingResponseTrue";
+    public static String playingResponseFalse = "PlayingResponseFalse";
+    
+    
+    
+    public static String keySender = "KeySender";
+    public static String keyReceiver = "KeyReceiver";
+    public static String keyBoolean = "KeyBoolean";
+    public static String keyGame = "KeyGame";
+    public static String keyMove1 = "KeyMove1";
+    public static String keyMove2 = "KeyMove2";
+    public static String keyMove3 = "KeyMove3";
+    public static String keyMove4 = "KeyMove4";
+    public static String keyMove5 = "KeyMove5";
+    public static String keyMove6 = "KeyMove6";
+    public static String keyMove7 = "KeyMove7";
+    public static String keyMove8 = "KeyMove8";
+    public static String keyMove9 = "KeyMove9";
+    
+    
+    
+    
+
+}

@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.io.StreamCorruptedException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -94,6 +95,12 @@ public class ClientConnection {
 
                         } else if (msg.equals(Messages.viewUserProfileResponse)) {
                             displayUserInfo(msg, obj);
+
+                        } else if (msg.equals(Messages.playingRequest)) {
+                            showInvite(msg, obj);
+
+                        } else if (msg.equals(Messages.sendInvitationResponse)) {
+                            acceptInvite(msg, obj);
                         }
 
                         System.out.println("msg is : " + msg);
@@ -113,10 +120,10 @@ public class ClientConnection {
     }
 
     public void writeMessage(String msg, Object object) {
-        
+
         ClientConnection.flag.set("");
         ClientConnection.flagObjct.set(null);
-        
+
         new Thread() {
             @Override
             public void run() {
@@ -129,6 +136,46 @@ public class ClientConnection {
             }
 
         }.start();
+    }
+
+    private void acceptInvite(String msg, Object acceptCheck) {
+
+        Boolean accept = (Boolean) acceptCheck;
+        System.out.println("Receiveing Invitation Response From Client");
+        if (accept) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    ClientConnection.flag.set("acceptTrue");
+                    System.out.println("Receiveing Invitation Response From Client with True ");
+                }
+            });
+
+        } else {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    ClientConnection.flag.set("acceptFalse");
+                    System.out.println("Receiveing Invitation Response From Client with False");
+                }
+            });
+        }
+
+    }
+
+    private void showInvite(String msg, Object obj) {
+
+        HashMap<String, Object> players = (HashMap<String, Object>) obj;
+        System.out.println("Reciving Playing Request From Client ");
+        if (msg.equals(Messages.playingRequest)) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    ClientConnection.flag.set("playingRequest");
+                    ClientConnection.flagObjct.set(players);
+                }
+            });
+        }
     }
 
     private void checkLogin(Boolean loginCheck) {
@@ -161,6 +208,7 @@ public class ClientConnection {
                 @Override
                 public void run() {
                     ClientConnection.flag.set("registerTrue");
+
                 }
             });
 

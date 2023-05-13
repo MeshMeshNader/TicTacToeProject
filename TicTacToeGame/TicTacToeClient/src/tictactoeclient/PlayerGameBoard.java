@@ -1,17 +1,17 @@
 package tictactoeclient;
 
- import java.io.File;
+import java.io.File;
 import java.util.ArrayList;
- 
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
- 
+
 import javafx.scene.control.TextField;
- import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.DropShadow;
@@ -22,15 +22,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
- import javafx.scene.media.Media;
+import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
- 
+
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
- import java.util.Date;
- 
+import java.util.Date;
 
 public class PlayerGameBoard extends BorderPane {
 
@@ -52,13 +51,13 @@ public class PlayerGameBoard extends BorderPane {
     protected final Text recordTxt;
     protected final Text playerOneUserNameLLValueTxt;
     protected final Text playerTwoUserNameLLValueTxt;
-     protected final Text ScoreTxt;
+    protected final Text ScoreTxt;
     protected final Text playerOneScore;
     protected final Text playerTwoScore;
-     protected final Text enterYourNameTxt;
+    protected final Text enterYourNameTxt;
     protected final TextField playerOneUserNameLLValueTxtField;
     protected final TextField playerTwoUserNameLLValueTxtField;
-     protected final AnchorPane anchorPane0;
+    protected final AnchorPane anchorPane0;
     protected final Glow glow0;
     protected final Text playerTwoUserNameRValueTxt;
     protected final Text toeRTxt;
@@ -96,7 +95,7 @@ public class PlayerGameBoard extends BorderPane {
     protected final ColorAdjust colorAdjust6;
     protected final Button cellPos2_0;
     protected final ColorAdjust colorAdjust7;
-     boolean isRecorded = false;
+    boolean isRecorded = false;
 
     Stage parentStage;
     private int playerTurn = 0;
@@ -116,7 +115,7 @@ public class PlayerGameBoard extends BorderPane {
 
         this.playerOneNameValue = playerOneNameValue;
         this.playerTwoNameValue = playerTwoNameValue;
-         anchorPane = new AnchorPane();
+        anchorPane = new AnchorPane();
         glow = new Glow();
         backBtn = new Button();
         dropShadow = new DropShadow();
@@ -134,13 +133,13 @@ public class PlayerGameBoard extends BorderPane {
         recordTxt = new Text();
         playerOneUserNameLLValueTxt = new Text();
         playerTwoUserNameLLValueTxt = new Text();
-         ScoreTxt = new Text();
+        ScoreTxt = new Text();
         playerOneScore = new Text();
         playerTwoScore = new Text();
-         enterYourNameTxt = new Text();
+        enterYourNameTxt = new Text();
         playerOneUserNameLLValueTxtField = new TextField();
         playerTwoUserNameLLValueTxtField = new TextField();
-         anchorPane0 = new AnchorPane();
+        anchorPane0 = new AnchorPane();
         glow0 = new Glow();
         playerTwoUserNameRValueTxt = new Text();
         toeRTxt = new Text();
@@ -596,8 +595,8 @@ public class PlayerGameBoard extends BorderPane {
         xoGridBane.getChildren().add(cellPos0_1);
         xoGridBane.getChildren().add(cellPos2_0);
         anchorPane0.getChildren().add(xoGridBane);
-        
-         checkSoundToggleBtn();
+
+        checkSoundToggleBtn();
 
         cellsBtn = new Button[][]{
             {cellPos0_0, cellPos0_1, cellPos0_2},
@@ -625,7 +624,6 @@ public class PlayerGameBoard extends BorderPane {
                 isRecorded = false;
             }
         });
-
 
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -656,7 +654,6 @@ public class PlayerGameBoard extends BorderPane {
         });
 
     }
-
 
     private void setupButton(Button cellBtn, int row, int col) {
         cellBtn.setOnMouseClicked(mouseEvent -> {
@@ -805,8 +802,8 @@ public class PlayerGameBoard extends BorderPane {
 
         return indexValue;
     }
-    
-    void checkSoundToggleBtn(){
+
+    void checkSoundToggleBtn() {
         if (WelcomPage.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             soundToggleBtn.setText("On");
             soundToggleBtn.setStyle("-fx-background-color: green;");

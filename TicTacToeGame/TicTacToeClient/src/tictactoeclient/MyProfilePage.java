@@ -57,11 +57,12 @@ public class MyProfilePage extends BorderPane {
     protected final Text noOfLossesValueTxt;
     protected final Text scoreTxt;
     protected final Text scoreValueTxt;
-
+    boolean sign;
     public MyProfilePage() {
 
         ClientConnection clientconnection;
         myTurn = false;
+        sign = false;
         anchorPane = new AnchorPane();
         glow = new Glow();
         userImg = new ImageView();
@@ -371,7 +372,7 @@ public class MyProfilePage extends BorderPane {
             }
         });
 
-        soundToggleBtn.setStyle("-fx-background-color: green;");
+        /*soundToggleBtn.setStyle("-fx-background-color: green;");
 
         //generate the sound file from a given path
         //creating an object from media player 
@@ -385,34 +386,26 @@ public class MyProfilePage extends BorderPane {
         }
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
         //this property will make the sound to run automatically when the app starts
-        mediaPlayer.setAutoPlay(true);
+        mediaPlayer.setAutoPlay(true);*/
 
         soundToggleBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
                 if (soundToggleBtn.isSelected()) {
-                    mediaPlayer.pause();
+                    //mediaPlayer.pause();
                     soundToggleBtn.setText("Off");
                     soundToggleBtn.setStyle("-fx-background-color: red;");
 
                 } else {
-                    mediaPlayer.play();
+                    //mediaPlayer.play();
                     soundToggleBtn.setText("On");
                     soundToggleBtn.setStyle("-fx-background-color: green;");
                 }
             }
         });
 
-        myProfileBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-                MyProfilePage root = new MyProfilePage();
-                Scene scene = new Scene(root);
-                TicTacToeClient.stage.setScene(scene);
-            }
-        });
+    
 
         onlineUsersBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -455,14 +448,19 @@ public class MyProfilePage extends BorderPane {
             }else{
                 myTurn = false;
              }
+            if(newValue.equals("registerTrue")){
+                sign = true ;               
+            }else
+                sign = false;
         });
 
         ClientConnection.flagObjct.addListener((observable, oldValue, newValue) -> {
             UserDTO user;
-            if (myTurn) {
+            if (myTurn || sign) {
                  user = (UserDTO) newValue;
                  displayUserData(user);
             }
+            
         });
         
         

@@ -18,6 +18,11 @@ public class MoveDTO implements Serializable{
     private int col;
     Date createdAt;
 
+    public MoveDTO() {
+    }
+    
+    
+
     public MoveDTO(int moveID, int gameID, int playerID, int row, int col, Date createdAt) {
         this.moveID = moveID;
         this.gameID = gameID;

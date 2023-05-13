@@ -30,6 +30,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.DropShadow;
@@ -59,7 +60,7 @@ public class OnlineLoginPage extends BorderPane {
     protected final Button homeBtn;
     protected final DropShadow dropShadow1;
     protected final TextField usernameTxtField;
-    protected final TextField passwordTxtField;
+    protected final PasswordField passwordTxtField;
     protected final Text passwordTxt;
     protected final InnerShadow innerShadow;
     protected final Text usernameTxt;
@@ -90,7 +91,7 @@ public class OnlineLoginPage extends BorderPane {
         homeBtn = new Button();
         dropShadow1 = new DropShadow();
         usernameTxtField = new TextField();
-        passwordTxtField = new TextField();
+        passwordTxtField = new PasswordField();
         passwordTxt = new Text();
         innerShadow = new InnerShadow();
         usernameTxt = new Text();
