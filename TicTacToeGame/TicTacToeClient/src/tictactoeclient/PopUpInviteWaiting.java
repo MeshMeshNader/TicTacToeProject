@@ -1,5 +1,6 @@
 package tictactoeclient;
 
+import java.util.HashMap;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -24,10 +25,12 @@ public class PopUpInviteWaiting extends AnchorPane {
     protected final DropShadow dropShadow0;
     protected final ProgressIndicator progressIndicator;
     protected final Glow glow;
+    HashMap<String, Object> players;
 
-    public PopUpInviteWaiting(Stage stage, UserDTO selectedUser) {
+    public PopUpInviteWaiting(Stage stage, HashMap<String, Object> players) {
         ClientConnection clientconnection;
         myTurn = false;
+        this.players = players;
         parentStage = stage;
         waitingForResponseTxt = new Text();
 //        startBtn = new Button();
@@ -88,7 +91,7 @@ public class PopUpInviteWaiting extends AnchorPane {
 
             if (newValue.equals("acceptTrue")) {
 
-                OnlineGameBoard root = new OnlineGameBoard(null);
+                OnlineGameBoard root = new OnlineGameBoard(players);
                 Scene scene = new Scene(root);
                 System.out.println("Opening GameBoard From Client Waiting ");
                 //loggedOnUser = user;

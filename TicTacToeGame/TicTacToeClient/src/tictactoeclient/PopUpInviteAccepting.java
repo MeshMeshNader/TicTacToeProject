@@ -1,5 +1,6 @@
 package tictactoeclient;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.beans.property.BooleanProperty;
@@ -96,7 +97,7 @@ public class PopUpInviteAccepting extends AnchorPane {
         getChildren().add(userNameValueTxt);
 
         clientconnection = ClientConnection.getInstance();
-        userNameValueTxt.setText(((UserDTO)players.get(Messages.keySender)).getUserName());
+        userNameValueTxt.setText(((UserDTO) players.get(Messages.keySender)).getUserName());
 
         ClientConnection.flag.addListener((observable, oldValue, newValue) -> {
 
@@ -124,6 +125,8 @@ public class PopUpInviteAccepting extends AnchorPane {
                 clientconnection.writeMessage(Messages.playingResponseTrue, players);
                 OnlineGameBoard root = new OnlineGameBoard(players);
                 Scene scene = new Scene(root);
+
+                
                 System.out.println("Opening GameBoard From Client Accepting ");
                 //loggedOnUser = user;
                 TicTacToeClient.stage.setScene(scene);

@@ -106,7 +106,7 @@ public class DataAccessLayer {
                     resultSet.getString("PLAYE2"),
                     resultSet.getInt("WINNERID"),
                     resultSet.getInt("LOSERID"),
-                    resultSet.getDate("CREATEDAT")
+                    resultSet.getTimestamp("CREATEDAT")
             ));
         }
        return games;
@@ -438,7 +438,7 @@ public class DataAccessLayer {
             pst.setInt(6, game.getWinnerID());
             pst.setInt(7, game.getLoserID());
 
-            pst.setDate(8, game.getCreatedAt());
+            pst.setTimestamp(8, game.getCreatedAt());
 
             pst.executeUpdate();
             return true;
@@ -455,7 +455,7 @@ public class DataAccessLayer {
             PreparedStatement pst = con.prepareStatement(
                     "INSERT INTO MOVE VALUES(DEFAULT ,?,?, ? ,?,?)");
             pst.setInt(2, move.getGameID());
-            pst.setInt(3, move.getPlayerID());
+            pst.setString(3, move.getplayerUserName());
             pst.setInt(4, move.getRow());
             pst.setInt(5, move.getCol());
             pst.setDate(6, move.getCreatedAt());
@@ -479,7 +479,7 @@ public class DataAccessLayer {
         while (resultSet.next()) {
             moves.add(new MoveDTO(moveId,
                     resultSet.getInt("GAMEID"),
-                    resultSet.getInt("PLAYERID"),
+                    resultSet.getString("PLAYERUSERNAME"),
                     resultSet.getInt("ROW"),
                     resultSet.getInt("COL"),
                     resultSet.getDate("CREATEDAT")
@@ -503,7 +503,7 @@ public class DataAccessLayer {
                     resultSet.getString("PLAYE2"),
                     resultSet.getInt("WINNERID"),
                     resultSet.getInt("LOSERID"),
-                    resultSet.getDate("CREATEDAT")
+                    resultSet.getTimestamp("CREATEDAT")
             );
         } else {
             game = new GameDTO();

@@ -13,7 +13,7 @@ public class MoveDTO implements Serializable{
 
     private int moveID;
     private int gameID;
-    private int playerID;
+    private String playerUserName;
     private int row;
     private int col;
     Date createdAt;
@@ -23,10 +23,11 @@ public class MoveDTO implements Serializable{
     
     
 
-    public MoveDTO(int moveID, int gameID, int playerID, int row, int col, Date createdAt) {
+    
+    public MoveDTO(int moveID, int gameID, String playerUserName, int row, int col, Date createdAt) {
         this.moveID = moveID;
         this.gameID = gameID;
-        this.playerID = playerID;
+        this.playerUserName = playerUserName;
         this.row = row;
         this.col = col;
         this.createdAt = createdAt;
@@ -48,12 +49,12 @@ public class MoveDTO implements Serializable{
         this.gameID = gameID;
     }
 
-    public int getPlayerID() {
-        return playerID;
+    public String getplayerUserName() {
+        return playerUserName;
     }
 
-    public void setPlayerID(int playerID) {
-        this.playerID = playerID;
+    public void setplayerUserName(String playerUserName) {
+        this.playerUserName = playerUserName;
     }
 
     public int getRow() {
@@ -80,4 +81,12 @@ public class MoveDTO implements Serializable{
         this.createdAt = createdAt;
     }
 
+    public MoveDTO(String playerUserName, int row, int col) {
+        this.playerUserName = playerUserName;
+        this.row = row;
+        this.col = col;
+    }
+
+    
+    
 }

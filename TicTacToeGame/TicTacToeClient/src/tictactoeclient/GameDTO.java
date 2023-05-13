@@ -6,7 +6,7 @@
 package tictactoeclient;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
@@ -21,9 +21,9 @@ public class GameDTO implements Serializable{
     private String playe2;
     private int winnerID;
     private int loserID;
-    Date createdAt;
+    Timestamp createdAt;
 
-    public GameDTO(int gameID, String mode, String results, String playe1, String playe2, int winnerID, int loserID, Date createdAt) {
+    public GameDTO(int gameID, String mode, String results, String playe1, String playe2, int winnerID, int loserID, Timestamp createdAt) {
         this.gameID = gameID;
         this.mode = mode;
         this.results = results;
@@ -33,6 +33,17 @@ public class GameDTO implements Serializable{
         this.loserID = loserID;
         this.createdAt = createdAt;
     }
+
+    public GameDTO(String mode, String results, String playe1, String playe2, int winnerID, int loserID, Timestamp createdAt) {
+        this.mode = mode;
+        this.results = results;
+        this.playe1 = playe1;
+        this.playe2 = playe2;
+        this.winnerID = winnerID;
+        this.loserID = loserID;
+        this.createdAt = createdAt;
+    }
+    
 
     public GameDTO() {
     }
@@ -95,11 +106,11 @@ public class GameDTO implements Serializable{
         this.loserID = loserID;
     }
 
-    public Date getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 

@@ -101,6 +101,8 @@ public class ClientConnection {
 
                         } else if (msg.equals(Messages.sendInvitationResponse)) {
                             acceptInvite(msg, obj);
+                        }else if (msg.equals(Messages.setMovesResponse)) {
+                            printResponseToBoard(msg , obj);
                         }
 
                         System.out.println("msg is : " + msg);
@@ -138,6 +140,21 @@ public class ClientConnection {
         }.start();
     }
 
+    
+    private void printResponseToBoard(String msg, Object obj) {
+        HashMap<String, Object> players = (HashMap<String, Object>) obj;
+        
+        if (msg.equals(Messages.setMovesResponse)) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    ClientConnection.flag.set("MoveResponse");
+                    ClientConnection.flagObjct.set(players);
+                }
+            });
+        }
+    }
+    
     private void acceptInvite(String msg, Object acceptCheck) {
 
         Boolean accept = (Boolean) acceptCheck;

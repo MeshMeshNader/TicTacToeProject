@@ -323,22 +323,15 @@ public class OnlineUsersPage extends BorderPane {
                 players.put(Messages.keyReceiver, selectedUser);
                 players.put(Messages.keyBoolean, new Boolean(false));
                 players.put(Messages.keyGame, new GameDTO());
-                players.put(Messages.keyMove1, new MoveDTO());
-                players.put(Messages.keyMove2, new MoveDTO());
-                players.put(Messages.keyMove3, new MoveDTO());
-                players.put(Messages.keyMove4, new MoveDTO());
-                players.put(Messages.keyMove5, new MoveDTO());
-                players.put(Messages.keyMove6, new MoveDTO());
-                players.put(Messages.keyMove7, new MoveDTO());
-                players.put(Messages.keyMove8, new MoveDTO());
-                players.put(Messages.keyMove9, new MoveDTO());
+                players.put(Messages.keyMove, new MoveDTO());
+              
                 
                 clientconnection.writeMessage(Messages.sendInvitationRequest, players);
 
                 System.out.println("Sending Invetation Request From Client ");
 
                 Stage popUpStage = new Stage();
-                Scene popUpPage = new Scene(new PopUpInviteWaiting(popUpStage, selectedUser));
+                Scene popUpPage = new Scene(new PopUpInviteWaiting(popUpStage, players));
 
                 popUpStage.setScene(popUpPage);
                 popUpStage.initModality(Modality.APPLICATION_MODAL);

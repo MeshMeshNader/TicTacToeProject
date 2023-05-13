@@ -85,15 +85,8 @@ public class Messages implements Serializable {
     public static String keyReceiver = "KeyReceiver";
     public static String keyBoolean = "KeyBoolean";
     public static String keyGame = "KeyGame";
-    public static String keyMove1 = "KeyMove1";
-    public static String keyMove2 = "KeyMove2";
-    public static String keyMove3 = "KeyMove3";
-    public static String keyMove4 = "KeyMove4";
-    public static String keyMove5 = "KeyMove5";
-    public static String keyMove6 = "KeyMove6";
-    public static String keyMove7 = "KeyMove7";
-    public static String keyMove8 = "KeyMove8";
-    public static String keyMove9 = "KeyMove9";
+    public static String keyMove = "KeyMove";
+    
     
     
     

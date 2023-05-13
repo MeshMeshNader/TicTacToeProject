@@ -130,10 +130,6 @@ public class ServerConnection {
                             obj = (GameDTO) objectinputstream.readObject();
                             sendMessage(Messages.updatedResultResponse, updatedResult());
 
-                        } else if (msg.equals(Messages.setMovesRequest)) {
-                            obj = (MoveDTO) objectinputstream.readObject();
-                            sendMessage(Messages.setMovesResponse, setMove());
-
                         } else if (msg.equals(Messages.getMovesRequest)) {
                             obj = (MoveDTO) objectinputstream.readObject();
                             sendMessage(Messages.getMovesResponse, getMoves());
@@ -205,7 +201,9 @@ public class ServerConnection {
                         } else if (msg.equals(Messages.playingResponseFalse)) {
                             obj = (HashMap<String, Object>) objectinputstream.readObject();
                             checkPlayingResponseFalse();
-
+                        } else if (msg.equals(Messages.setMovesRequest)) {
+                            obj = (HashMap<String, Object>) objectinputstream.readObject();
+                            sendTheMoveAgain();
                         }
 
                     } catch (IOException ex) {
@@ -237,6 +235,27 @@ public class ServerConnection {
 
             }
         }.start();
+    }
+
+    public void sendTheMoveAgain() {
+        HashMap<String, Object> players = (HashMap<String, Object>) obj;
+        ObjectOutputStream objOutS = null;
+        if ((Boolean) players.get(Messages.keyBoolean) == true) {
+            objOutS = ServerHandeller.clientSockets.get(
+                    ((UserDTO) players.get(Messages.keySender)).getUserName()).objectoutputstream;
+        } else if ((Boolean) players.get(Messages.keyBoolean) == false) {
+            objOutS = ServerHandeller.clientSockets.get(
+                    ((UserDTO) players.get(Messages.keyReceiver)).getUserName()).objectoutputstream;
+        }
+
+        try {
+            objOutS.writeObject(Messages.setMovesResponse);
+            objOutS.writeObject(players);
+        } catch (IOException ex) {
+            Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+
     }
 
     public void invitProcess() {
