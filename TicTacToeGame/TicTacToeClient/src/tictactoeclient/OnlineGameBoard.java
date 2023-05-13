@@ -1,6 +1,9 @@
 package tictactoeclient;
 
 import java.io.File;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import javafx.event.ActionEvent;
@@ -19,7 +22,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.layout.RowConstraints;
 
 import javafx.scene.media.Media;
@@ -28,6 +30,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class OnlineGameBoard extends BorderPane {
@@ -91,9 +94,26 @@ public class OnlineGameBoard extends BorderPane {
     protected final ColorAdjust colorAdjust6;
     protected final Button cellPos2_0;
     protected final ColorAdjust colorAdjust7;
+    Button[][] cellsBtn;
+    int moveId = 0;
+    ArrayList<OfflineGameDTO> fullRecord = new ArrayList<>();
+    private ArrayList<OfflineMoveDTO> record = new ArrayList<>();
+    int playerOneScoreValue = 0;
+    int playerTwoScoreValue = 0;
+    private int playerTurn = 0;
+    private boolean gameIsOver = false;
+    ArrayList<Button> cells;
+    boolean isRecorded = false;
+    UserDTO player1;
+    UserDTO player2;
+    HashMap<String, Object> players;
+    ClientConnection clientconnection;
+    int turn = 0;
+    boolean printFromServer = false;
 
     public OnlineGameBoard(HashMap<String, Object> players) {
 
+        this.players = players;
         anchorPane = new AnchorPane();
         glow = new Glow();
         backBtn = new Button();
@@ -566,6 +586,41 @@ public class OnlineGameBoard extends BorderPane {
 
         checkSoundToggleBtn();
 
+        clientconnection = ClientConnection.getInstance();
+
+        ClientConnection.flag.addListener((observable, oldValue, newValue) -> {
+
+            if (newValue.equals("MoveResponse")) {
+                printFromServer = true;
+            } else {
+                printFromServer = false;
+            }
+
+        });
+
+        ClientConnection.flagObjct.addListener((observable, oldValue, newValue) -> {
+            if (printFromServer) {
+                HashMap<String, Object> PlayersFromServer = (HashMap<String, Object>) newValue;
+                int row = ((MoveDTO) PlayersFromServer.get(Messages.keyMove)).getRow();
+                int col = ((MoveDTO) PlayersFromServer.get(Messages.keyMove)).getCol();
+                maiualPrint(cellsBtn[row][col], row, col);
+                System.out.println("Printing from print response to board");
+                turn++;
+
+            }
+
+        });
+
+        players.put(Messages.keyGame, new GameDTO(
+                "online",
+                "none",
+                ((UserDTO) players.get(Messages.keySender)).getUserName(),
+                ((UserDTO) players.get(Messages.keyReceiver)).getUserName(),
+                0,
+                0,
+                new Timestamp(System.currentTimeMillis())
+        ));
+
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -580,7 +635,7 @@ public class OnlineGameBoard extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
 
-                // Rematch The Game
+                resetAllCells();
             }
         });
 
@@ -594,9 +649,345 @@ public class OnlineGameBoard extends BorderPane {
             }
         });
 
+        player1 = (UserDTO) players.get(Messages.keyReceiver);
+        player2 = (UserDTO) players.get(Messages.keySender);
+
+        cellsBtn = new Button[][]{
+            {cellPos0_0, cellPos0_1, cellPos0_2},
+            {cellPos1_0, cellPos1_1, cellPos1_2},
+            {cellPos2_0, cellPos2_1, cellPos2_2}
+        };
+
+        for (int i = 0; i < cellsBtn.length; i++) {
+            for (int j = 0; j < cellsBtn[i].length; j++) {
+                Button cell = cellsBtn[i][j];
+                setupButton(cell, i, j);
+                cell.setFocusTraversable(false);
+            }
+        }
+
+        recordToggleBtn.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                recordToggleBtn.setText("On");
+                recordToggleBtn.setStyle("-fx-background-color: green;");
+                isRecorded = true;
+                //new obj           
+            } else {
+                recordToggleBtn.setText("Off");
+                recordToggleBtn.setStyle("");
+                isRecorded = false;
+            }
+        });
+
     }
 
-    void checkSoundToggleBtn(){
+    void maiualPrint(Button cellBtn, int row, int col) {
+        if (gameIsOver) {
+            return;
+        }
+
+        setPlayerSymbol(cellBtn, row, col);
+        cellBtn.setDisable(true);
+        record.add(new OfflineMoveDTO(moveId++, playerTurn, row, col));
+        int winningLineIndex = checkIfGameIsOver();
+
+        if (winningLineIndex != -1) {
+            highlightWinningLine(winningLineIndex);
+            if (playerTurn % 2 == 0) {
+                player2ScoreValueTxt.setText(String.valueOf(++playerTwoScoreValue));
+            } else {
+                player1ScoreValueTxt.setText(String.valueOf(++playerOneScoreValue));
+            }
+
+            gameIsOver = true;
+
+            fullRecord = RecordOperation.readRecordFromFile("fullRecorde.json");
+            Date date = new Date();
+
+            if (fullRecord == null || fullRecord.isEmpty()) {
+                fullRecord.add(new OfflineGameDTO(playerTurn % 2, player1.getUserName(), player2.getUserName(), date, new ArrayList<>(record)));
+            } else {
+                fullRecord.add(new OfflineGameDTO(playerTurn % 2, player1.getUserName(), player2.getUserName(), date, new ArrayList<>(record)));
+            }
+            //fullRecord.add(new OfflineGameDTO(playerTurn % 2, playerOneNameValue, playerTwoNameValue, date, new ArrayList<>(record)));
+
+            if (isRecorded) {
+                RecordOperation.writeRecordToFile(fullRecord, "fullRecorde.json");
+                System.out.println("Game record saved.");
+            }
+        } else if (record.size() == 9) { // game is a tie
+            gameIsOver = true;
+
+            if (isRecorded) {
+                RecordOperation.writeRecordToFile(fullRecord, "fullRecorde.json");
+                System.out.println("Game record saved.");
+            }
+        }
+    }
+
+    private void setupButton(Button cellBtn, int row, int col) {
+        cellBtn.setOnMouseClicked(mouseEvent -> {
+            if (gameIsOver) {
+                return;
+            }
+
+            setPlayerSymbol(cellBtn, row, col);
+            cellBtn.setDisable(true);
+            record.add(new OfflineMoveDTO(moveId++, playerTurn, row, col));
+            int winningLineIndex = checkIfGameIsOver();
+
+            if (winningLineIndex != -1) {
+                highlightWinningLine(winningLineIndex);
+                if (playerTurn % 2 == 0) {
+                    player2ScoreValueTxt.setText(String.valueOf(++playerTwoScoreValue));
+                } else {
+                    player1ScoreValueTxt.setText(String.valueOf(++playerOneScoreValue));
+                }
+
+                gameIsOver = true;
+
+                fullRecord = RecordOperation.readRecordFromFile("fullRecorde.json");
+                Date date = new Date();
+
+                if (fullRecord == null || fullRecord.isEmpty()) {
+                    fullRecord.add(new OfflineGameDTO(playerTurn % 2, player1.getUserName(), player2.getUserName(), date, new ArrayList<>(record)));
+                } else {
+                    fullRecord.add(new OfflineGameDTO(playerTurn % 2, player1.getUserName(), player2.getUserName(), date, new ArrayList<>(record)));
+                }
+                //fullRecord.add(new OfflineGameDTO(playerTurn % 2, playerOneNameValue, playerTwoNameValue, date, new ArrayList<>(record)));
+
+                if (isRecorded) {
+                    RecordOperation.writeRecordToFile(fullRecord, "fullRecorde.json");
+                    System.out.println("Game record saved.");
+                }
+            } else if (record.size() == 9) { // game is a tie
+                gameIsOver = true;
+
+                if (isRecorded) {
+                    RecordOperation.writeRecordToFile(fullRecord, "fullRecorde.json");
+                    System.out.println("Game record saved.");
+                }
+            }
+        });
+    }
+
+    private void highlightWinningLine(int index) {
+        switch (index) {
+            case 0:
+                highlightCell(cellsBtn[0][0], cellsBtn[0][1], cellsBtn[0][2]);
+                break;
+            case 1:
+                highlightCell(cellsBtn[1][0], cellsBtn[1][1], cellsBtn[1][2]);
+                break;
+            case 2:
+                highlightCell(cellsBtn[2][0], cellsBtn[2][1], cellsBtn[2][2]);
+                break;
+            case 3:
+                highlightCell(cellsBtn[0][0], cellsBtn[1][0], cellsBtn[2][0]);
+                break;
+            case 4:
+                highlightCell(cellsBtn[0][1], cellsBtn[1][1], cellsBtn[2][1]);
+                break;
+            case 5:
+                highlightCell(cellsBtn[0][2], cellsBtn[1][2], cellsBtn[2][2]);
+                break;
+            case 6:
+                highlightCell(cellsBtn[0][0], cellsBtn[1][1], cellsBtn[2][2]);
+                break;
+            case 7:
+                highlightCell(cellsBtn[2][0], cellsBtn[1][1], cellsBtn[0][2]);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void highlightCell(Button cellBtnOne, Button cellBtnTwo, Button cellBtnThree) {
+        cellBtnOne.setStyle("-fx-background-color: gray");
+        cellBtnTwo.setStyle("-fx-background-color: gray");
+        cellBtnThree.setStyle("-fx-background-color: gray");
+    }
+
+    private void unhighlightCell(Button cellBtn) {
+        cellBtn.setStyle("");
+        cellBtn.setText("");
+        cellBtn.setDisable(false);
+    }
+
+    private void resetAllCells() {
+        for (Button[] row : cellsBtn) {
+            for (Button cell : row) {
+                unhighlightCell(cell);
+            }
+        }
+        record = new ArrayList<>();
+        gameIsOver = false;
+        playerTurn = 0;
+    }
+
+    private void setPlayerSymbol(Button cellBtn, int row, int col) {
+
+        if (playerTurn % 2 == 0) {
+
+            turn++;
+            cellBtn.setText("X");
+            playerTurn = 1;
+            System.out.println("setPlayerSymple XXXXX");
+
+            send(turn, row, col);
+        } else {
+            turn++;
+            cellBtn.setText("O");
+            playerTurn = 0;
+
+            send(turn, row, col);
+            System.out.println("setPlayerSymple OOOOOOO");
+
+        }
+
+    }
+
+    void send(int turn, int row, int col) {
+
+        switch (turn) {
+            case 1:
+                players.put(Messages.keyMove, new MoveDTO(
+                        player1.getUserName(), row, col
+                ));
+                System.out.println("case 1");
+                players.put(Messages.keyBoolean, true);
+
+                clientconnection.writeMessage(Messages.setMovesRequest, players);
+
+                break;
+            case 2:
+
+                players.put(Messages.keyMove, new MoveDTO(
+                        player2.getUserName(), row, col
+                ));
+                System.out.println("case 2");
+                players.put(Messages.keyBoolean, true);
+
+                clientconnection.writeMessage(Messages.setMovesRequest, players);
+
+                break;
+            case 3:
+                players.put(Messages.keyMove, new MoveDTO(
+                        player1.getUserName(), row, col
+                ));
+                System.out.println("case 3");
+                players.put(Messages.keyBoolean, true);
+
+                clientconnection.writeMessage(Messages.setMovesRequest, players);
+
+                break;
+            case 4:
+
+                players.put(Messages.keyMove, new MoveDTO(
+                        player2.getUserName(), row, col
+                ));
+                System.out.println("case 4");
+                players.put(Messages.keyBoolean, false);
+
+                clientconnection.writeMessage(Messages.setMovesRequest, players);
+
+                break;
+            case 5:
+
+                players.put(Messages.keyMove, new MoveDTO(
+                        player1.getUserName(), row, col
+                ));
+
+                players.put(Messages.keyBoolean, true);
+
+                clientconnection.writeMessage(Messages.setMovesRequest, players);
+
+                break;
+            case 6:
+
+                players.put(Messages.keyMove, new MoveDTO(
+                        player2.getUserName(), row, col
+                ));
+
+                players.put(Messages.keyBoolean, false);
+
+                clientconnection.writeMessage(Messages.setMovesRequest, players);
+
+                break;
+            case 7:
+
+                players.put(Messages.keyMove, new MoveDTO(
+                        player1.getUserName(), row, col
+                ));
+
+                players.put(Messages.keyBoolean, true);
+
+                clientconnection.writeMessage(Messages.setMovesRequest, players);
+
+                break;
+            case 8:
+                players.put(Messages.keyMove, new MoveDTO(
+                        player2.getUserName(), row, col
+                ));
+
+                players.put(Messages.keyBoolean, false);
+
+                clientconnection.writeMessage(Messages.setMovesRequest, players);
+
+                break;
+            case 9:
+
+                players.put(Messages.keyMove, new MoveDTO(
+                        player1.getUserName(), row, col
+                ));
+
+                players.put(Messages.keyBoolean, true);
+
+                clientconnection.writeMessage(Messages.setMovesRequest, players);
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    public int checkIfGameIsOver() {
+        int indexValue = -1;
+        indexValue = (record.size() == 9 ? -2 : -1);
+        for (int index = 0; index < 8; index++) {
+
+            String line = "";
+            if (index == 0) {
+                line = cellsBtn[0][0].getText() + cellsBtn[0][1].getText() + cellsBtn[0][2].getText();
+            } else if (index == 1) {
+                line = cellsBtn[1][0].getText() + cellsBtn[1][1].getText() + cellsBtn[1][2].getText();
+            } else if (index == 2) {
+                line = cellsBtn[2][0].getText() + cellsBtn[2][1].getText() + cellsBtn[2][2].getText();
+            } else if (index == 3) {
+                line = cellsBtn[0][0].getText() + cellsBtn[1][0].getText() + cellsBtn[2][0].getText();
+            } else if (index == 4) {
+                line = cellsBtn[0][1].getText() + cellsBtn[1][1].getText() + cellsBtn[2][1].getText();
+            } else if (index == 5) {
+                line = cellsBtn[0][2].getText() + cellsBtn[1][2].getText() + cellsBtn[2][2].getText();
+            } else if (index == 6) {
+                line = cellsBtn[0][0].getText() + cellsBtn[1][1].getText() + cellsBtn[2][2].getText();
+            } else if (index == 7) {
+                line = cellsBtn[2][0].getText() + cellsBtn[1][1].getText() + cellsBtn[0][2].getText();
+            }
+
+            if (line.equals("XXX")) {
+                // X wins
+                indexValue = index;
+            } else if (line.equals("OOO")) {
+                // O wins
+                indexValue = index;
+            }
+        }
+
+        return indexValue;
+    }
+
+    void checkSoundToggleBtn() {
         if (TicTacToeClient.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             soundToggleBtn.setText("On");
             soundToggleBtn.setStyle("-fx-background-color: green;");
@@ -625,5 +1016,4 @@ public class OnlineGameBoard extends BorderPane {
             }
         });
     }
-
 }

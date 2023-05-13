@@ -203,6 +203,7 @@ public class ServerConnection {
                             checkPlayingResponseFalse();
                         } else if (msg.equals(Messages.setMovesRequest)) {
                             obj = (HashMap<String, Object>) objectinputstream.readObject();
+                            System.out.println("THIS IS SERVEEER");
                             sendTheMoveAgain();
                         }
 
@@ -518,7 +519,7 @@ public class ServerConnection {
         ArrayList<UserDTO> allPlayers = DataAccessLayer.getAllPlayers();
         allPlayers.remove(objUser);
 
-        return allPlayers;
-    }
-
+        return allPlayers;}
 }
+
+
